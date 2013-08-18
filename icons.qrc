@@ -1,0 +1,25 @@
+<RCC>
+    <qresource prefix="/default">
+        <file>icons/edit-copy.png</file>
+        <file>icons/edit-cut.png</file>
+        <file>icons/edit-paste.png</file>
+        <file>icons/edit-redo.png</file>
+        <file>icons/edit-undo.png</file>
+        <file>icons/file-close.png</file>
+        <file>icons/file-exit.png</file>
+        <file>icons/file-new.png</file>
+        <file>icons/file-open.png</file>
+        <file>icons/file-save.png</file>
+        <file>icons/help-about.png</file>
+        <file>icons/help-license.png</file>
+        <file>icons/help-man.png</file>
+        <file>icons/plugin-empty.png</file>
+        <file>icons/properties-plugins.png</file>
+        <file>icons/properties-settings.png</file>
+        <file>icons/scheme-add-label.png</file>
+        <file>icons/scheme-add-link.png</file>
+        <file>icons/scheme-add-node.png</file>
+        <file>icons/scheme-edit.png</file>
+        <file>icons/scheme-vhdl.png</file>
+    </qresource>
+</RCC>

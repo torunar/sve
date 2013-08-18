@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>SVE</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="mFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="aNew"/>
+    <addaction name="aOpen"/>
+    <addaction name="aSave"/>
+    <addaction name="aSaveAs"/>
+    <addaction name="aOptions"/>
+    <addaction name="aQuit"/>
+   </widget>
+   <widget class="QMenu" name="mEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="aUndo"/>
+    <addaction name="aRedo"/>
+    <addaction name="aCopy"/>
+    <addaction name="aCut"/>
+    <addaction name="aPaste"/>
+   </widget>
+   <widget class="QMenu" name="aScheme">
+    <property name="title">
+     <string>Scheme</string>
+    </property>
+    <addaction name="aAddNode"/>
+    <addaction name="aAddLink"/>
+    <addaction name="aAddLabel"/>
+    <addaction name="separator"/>
+    <addaction name="aViewVHDL"/>
+    <addaction name="aEdit"/>
+   </widget>
+   <widget class="QMenu" name="mProperties">
+    <property name="title">
+     <string>Properties</string>
+    </property>
+    <addaction name="aPlugins"/>
+    <addaction name="aSettings"/>
+   </widget>
+   <widget class="QMenu" name="mInfo">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="aAbout"/>
+    <addaction name="aMan"/>
+    <addaction name="aQt"/>
+    <addaction name="aLicence"/>
+   </widget>
+   <addaction name="mFile"/>
+   <addaction name="mEdit"/>
+   <addaction name="aScheme"/>
+   <addaction name="mProperties"/>
+   <addaction name="mInfo"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <property name="iconSize">
+    <size>
+     <width>24</width>
+     <height>24</height>
+    </size>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="aNew"/>
+   <addaction name="aOpen"/>
+   <addaction name="aSave"/>
+   <addaction name="separator"/>
+   <addaction name="aUndo"/>
+   <addaction name="aRedo"/>
+   <addaction name="separator"/>
+   <addaction name="aAddNode"/>
+   <addaction name="aEdit"/>
+   <addaction name="aAddLink"/>
+   <addaction name="aAddLabel"/>
+   <addaction name="separator"/>
+   <addaction name="aViewVHDL"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QToolBar" name="pluginBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::AllToolBarAreas</set>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>LeftToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <action name="aNew">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/default/icons/file-new.png</normaloff>:/default/icons/file-new.png</iconset>
+   </property>
+   <property name="text">
+    <string>New</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="aOpen">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/default/icons/file-open.png</normaloff>:/default/icons/file-open.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="aSave">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/default/icons/file-save.png</normaloff>:/default/icons/file-save.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="aSaveAs">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/default/icons/file-save.png</normaloff>:/default/icons/file-save.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save as</string>
+   </property>
+  </action>
+  <action name="aQuit">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/default/icons/file-exit.png</normaloff>:/default/icons/file-exit.png</iconset>
+   </property>
+   <property name="text">
+    <string>Quit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="aUndo">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/default/icons/edit-undo.png</normaloff>:/default/icons/edit-undo.png</iconset>
+   </property>
+   <property name="text">
+    <string>Undo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="aRedo">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/default/icons/edit-redo.png</normaloff>:/default/icons/edit-redo.png</iconset>
+   </property>
+   <property name="text">
+    <string>Redo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="aCopy">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/default/icons/edit-copy.png</normaloff>:/default/icons/edit-copy.png</iconset>
+   </property>
+   <property name="text">
+    <string>Copy</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="aCut">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/default/icons/edit-cut.png</normaloff>:/default/icons/edit-cut.png</iconset>
+   </property>
+   <property name="text">
+    <string>Cut</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="aPaste">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/default/icons/edit-paste.png</normaloff>:/default/icons/edit-paste.png</iconset>
+   </property>
+   <property name="text">
+    <string>Paste</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
+  </action>
+  <action name="aAddNode">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/default/icons/scheme-add-node.png</normaloff>:/default/icons/scheme-add-node.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add Node</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
+   </property>
+  </action>
+  <action name="aViewVHDL">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/default/icons/scheme-vhdl.png</normaloff>:/default/icons/scheme-vhdl.png</iconset>
+   </property>
+   <property name="text">
+    <string>View VHDL</string>
+   </property>
+  </action>
+  <action name="aEdit">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/default/icons/scheme-edit.png</normaloff>:/default/icons/scheme-edit.png</iconset>
+   </property>
+   <property name="text">
+    <string>Edit Node</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
+   </property>
+  </action>
+  <action name="aPlugins">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/default/icons/properties-plugins.png</normaloff>:/default/icons/properties-plugins.png</iconset>
+   </property>
+   <property name="text">
+    <string>Plugins</string>
+   </property>
+  </action>
+  <action name="aSettings">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/default/icons/properties-settings.png</normaloff>:/default/icons/properties-settings.png</iconset>
+   </property>
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
+  <action name="aAddLink">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/default/icons/scheme-add-link.png</normaloff>:/default/icons/scheme-add-link.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add Link</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="aAddLabel">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/default/icons/scheme-add-label.png</normaloff>:/default/icons/scheme-add-label.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add Label</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
+   </property>
+  </action>
+  <action name="aAbout">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/default/icons/help-about.png</normaloff>:/default/icons/help-about.png</iconset>
+   </property>
+   <property name="text">
+    <string>About</string>
+   </property>
+   <property name="toolTip">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="aMan">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../home/torunar/coding/sve/icons/help-man.png</normaloff>../../../../home/torunar/coding/sve/icons/help-man.png</iconset>
+   </property>
+   <property name="text">
+    <string>User Manual</string>
+   </property>
+   <property name="toolTip">
+    <string>User Manual</string>
+   </property>
+  </action>
+  <action name="aQt">
+   <property name="text">
+    <string>About Qt</string>
+   </property>
+   <property name="toolTip">
+    <string>About Qt</string>
+   </property>
+  </action>
+  <action name="aLicence">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../home/torunar/coding/sve/icons/help-license.png</normaloff>../../../../home/torunar/coding/sve/icons/help-license.png</iconset>
+   </property>
+   <property name="text">
+    <string>Licence</string>
+   </property>
+   <property name="toolTip">
+    <string>Licence</string>
+   </property>
+  </action>
+  <action name="aOptions">
+   <property name="text">
+    <string>Options</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
+ <connections/>
+</ui>
