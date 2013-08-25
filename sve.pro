@@ -13,13 +13,15 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     document.cpp \
-    docwindow.cpp
+    docwindow.cpp \
+    editablelabel.cpp
 
 HEADERS  += mainwindow.h \
     document.h \
-    docwindow.h
+    docwindow.h \
+    editablelabel.h
 
 FORMS    += mainwindow.ui
 
 RESOURCES += \
-    icons.qrc
+    ui.qrc

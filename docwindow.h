@@ -7,15 +7,18 @@
 #include <QString>
 #include <QObject>
 
-class DocWindow {
+class DocWindow : public QMdiSubWindow {
+    Q_OBJECT
+
 public:
-    DocWindow(QMdiArea *parent);
-    Document *document;
-    QMdiSubWindow *window;
+    DocWindow(QWidget *parent);
+    ~DocWindow(){}
 
     void setTitle(const QString title);
     Document* getDocument();
-    QMdiSubWindow* getWindow();
+
+private:
+    Document* document;
 };
 
 #endif // DOCWINDOW_H

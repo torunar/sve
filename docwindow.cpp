@@ -1,22 +1,17 @@
 #include "docwindow.h"
 
 
-DocWindow::DocWindow(QMdiArea *parent = 0) {
-    this->window = new QMdiSubWindow(parent);
-    this->window->setWindowTitle(QObject::trUtf8("Untitled"));
-    this->window->showMaximized();
+DocWindow::DocWindow(QWidget *parent) : QMdiSubWindow(parent) {
+    this->setWindowTitle(QObject::tr("Untitled"));
+    this->showMaximized();
 
-    document = new Document(this->window);
+    document = new Document(this);
 }
 
 void DocWindow::setTitle(const QString title) {
-    this->window->setWindowTitle(title);
+    this->setWindowTitle(title);
 }
 
 Document* DocWindow::getDocument() {
     return this->document;
-}
-
-QMdiSubWindow* DocWindow::getWindow() {
-    return this->window;
 }

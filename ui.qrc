@@ -1,25 +1,28 @@
 <RCC>
-    <qresource prefix="/default">
-        <file>icons/edit-copy.png</file>
-        <file>icons/edit-cut.png</file>
-        <file>icons/edit-paste.png</file>
-        <file>icons/edit-redo.png</file>
-        <file>icons/edit-undo.png</file>
-        <file>icons/file-close.png</file>
-        <file>icons/file-exit.png</file>
-        <file>icons/file-new.png</file>
-        <file>icons/file-open.png</file>
-        <file>icons/file-save.png</file>
-        <file>icons/help-about.png</file>
-        <file>icons/help-license.png</file>
-        <file>icons/help-man.png</file>
-        <file>icons/plugin-empty.png</file>
-        <file>icons/properties-plugins.png</file>
-        <file>icons/properties-settings.png</file>
-        <file>icons/scheme-add-label.png</file>
-        <file>icons/scheme-add-link.png</file>
-        <file>icons/scheme-add-node.png</file>
-        <file>icons/scheme-edit.png</file>
-        <file>icons/scheme-vhdl.png</file>
+    <qresource prefix="/icons">
+        <file alias="edit-copy">../img/icons/edit-copy.png</file>
+        <file alias="edit-cut">../img/icons/edit-cut.png</file>
+        <file alias="edit-paste">../img/icons/edit-paste.png</file>
+        <file alias="edit-redo">../img/icons/edit-redo.png</file>
+        <file alias="edit-undo">../img/icons/edit-undo.png</file>
+        <file alias="file-close">../img/icons/file-close.png</file>
+        <file alias="file-exit">../img/icons/file-exit.png</file>
+        <file alias="file-new">../img/icons/file-new.png</file>
+        <file alias="file-open">../img/icons/file-open.png</file>
+        <file alias="file-save">../img/icons/file-save.png</file>
+        <file alias="help-about">../img/icons/help-about.png</file>
+        <file alias="help-license">../img/icons/help-license.png</file>
+        <file alias="help-man">../img/icons/help-man.png</file>
+        <file alias="plugin-empty">../img/icons/plugin-empty.png</file>
+        <file alias="properties-plugins">../img/icons/properties-plugins.png</file>
+        <file alias="properties-settings">../img/icons/properties-settings.png</file>
+        <file alias="scheme-add-label">../img/icons/scheme-add-label.png</file>
+        <file alias="scheme-add-link">../img/icons/scheme-add-link.png</file>
+        <file alias="scheme-add-node">../img/icons/scheme-add-node.png</file>
+        <file alias="scheme-edit">../img/icons/scheme-edit.png</file>
+        <file alias="scheme-vhdl">../img/icons/scheme-vhdl.png</file>
+    </qresource>
+    <qresource prefix="/ui">
+        <file alias="grid">../img/ui/grid.png</file>
     </qresource>
 </RCC>

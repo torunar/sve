@@ -16,11 +16,17 @@ class MainWindow : public QMainWindow
     
 public:
     explicit MainWindow(QWidget *parent = 0);
+    Document *activeDocument;
     ~MainWindow();
+    QSettings *settings;
     
 private:
     Ui::MainWindow *ui;
     QMdiArea *mdiArea;
+
+public slots:
+    void createDocument();
+    void quit();
 };
 
 #endif // MAINWINDOW_H

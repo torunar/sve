@@ -1,7 +1,9 @@
 #include "document.h"
 
-/* @parent : MDI subwindow */
-Document::Document(QMdiSubWindow *parent = 0) {
+/*
+ * @ QMdiSubWindow parent : parent to embed document into
+ */
+Document::Document(QMdiSubWindow *parent) {
     this->parent = parent;
 
     /* scroll area inside of subwindow */
@@ -9,10 +11,7 @@ Document::Document(QMdiSubWindow *parent = 0) {
 
     /* finally, workarea */
     this->workarea = new QFrame(this->container);
-    QPalette pal = this->workarea->palette();
-    pal.setColor(QPalette::Window, QColor(255,255,255));
-    this->workarea->setPalette(pal);
-    this->workarea->setAutoFillBackground(true);
+    this->workarea->setFrameStyle(QFrame::StyledPanel);
 
     this->container->setWidget(workarea);
 
@@ -21,20 +20,51 @@ Document::Document(QMdiSubWindow *parent = 0) {
     this->changed = false;
 }
 
+/*
+ * @ int w: width
+ * @ int h: height
+ */
 void Document::resize(const int w, const int h) {
     this->workarea->resize(w, h);
 }
 
+/*
+ * @ QSize size: new size to resize to
+ */
 void Document::resize(const QSize size) {
     this->workarea->resize(size);
 }
 
+/*
+ * @ QMdiSubWindow parent: parent to attach document to
+ */
 void Document::attachToWindow(QMdiSubWindow *parent) {
     this->parent = parent;
     this->container->setParent(this->parent);
     this->parent->setWidget(this->container);
 }
 
+/*
+ * @return: check if document tree was changed
+ */
 bool Document::isChanged() {
     return this->changed;
+}
+
+void Document::addNode(QString nodeName, const NodeType nodeType) {
+    bool ok;
+    if (nodeType == Label) {
+        QString text = QInputDialog::getText(this->workarea,
+            tr("New label"),
+            tr("Insert text for this label"),
+            QLineEdit::Normal,
+            "",
+            &ok
+        );
+        if (ok && !text.isEmpty()) {
+            EditableLabel *label = new EditableLabel(text, this->workarea);
+            label->show();
+        }
+    }
+    this->changed = true;
 }

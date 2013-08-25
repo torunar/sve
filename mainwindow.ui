@@ -125,8 +125,8 @@
   </widget>
   <action name="aNew">
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/default/icons/file-new.png</normaloff>:/default/icons/file-new.png</iconset>
+    <iconset resource="ui.qrc">
+     <normaloff>:/icons/file-new</normaloff>:/icons/file-new</iconset>
    </property>
    <property name="text">
     <string>New</string>
@@ -137,8 +137,8 @@
   </action>
   <action name="aOpen">
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/default/icons/file-open.png</normaloff>:/default/icons/file-open.png</iconset>
+    <iconset>
+     <normaloff>:/icons/file-open</normaloff>:/icons/file-open</iconset>
    </property>
    <property name="text">
     <string>Open</string>
@@ -149,8 +149,8 @@
   </action>
   <action name="aSave">
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/default/icons/file-save.png</normaloff>:/default/icons/file-save.png</iconset>
+    <iconset>
+     <normaloff>:/icons/file-save</normaloff>:/icons/file-save</iconset>
    </property>
    <property name="text">
     <string>Save</string>
@@ -161,8 +161,8 @@
   </action>
   <action name="aSaveAs">
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/default/icons/file-save.png</normaloff>:/default/icons/file-save.png</iconset>
+    <iconset>
+     <normaloff>:/icons/file-save</normaloff>:/icons/file-save</iconset>
    </property>
    <property name="text">
     <string>Save as</string>
@@ -170,8 +170,8 @@
   </action>
   <action name="aQuit">
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/default/icons/file-exit.png</normaloff>:/default/icons/file-exit.png</iconset>
+    <iconset>
+     <normaloff>:/icons/file-exit</normaloff>:/icons/file-exit</iconset>
    </property>
    <property name="text">
     <string>Quit</string>
@@ -182,8 +182,8 @@
   </action>
   <action name="aUndo">
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/default/icons/edit-undo.png</normaloff>:/default/icons/edit-undo.png</iconset>
+    <iconset>
+     <normaloff>:/icons/edit-undo</normaloff>:/icons/edit-undo</iconset>
    </property>
    <property name="text">
     <string>Undo</string>
@@ -194,8 +194,8 @@
   </action>
   <action name="aRedo">
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/default/icons/edit-redo.png</normaloff>:/default/icons/edit-redo.png</iconset>
+    <iconset>
+     <normaloff>:/icons/edit-redo</normaloff>:/icons/edit-redo</iconset>
    </property>
    <property name="text">
     <string>Redo</string>
@@ -206,8 +206,8 @@
   </action>
   <action name="aCopy">
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/default/icons/edit-copy.png</normaloff>:/default/icons/edit-copy.png</iconset>
+    <iconset>
+     <normaloff>:/icons/edit-copy</normaloff>:/icons/edit-copy</iconset>
    </property>
    <property name="text">
     <string>Copy</string>
@@ -218,8 +218,8 @@
   </action>
   <action name="aCut">
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/default/icons/edit-cut.png</normaloff>:/default/icons/edit-cut.png</iconset>
+    <iconset>
+     <normaloff>:/icons/edit-cut</normaloff>:/icons/edit-cut</iconset>
    </property>
    <property name="text">
     <string>Cut</string>
@@ -230,8 +230,8 @@
   </action>
   <action name="aPaste">
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/default/icons/edit-paste.png</normaloff>:/default/icons/edit-paste.png</iconset>
+    <iconset>
+     <normaloff>:/icons/edit-paste</normaloff>:/icons/edit-paste</iconset>
    </property>
    <property name="text">
     <string>Paste</string>
@@ -242,8 +242,8 @@
   </action>
   <action name="aAddNode">
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/default/icons/scheme-add-node.png</normaloff>:/default/icons/scheme-add-node.png</iconset>
+    <iconset>
+     <normaloff>:/icons/scheme-add-node</normaloff>:/icons/scheme-add-node</iconset>
    </property>
    <property name="text">
     <string>Add Node</string>
@@ -254,8 +254,8 @@
   </action>
   <action name="aViewVHDL">
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/default/icons/scheme-vhdl.png</normaloff>:/default/icons/scheme-vhdl.png</iconset>
+    <iconset>
+     <normaloff>:/icons/scheme-vhdl</normaloff>:/icons/scheme-vhdl</iconset>
    </property>
    <property name="text">
     <string>View VHDL</string>
@@ -263,8 +263,8 @@
   </action>
   <action name="aEdit">
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/default/icons/scheme-edit.png</normaloff>:/default/icons/scheme-edit.png</iconset>
+    <iconset>
+     <normaloff>:/icons/scheme-edit</normaloff>:/icons/scheme-edit</iconset>
    </property>
    <property name="text">
     <string>Edit Node</string>
@@ -275,8 +275,8 @@
   </action>
   <action name="aPlugins">
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/default/icons/properties-plugins.png</normaloff>:/default/icons/properties-plugins.png</iconset>
+    <iconset>
+     <normaloff>:/icons/properties-plugins</normaloff>:/icons/properties-plugins</iconset>
    </property>
    <property name="text">
     <string>Plugins</string>
@@ -284,8 +284,8 @@
   </action>
   <action name="aSettings">
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/default/icons/properties-settings.png</normaloff>:/default/icons/properties-settings.png</iconset>
+    <iconset>
+     <normaloff>:/icons/properties-settings</normaloff>:/icons/properties-settings</iconset>
    </property>
    <property name="text">
     <string>Settings</string>
@@ -293,8 +293,8 @@
   </action>
   <action name="aAddLink">
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/default/icons/scheme-add-link.png</normaloff>:/default/icons/scheme-add-link.png</iconset>
+    <iconset>
+     <normaloff>:/icons/scheme-add-link</normaloff>:/icons/scheme-add-link</iconset>
    </property>
    <property name="text">
     <string>Add Link</string>
@@ -305,8 +305,8 @@
   </action>
   <action name="aAddLabel">
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/default/icons/scheme-add-label.png</normaloff>:/default/icons/scheme-add-label.png</iconset>
+    <iconset>
+     <normaloff>:/icons/scheme-add-label</normaloff>:/icons/scheme-add-label</iconset>
    </property>
    <property name="text">
     <string>Add Label</string>
@@ -317,8 +317,8 @@
   </action>
   <action name="aAbout">
    <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/default/icons/help-about.png</normaloff>:/default/icons/help-about.png</iconset>
+    <iconset>
+     <normaloff>:/icons/help-about</normaloff>:/icons/help-about</iconset>
    </property>
    <property name="text">
     <string>About</string>
@@ -330,7 +330,7 @@
   <action name="aMan">
    <property name="icon">
     <iconset>
-     <normaloff>../../../../home/torunar/coding/sve/icons/help-man.png</normaloff>../../../../home/torunar/coding/sve/icons/help-man.png</iconset>
+     <normaloff>:/icons/help-man</normaloff>:/icons/help-man</iconset>
    </property>
    <property name="text">
     <string>User Manual</string>
@@ -350,7 +350,7 @@
   <action name="aLicence">
    <property name="icon">
     <iconset>
-     <normaloff>../../../../home/torunar/coding/sve/icons/help-license.png</normaloff>../../../../home/torunar/coding/sve/icons/help-license.png</iconset>
+     <normaloff>:/icons/help-license</normaloff>:/icons/help-license</iconset>
    </property>
    <property name="text">
     <string>Licence</string>
@@ -367,7 +367,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="icons.qrc"/>
+  <include location="ui.qrc"/>
  </resources>
  <connections/>
 </ui>
