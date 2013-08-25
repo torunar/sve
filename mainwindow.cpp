@@ -54,5 +54,5 @@ void MainWindow::quit() {
 void MainWindow::createDocument() {
     DocWindow* docwindow = new DocWindow(mdiArea);
     this->activeDocument = docwindow->getDocument();
-    this->activeDocument->resize(settings->value("Size ").toSize());
+    this->activeDocument->resize(settings->value("Size").toSize());
 }

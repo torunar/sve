@@ -11,6 +11,7 @@ Document::Document(QMdiSubWindow *parent) {
 
     /* finally, workarea */
     this->workarea = new QFrame(this->container);
+    this->workarea->setObjectName("DocumentArea");
     this->workarea->setFrameStyle(QFrame::StyledPanel);
 
     this->container->setWidget(workarea);
