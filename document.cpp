@@ -18,7 +18,10 @@ Document::Document(QMdiSubWindow *parent) {
 
     if (parent) this->parent->setWidget(this->container);
 
+    if (parent) this->title = parent->windowTitle();
+
     this->changed = false;
+
 }
 
 /*

@@ -30,16 +30,15 @@ MainWindow::MainWindow(QWidget *parent) :
     this->mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     this->mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     this->mdiArea->setViewMode(QMdiArea::TabbedView);
+    this->setCentralWidget(mdiArea);
+
+    this->activeDocument = NULL;
 
     this->createDocument();
 
-    this->setCentralWidget(mdiArea);
-
     connect(ui->aNew, SIGNAL(triggered()), this, SLOT(createDocument()));
-    connect(ui->aAddNode, SIGNAL(triggered()), activeDocument, SLOT(addNode()));
     connect(ui->aQuit, SIGNAL(triggered()), this, SLOT(quit()));
-
-    settings->endGroup();
+    connect(this->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(setActiveDocument(QMdiSubWindow*)));
 }
 
 MainWindow::~MainWindow()
@@ -52,7 +51,16 @@ void MainWindow::quit() {
 }
 
 void MainWindow::createDocument() {
-    DocWindow* docwindow = new DocWindow(mdiArea);
+    if (this->activeDocument) {
+        disconnect(ui->aAddNode, SIGNAL(triggered()), this->activeDocument, SLOT(addNode()));
+    }
+    DocWindow *docwindow = new DocWindow(mdiArea);
     this->activeDocument = docwindow->getDocument();
+    connect(ui->aAddNode, SIGNAL(triggered()), this->activeDocument, SLOT(addNode()));
     this->activeDocument->resize(settings->value("Size").toSize());
 }
+
+void MainWindow::setActiveDocument(QMdiSubWindow *docwindow) {
+    // something?
+}
+

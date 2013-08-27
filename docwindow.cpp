@@ -2,7 +2,8 @@
 
 
 DocWindow::DocWindow(QWidget *parent) : QMdiSubWindow(parent) {
-    this->setWindowTitle(QObject::tr("Untitled"));
+    int n = ((QMdiArea*) parent)->subWindowList().count() + 1;
+    this->setWindowTitle(QObject::tr("Untitled") + " " + QString::number(n));
     this->showMaximized();
 
     document = new Document(this);
