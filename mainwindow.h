@@ -27,7 +27,7 @@ private:
 
 public slots:
     void createDocument();
-    void setActiveDocument(QMdiSubWindow *docwindow);
+    void setActiveDocument();
     void quit();
 };
 

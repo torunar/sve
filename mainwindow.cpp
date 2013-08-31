@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->aNew, SIGNAL(triggered()), this, SLOT(createDocument()));
     connect(ui->aQuit, SIGNAL(triggered()), this, SLOT(quit()));
-    connect(this->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(setActiveDocument(QMdiSubWindow*)));
+
 }
 
 MainWindow::~MainWindow()
@@ -51,16 +51,28 @@ void MainWindow::quit() {
 }
 
 void MainWindow::createDocument() {
+    // disconnect old slots
     if (this->activeDocument) {
         disconnect(ui->aAddNode, SIGNAL(triggered()), this->activeDocument, SLOT(addNode()));
     }
+    // create new window
     DocWindow *docwindow = new DocWindow(mdiArea);
+    connect(docwindow, SIGNAL(aboutToActivate()), this, SLOT(setActiveDocument()));
+    // set context
     this->activeDocument = docwindow->getDocument();
     connect(ui->aAddNode, SIGNAL(triggered()), this->activeDocument, SLOT(addNode()));
+    // resize
     this->activeDocument->resize(settings->value("Size").toSize());
 }
 
-void MainWindow::setActiveDocument(QMdiSubWindow *docwindow) {
-    // something?
+void MainWindow::setActiveDocument() {
+    // disconnect old slots
+    if (this->activeDocument) {
+        disconnect(ui->aAddNode, SIGNAL(triggered()), this->activeDocument, SLOT(addNode()));
+    }
+    // switch context
+    this->activeDocument = ((DocWindow*) this->sender())->getDocument();
+    // connect new slots
+    connect(ui->aAddNode, SIGNAL(triggered()), this->activeDocument, SLOT(addNode()));
 }
 
