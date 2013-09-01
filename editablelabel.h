@@ -6,14 +6,17 @@
 #include <QMenu>
 #include <QInputDialog>
 #include <QMouseEvent>
+#include <QtXml/QDomElement>
+#include <QDebug>
 
 class EditableLabel : public QLabel
 {
     Q_OBJECT
 public:
     EditableLabel(QWidget *parent = 0);
-    EditableLabel(const QString text, QWidget *parent = 0);
+    EditableLabel(const QString text, QDomDocument *xml, QWidget *parent = 0);
     ~EditableLabel(){}
+    QDomElement node;
 
 protected:
     void mousePressEvent(QMouseEvent *ev);

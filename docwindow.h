@@ -19,6 +19,9 @@ public:
 
 private:
     Document* document;
+
+protected:
+    void closeEvent(QCloseEvent *closeEvent);
 };
 
 #endif // DOCWINDOW_H

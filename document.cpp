@@ -6,10 +6,10 @@
 Document::Document(QMdiSubWindow *parent) {
     this->parent = parent;
 
-    /* scroll area inside of subwindow */
+    // scroll area inside of subwindow
     this->container = new QScrollArea(this->parent);
 
-    /* finally, workarea */
+    // finally, workarea
     this->workarea = new QFrame(this->container);
     this->workarea->setObjectName("DocumentArea");
     this->workarea->setFrameStyle(QFrame::StyledPanel);
@@ -18,10 +18,11 @@ Document::Document(QMdiSubWindow *parent) {
 
     if (parent) this->parent->setWidget(this->container);
 
-    if (parent) this->title = parent->windowTitle();
+    this->title = "";
 
     this->changed = false;
 
+    this->xml = new QDomDocument();
 }
 
 /*
@@ -66,9 +67,23 @@ void Document::addNode(QString nodeName, const NodeType nodeType) {
             &ok
         );
         if (ok && !text.isEmpty()) {
-            EditableLabel *label = new EditableLabel(text, this->workarea);
+            EditableLabel *label = new EditableLabel(text, this->xml, this->workarea);
             label->show();
         }
     }
     this->changed = true;
+}
+
+bool Document::save() {
+    QString filename;
+    if (this->title == "") {
+        QFileDialog *fd = new QFileDialog();
+        filename = fd->getSaveFileName(0, tr("Save as..."), "", "*.sve");
+        this->title = QFileInfo(filename).baseName() + ".sve";
+    }
+    QFile fileOut(filename);
+    fileOut.open(QFile::WriteOnly);
+    fileOut.write(this->xml->toString().toAscii());
+    fileOut.close();
+    return true;
 }

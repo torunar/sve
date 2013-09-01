@@ -28,6 +28,7 @@ private:
 public slots:
     void createDocument();
     void setActiveDocument();
+    void lolz();
     void quit();
 };
 

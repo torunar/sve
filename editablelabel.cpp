@@ -6,10 +6,15 @@ EditableLabel::EditableLabel(QWidget *parent) : QLabel(parent) {
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
 }
 
-EditableLabel::EditableLabel(const QString text, QWidget *parent) : QLabel(text, parent) {
+EditableLabel::EditableLabel(const QString text, QDomDocument *xml, QWidget *parent) : QLabel(text, parent) {
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     this->setObjectName("EditableLabel");
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
+
+    this->node = xml->createElement("label");
+    this->node.setAttribute("x", 0);
+    this->node.setAttribute("y", 0);
+    this->node.setAttribute("text", text);
 }
 
 void EditableLabel::showContextMenu(const QPoint& pos) {
@@ -35,6 +40,7 @@ void EditableLabel::editText() {
     );
     if (ok && !text.isEmpty()) {
         this->setText(text);
+        this->node.setAttribute("text", text);
     }
 }
 
@@ -57,7 +63,8 @@ void EditableLabel::mouseMoveEvent(QMouseEvent *ev) {
 }
 
 void EditableLabel::mouseReleaseEvent(QMouseEvent *ev) {
-    //performDrag(ev->pos());
+    this->node.setAttribute("x", this->x());
+    this->node.setAttribute("y", this->y());
 }
 
 void EditableLabel::performDrag(const QPoint endPos) {

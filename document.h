@@ -10,7 +10,11 @@
 #include <QObject>
 #include <QMessageBox>
 #include <QInputDialog>
+#include <QFileDialog>
+#include <QFile>
+#include <QFileInfo>
 #include <editablelabel.h>
+
 
 typedef enum {
     Stub = 0,
@@ -30,6 +34,7 @@ public:
     void resize(const QSize size);
     void resize(const int w, const int h);
     bool isChanged();
+    bool save();
 
     QString title;
 
@@ -41,7 +46,7 @@ private:
     QMdiSubWindow *parent;
     QScrollArea *container;
     QFrame *workarea;
-    QDomDocument *content;
+    QDomDocument *xml;
     bool changed;
 
 };

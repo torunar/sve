@@ -76,3 +76,7 @@ void MainWindow::setActiveDocument() {
     connect(ui->aAddNode, SIGNAL(triggered()), this->activeDocument, SLOT(addNode()));
 }
 
+void MainWindow::lolz() {
+    qDebug() << "lolz";
+}
+
