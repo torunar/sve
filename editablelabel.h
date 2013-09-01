@@ -6,6 +6,7 @@
 #include <QMenu>
 #include <QInputDialog>
 #include <QMouseEvent>
+#include <QDateTime>
 #include <QtXml/QDomElement>
 #include <QDebug>
 

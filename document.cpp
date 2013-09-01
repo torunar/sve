@@ -22,7 +22,7 @@ Document::Document(QMdiSubWindow *parent) {
 
     this->changed = false;
 
-    this->xml = new QDomDocument();
+    this->xml = new QDomDocument("SVE");
 }
 
 /*
@@ -80,6 +80,7 @@ bool Document::save() {
         QFileDialog *fd = new QFileDialog();
         filename = fd->getSaveFileName(0, tr("Save as..."), "", "*.sve");
         this->title = QFileInfo(filename).baseName() + ".sve";
+        if (!filename.contains(".sve")) filename += ".sve";
     }
     QFile fileOut(filename);
     fileOut.open(QFile::WriteOnly);

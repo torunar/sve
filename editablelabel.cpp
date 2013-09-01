@@ -12,9 +12,25 @@ EditableLabel::EditableLabel(const QString text, QDomDocument *xml, QWidget *par
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
 
     this->node = xml->createElement("label");
+    /*
+    QDomElement name = xml->createElement("name");
+    QDomText txt = xml->createTextNode(QString::number(QDateTime::currentMSecsSinceEpoch()));
+    name.appendChild(txt);
+    this->node.appendChild(name);
+    QDomElement x = xml->createElement("x");
+    txt = xml->createTextNode("0");
+    x.appendChild(txt);
+    this->node.appendChild(x);
+    QDomElement y = xml->createElement("y");
+    txt = xml->createTextNode("0");
+    y.appendChild(txt);
+    this->node.appendChild(y);
+    */
+    this->node.setAttribute("name", QString::number(QDateTime::currentMSecsSinceEpoch()));
     this->node.setAttribute("x", 0);
     this->node.setAttribute("y", 0);
     this->node.setAttribute("text", text);
+    xml->appendChild(this->node);
 }
 
 void EditableLabel::showContextMenu(const QPoint& pos) {
