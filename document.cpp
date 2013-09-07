@@ -74,17 +74,11 @@ void Document::addNode(QString nodeName, const NodeType nodeType) {
     this->changed = true;
 }
 
-bool Document::save() {
-    QString filename;
-    if (this->title == "") {
-        QFileDialog *fd = new QFileDialog();
-        filename = fd->getSaveFileName(0, tr("Save as..."), "", "*.sve");
-        this->title = QFileInfo(filename).baseName() + ".sve";
-        if (!filename.contains(".sve")) filename += ".sve";
-    }
-    QFile fileOut(filename);
+void Document::save(QString filename) {
+    this->filename = filename;
+    this->title = QFileInfo(filename).baseName() + ".sve";
+    QFile fileOut(this->filename);
     fileOut.open(QFile::WriteOnly);
     fileOut.write(this->xml->toString().toAscii());
     fileOut.close();
-    return true;
 }

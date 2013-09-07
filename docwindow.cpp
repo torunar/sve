@@ -22,19 +22,22 @@ void DocWindow::closeEvent(QCloseEvent *closeEvent) {
     if (this->document->isChanged()) {
         QMessageBox* mb = new QMessageBox();
         mb->setWindowTitle(tr("Document was changed"));
-        mb->setText(tr("Document has some unsaved changes"));
+        mb->setText(tr("Document \"%1\" has some unsaved changes").arg(this->windowTitle()));
         mb->addButton(tr("Close without saving"), QMessageBox::DestructiveRole);
         mb->addButton(tr("Save"), QMessageBox::AcceptRole);
         mb->addButton(tr("Cancel"), QMessageBox::RejectRole);
+        // "delete this" is a trick to really DeleteOnClose as defined above
         switch (mb->exec()) {
         // close without saving
         case 0:
             closeEvent->accept();
+            delete this;
             break;
         // save
         case 1:
-            this->document->save();
+            this->save();
             closeEvent->accept();
+            delete this;
             break;
         // cancel
         case 2:
@@ -44,5 +47,19 @@ void DocWindow::closeEvent(QCloseEvent *closeEvent) {
     }
     else {
         closeEvent->accept();
+        delete this;
     }
+}
+
+void DocWindow::save() {
+    QString filename;
+    if (this->document->filename == "") {
+        QFileDialog *fd = new QFileDialog();
+        filename = fd->getSaveFileName(0, tr("Save as..."), "", "*.sve");
+        if (!filename.contains(".sve")) filename += ".sve";
+    }
+    else {
+        filename = this->document->filename;
+    }
+    this->document->save(filename);
 }

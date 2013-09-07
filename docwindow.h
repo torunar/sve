@@ -22,6 +22,9 @@ private:
 
 protected:
     void closeEvent(QCloseEvent *closeEvent);
+
+public slots:
+    void save();
 };
 
 #endif // DOCWINDOW_H

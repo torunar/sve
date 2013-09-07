@@ -17,6 +17,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     Document *activeDocument;
+    DocWindow *activeWindow;
 
     ~MainWindow();
     QSettings *settings;
@@ -28,8 +29,10 @@ private:
 public slots:
     void createDocument();
     void setActiveDocument();
-    void lolz();
     void quit();
+
+protected:
+    void closeEvent(QCloseEvent *);
 };
 
 #endif // MAINWINDOW_H

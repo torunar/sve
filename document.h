@@ -34,13 +34,14 @@ public:
     void resize(const QSize size);
     void resize(const int w, const int h);
     bool isChanged();
-    bool save();
 
     QString title;
+    QString filename;
 
 public slots:
     void addNode(QString nodeName = "", const NodeType nodeType = Label);
 //    void addLink(const QString linkName){}
+    void save(QString filename);
 
 private:
     QMdiSubWindow *parent;
@@ -48,7 +49,6 @@ private:
     QFrame *workarea;
     QDomDocument *xml;
     bool changed;
-
 };
 
 #endif // DOCUMENT_H

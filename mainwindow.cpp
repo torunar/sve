@@ -30,15 +30,16 @@ MainWindow::MainWindow(QWidget *parent) :
     this->mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     this->mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     this->mdiArea->setViewMode(QMdiArea::TabbedView);
+    this->mdiArea->setActivationOrder(QMdiArea::ActivationHistoryOrder);
     this->setCentralWidget(mdiArea);
 
     this->activeDocument = NULL;
+    this->activeWindow = NULL;
 
     this->createDocument();
 
     connect(ui->aNew, SIGNAL(triggered()), this, SLOT(createDocument()));
     connect(ui->aQuit, SIGNAL(triggered()), this, SLOT(quit()));
-
 }
 
 MainWindow::~MainWindow()
@@ -47,20 +48,31 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::quit() {
-    exit(0);
+    for (int i = this->mdiArea->subWindowList(QMdiArea::ActivationHistoryOrder).length() - 1; i >= 0; i--) {
+        int before = this->mdiArea->subWindowList().length();
+        ((DocWindow*)this->mdiArea->subWindowList(QMdiArea::ActivationHistoryOrder).at(i))->close();
+        int after = this->mdiArea->subWindowList().length();
+        // closing unsaved document aborted with "cancel"
+        if (after == before) return;
+    }
+    if (this->mdiArea->subWindowList().length() == 0) {
+        exit(0);
+    }
 }
 
 void MainWindow::createDocument() {
     // disconnect old slots
     if (this->activeDocument) {
         disconnect(ui->aAddNode, SIGNAL(triggered()), this->activeDocument, SLOT(addNode()));
+        disconnect(ui->aSave, SIGNAL(triggered()), this->activeWindow, SLOT(save()));
     }
     // create new window
-    DocWindow *docwindow = new DocWindow(mdiArea);
-    connect(docwindow, SIGNAL(aboutToActivate()), this, SLOT(setActiveDocument()));
+    this->activeWindow = new DocWindow(mdiArea);
+    connect(this->activeWindow, SIGNAL(aboutToActivate()), this, SLOT(setActiveDocument()));
     // set context
-    this->activeDocument = docwindow->getDocument();
+    this->activeDocument = this->activeWindow->getDocument();
     connect(ui->aAddNode, SIGNAL(triggered()), this->activeDocument, SLOT(addNode()));
+    connect(ui->aSave, SIGNAL(triggered()), this->activeWindow, SLOT(save()));
     // resize
     this->activeDocument->resize(settings->value("Size").toSize());
 }
@@ -69,14 +81,18 @@ void MainWindow::setActiveDocument() {
     // disconnect old slots
     if (this->activeDocument) {
         disconnect(ui->aAddNode, SIGNAL(triggered()), this->activeDocument, SLOT(addNode()));
+        disconnect(ui->aSave, SIGNAL(triggered()), this->activeWindow, SLOT(save()));
     }
     // switch context
-    this->activeDocument = ((DocWindow*) this->sender())->getDocument();
+    this->activeWindow = ((DocWindow*) this->sender());
+    this->activeDocument = this->activeWindow->getDocument();
     // connect new slots
     connect(ui->aAddNode, SIGNAL(triggered()), this->activeDocument, SLOT(addNode()));
+    connect(ui->aSave, SIGNAL(triggered()), this->activeWindow, SLOT(save()));
 }
 
-void MainWindow::lolz() {
-    qDebug() << "lolz";
+void MainWindow::closeEvent(QCloseEvent *ev){
+    ev->ignore();
+    this->quit();
 }
 
