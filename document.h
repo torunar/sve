@@ -34,13 +34,17 @@ public:
     void resize(const QSize size);
     void resize(const int w, const int h);
     bool isChanged();
+    void setChanged(bool changed);
 
+    void addLabel(const QString text);
+    void addNode(const QString nodeName, const NodeType nodeType);
     QString title;
     QString filename;
 
 public slots:
-    void addNode(QString nodeName = "", const NodeType nodeType = Label);
-//    void addLink(const QString linkName){}
+    //void addLabel();
+    //void addNode();
+
     void save(QString filename);
 
 private:

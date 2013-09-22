@@ -5,6 +5,7 @@
  */
 Document::Document(QMdiSubWindow *parent) {
     this->parent = parent;
+    this->setObjectName("Doc");
 
     // scroll area inside of subwindow
     this->container = new QScrollArea(this->parent);
@@ -56,22 +57,14 @@ bool Document::isChanged() {
     return this->changed;
 }
 
-void Document::addNode(QString nodeName, const NodeType nodeType) {
-    bool ok;
-    if (nodeType == Label) {
-        QString text = QInputDialog::getText(this->workarea,
-            tr("New label"),
-            tr("Insert text for this label"),
-            QLineEdit::Normal,
-            "",
-            &ok
-        );
-        if (ok && !text.isEmpty()) {
-            EditableLabel *label = new EditableLabel(text, this->xml, this->workarea);
-            label->show();
-        }
-    }
+void Document::addLabel(const QString text) {
+    EditableLabel *label = new EditableLabel(text, this->xml, this->workarea);
+    label->show();
     this->changed = true;
+}
+
+void Document::addNode(const QString nodeName = NULL, const NodeType nodeType = Stub) {
+    qDebug() << nodeName << nodeType;
 }
 
 void Document::save(QString filename) {
@@ -81,4 +74,9 @@ void Document::save(QString filename) {
     fileOut.open(QFile::WriteOnly);
     fileOut.write(this->xml->toString().toAscii());
     fileOut.close();
+    this->changed = false;
+}
+
+void Document::setChanged(bool changed) {
+    this->changed = changed;
 }

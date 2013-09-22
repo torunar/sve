@@ -63,7 +63,7 @@ void MainWindow::quit() {
 void MainWindow::createDocument() {
     // disconnect old slots
     if (this->activeDocument) {
-        disconnect(ui->aAddNode, SIGNAL(triggered()), this->activeDocument, SLOT(addNode()));
+        disconnect(ui->aAddLabel, SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
         disconnect(ui->aSave, SIGNAL(triggered()), this->activeWindow, SLOT(save()));
     }
     // create new window
@@ -71,7 +71,7 @@ void MainWindow::createDocument() {
     connect(this->activeWindow, SIGNAL(aboutToActivate()), this, SLOT(setActiveDocument()));
     // set context
     this->activeDocument = this->activeWindow->getDocument();
-    connect(ui->aAddNode, SIGNAL(triggered()), this->activeDocument, SLOT(addNode()));
+    connect(ui->aAddLabel, SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
     connect(ui->aSave, SIGNAL(triggered()), this->activeWindow, SLOT(save()));
     // resize
     this->activeDocument->resize(settings->value("Size").toSize());
@@ -80,14 +80,14 @@ void MainWindow::createDocument() {
 void MainWindow::setActiveDocument() {
     // disconnect old slots
     if (this->activeDocument) {
-        disconnect(ui->aAddNode, SIGNAL(triggered()), this->activeDocument, SLOT(addNode()));
+        disconnect(ui->aAddLabel, SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
         disconnect(ui->aSave, SIGNAL(triggered()), this->activeWindow, SLOT(save()));
     }
     // switch context
     this->activeWindow = ((DocWindow*) this->sender());
     this->activeDocument = this->activeWindow->getDocument();
     // connect new slots
-    connect(ui->aAddNode, SIGNAL(triggered()), this->activeDocument, SLOT(addNode()));
+    connect(ui->aAddLabel, SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
     connect(ui->aSave, SIGNAL(triggered()), this->activeWindow, SLOT(save()));
 }
 

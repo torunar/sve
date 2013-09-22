@@ -6,6 +6,7 @@ DocWindow::DocWindow(QWidget *parent) : QMdiSubWindow(parent) {
     this->setWindowTitle(QObject::tr("Untitled") + " " + QString::number(n));
     this->showMaximized();
     this->setAttribute(Qt::WA_DeleteOnClose);
+    this->setObjectName("DocWindow");
 
     document = new Document(this);
 }
@@ -55,11 +56,56 @@ void DocWindow::save() {
     QString filename;
     if (this->document->filename == "") {
         QFileDialog *fd = new QFileDialog();
+        fd->setDefaultSuffix(".sve");
         filename = fd->getSaveFileName(0, tr("Save as..."), "", "*.sve");
-        if (!filename.contains(".sve")) filename += ".sve";
+        // saving cancelled
+        if (filename == "") return;
+        // setDefaultSuffix isn't working properly under Linux
+        if (!filename.endsWith(".sve")) filename += ".sve";
     }
     else {
         filename = this->document->filename;
     }
     this->document->save(filename);
+    this->setTitle(this->document->title);
 }
+
+void DocWindow::addLabel() {
+    bool ok;
+    QString text = QInputDialog::getText(0,
+        tr("New label"),
+        tr("Insert text for this label"),
+        QLineEdit::Normal,
+        "",
+        &ok
+    );
+    if (ok && !text.isEmpty()) {
+        this->document->addLabel(text);
+        this->setChanged(true);
+    }
+}
+
+bool DocWindow::eventFilter(QObject *object, QEvent *event){
+//    qDebug() << event;
+    return false;
+}
+
+void DocWindow::changeEvent(QEvent *changeEvent) {
+
+    if (changeEvent->type() == QEvent::WindowTitleChange) {
+        this->setChanged();
+    }
+}
+
+void DocWindow::setChanged(bool changed) {
+    this->document->setChanged(changed);
+    if (changed && !this->windowTitle().endsWith("*")) {
+        this->setWindowTitle(this->windowTitle() + "*");
+    }
+}
+
+void DocWindow::setChanged() {
+    if (this->windowTitle().endsWith("*")) this->document->setChanged(true);
+}
+
+

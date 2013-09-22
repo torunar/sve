@@ -9,15 +9,17 @@
 #include <QDateTime>
 #include <QtXml/QDomElement>
 #include <QDebug>
+#include <QEvent>
+#include <QMdiSubWindow>
 
 class EditableLabel : public QLabel
 {
     Q_OBJECT
 public:
-    EditableLabel(QWidget *parent = 0);
     EditableLabel(const QString text, QDomDocument *xml, QWidget *parent = 0);
     ~EditableLabel(){}
     QDomElement node;
+    QDomDocument* xml;
 
 protected:
     void mousePressEvent(QMouseEvent *ev);

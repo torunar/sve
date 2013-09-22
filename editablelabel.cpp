@@ -1,31 +1,12 @@
 #include "editablelabel.h"
 
-EditableLabel::EditableLabel(QWidget *parent) : QLabel(parent) {
-    this->setContextMenuPolicy(Qt::CustomContextMenu);
-    this->setObjectName("EditableLabel");
-    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
-}
-
 EditableLabel::EditableLabel(const QString text, QDomDocument *xml, QWidget *parent) : QLabel(text, parent) {
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     this->setObjectName("EditableLabel");
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
+    this->xml = xml;
 
     this->node = xml->createElement("label");
-    /*
-    QDomElement name = xml->createElement("name");
-    QDomText txt = xml->createTextNode(QString::number(QDateTime::currentMSecsSinceEpoch()));
-    name.appendChild(txt);
-    this->node.appendChild(name);
-    QDomElement x = xml->createElement("x");
-    txt = xml->createTextNode("0");
-    x.appendChild(txt);
-    this->node.appendChild(x);
-    QDomElement y = xml->createElement("y");
-    txt = xml->createTextNode("0");
-    y.appendChild(txt);
-    this->node.appendChild(y);
-    */
     this->node.setAttribute("name", QString::number(QDateTime::currentMSecsSinceEpoch()));
     this->node.setAttribute("x", 0);
     this->node.setAttribute("y", 0);
@@ -37,11 +18,11 @@ void EditableLabel::showContextMenu(const QPoint& pos) {
     QPoint globalPos = this->mapToGlobal(pos);
     QMenu menu;
     QAction *edit = new QAction(tr("Edit text"), this);
-    connect(edit, SIGNAL(triggered()), this, SLOT(editText()));
-    menu.addAction(edit);
+            connect(edit, SIGNAL(triggered()), this, SLOT(editText()));
+            menu.addAction(edit);
     QAction *del = new QAction(tr("Delete"), this);
-    connect(del, SIGNAL(triggered()), this, SLOT(deleteLabel()));
-    menu.addAction(del);
+            connect(del, SIGNAL(triggered()), this, SLOT(deleteLabel()));
+            menu.addAction(del);
     menu.exec(globalPos);
 }
 
@@ -61,6 +42,7 @@ void EditableLabel::editText() {
 }
 
 void EditableLabel::deleteLabel() {
+    this->xml->removeChild(this->node);
     delete(this);
 }
 
@@ -81,6 +63,12 @@ void EditableLabel::mouseMoveEvent(QMouseEvent *ev) {
 void EditableLabel::mouseReleaseEvent(QMouseEvent *ev) {
     this->node.setAttribute("x", this->x());
     this->node.setAttribute("y", this->y());
+    // document changed flag
+    QMdiSubWindow* c = (QMdiSubWindow*) this->parent()->parent()->parent()->parent();
+    QString markedTitle = c->windowTitle();
+    if (!markedTitle.endsWith("*")) {
+        c->setWindowTitle(markedTitle + "*");
+    }
 }
 
 void EditableLabel::performDrag(const QPoint endPos) {
