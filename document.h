@@ -41,10 +41,13 @@ public:
     QString title;
     QString filename;
 
+signals:
+    void altered(bool);
+
 public slots:
     //void addLabel();
     //void addNode();
-
+    void handleChildSignals(int signalType);
     void save(QString filename);
 
 private:

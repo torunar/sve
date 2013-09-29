@@ -37,12 +37,18 @@ void EditableLabel::editText() {
     );
     if (ok && !text.isEmpty()) {
         this->setText(text);
+        this->adjustSize();
         this->node.setAttribute("text", text);
+        // document changed flag
+        emit altered(2);
     }
 }
 
 void EditableLabel::deleteLabel() {
+    // remove from xml
     this->xml->removeChild(this->node);
+    emit altered(3);
+    // remove from the world
     delete(this);
 }
 
@@ -64,11 +70,7 @@ void EditableLabel::mouseReleaseEvent(QMouseEvent *ev) {
     this->node.setAttribute("x", this->x());
     this->node.setAttribute("y", this->y());
     // document changed flag
-    QMdiSubWindow* c = (QMdiSubWindow*) this->parent()->parent()->parent()->parent();
-    QString markedTitle = c->windowTitle();
-    if (!markedTitle.endsWith("*")) {
-        c->setWindowTitle(markedTitle + "*");
-    }
+    emit altered(1);
 }
 
 void EditableLabel::performDrag(const QPoint endPos) {

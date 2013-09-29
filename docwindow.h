@@ -16,18 +16,15 @@ public:
 
     void setTitle(const QString title);
     Document* getDocument();
-    void setChanged();
-    void setChanged(bool changed);
 
 private:
     Document* document;
 
 protected:
     void closeEvent(QCloseEvent *closeEvent);
-    bool eventFilter(QObject *object, QEvent *event);
-    void changeEvent(QEvent *changeEvent);
 
 public slots:
+    void setChanged(bool changed);
     void addLabel();
     void save();
 

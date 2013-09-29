@@ -57,16 +57,27 @@ bool Document::isChanged() {
     return this->changed;
 }
 
+/*
+ * Add label to the document and xml tree
+ */
 void Document::addLabel(const QString text) {
     EditableLabel *label = new EditableLabel(text, this->xml, this->workarea);
+    connect(label, SIGNAL(altered(int)), this, SLOT(handleChildSignals(int)));
     label->show();
     this->changed = true;
 }
 
+/*
+ * Add any abstract node
+ * TODO: probably, remove
+ */
 void Document::addNode(const QString nodeName = NULL, const NodeType nodeType = Stub) {
     qDebug() << nodeName << nodeType;
 }
 
+/*
+ * Save document to file
+ */
 void Document::save(QString filename) {
     this->filename = filename;
     this->title = QFileInfo(filename).baseName() + ".sve";
@@ -77,6 +88,19 @@ void Document::save(QString filename) {
     this->changed = false;
 }
 
+/*
+ * Set document changed flag
+ */
 void Document::setChanged(bool changed) {
     this->changed = changed;
+}
+
+/*
+ * Handle signals from child elements like labels and nodes
+ */
+void Document::handleChildSignals(int signalType) {
+    if (signalType != 0) {
+        setChanged(true);
+        emit altered(true);
+    }
 }

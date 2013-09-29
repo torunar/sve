@@ -9,6 +9,8 @@ DocWindow::DocWindow(QWidget *parent) : QMdiSubWindow(parent) {
     this->setObjectName("DocWindow");
 
     document = new Document(this);
+    // to set window title
+    connect(document, SIGNAL(altered(bool)), this, SLOT(setChanged(bool)));
 }
 
 void DocWindow::setTitle(const QString title) {
@@ -85,27 +87,9 @@ void DocWindow::addLabel() {
     }
 }
 
-bool DocWindow::eventFilter(QObject *object, QEvent *event){
-//    qDebug() << event;
-    return false;
-}
-
-void DocWindow::changeEvent(QEvent *changeEvent) {
-
-    if (changeEvent->type() == QEvent::WindowTitleChange) {
-        this->setChanged();
-    }
-}
-
 void DocWindow::setChanged(bool changed) {
     this->document->setChanged(changed);
     if (changed && !this->windowTitle().endsWith("*")) {
         this->setWindowTitle(this->windowTitle() + "*");
     }
 }
-
-void DocWindow::setChanged() {
-    if (this->windowTitle().endsWith("*")) this->document->setChanged(true);
-}
-
-

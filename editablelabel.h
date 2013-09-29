@@ -31,6 +31,13 @@ private:
     void performDrag(const QPoint endPos);
     
 signals:
+    void altered(int signalType);
+    /*
+      0: None
+      1: Moved
+      2: Text edited
+      3: Deleted
+    */
 
 public slots:
     void showContextMenu(const QPoint &pos);
