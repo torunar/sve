@@ -72,6 +72,19 @@ void DocWindow::save() {
     this->setTitle(this->document->title);
 }
 
+bool DocWindow::load() {
+    QFileDialog *fd = new QFileDialog();
+    fd->setDefaultSuffix(".sve");
+    QString filename = fd->getOpenFileName(0, tr("Open file..."), "", "*.sve");
+    // saving cancelled
+    if (filename == "") return false;
+    this->document->load(filename);
+    this->setTitle(this->document->title);
+    this->renderNodes();
+    this->document->setChanged(false);
+    return true;
+}
+
 void DocWindow::addLabel() {
     bool ok;
     QString text = QInputDialog::getText(0,
@@ -92,4 +105,8 @@ void DocWindow::setChanged(bool changed) {
     if (changed && !this->windowTitle().endsWith("*")) {
         this->setWindowTitle(this->windowTitle() + "*");
     }
+}
+
+void DocWindow::renderNodes() {
+    this->document->renderNodes();
 }

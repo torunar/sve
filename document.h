@@ -37,7 +37,12 @@ public:
     void setChanged(bool changed);
 
     void addLabel(const QString text);
+    void addLabel(const QDomNode node);
     void addNode(const QString nodeName, const NodeType nodeType);
+
+    void renderNodes();
+
+    QDomDocument* getXml();
     QString title;
     QString filename;
 
@@ -45,10 +50,9 @@ signals:
     void altered(bool);
 
 public slots:
-    //void addLabel();
-    //void addNode();
     void handleChildSignals(int signalType);
     void save(QString filename);
+    void load(QString filename);
 
 private:
     QMdiSubWindow *parent;

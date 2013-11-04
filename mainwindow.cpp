@@ -40,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->aNew, SIGNAL(triggered()), this, SLOT(createDocument()));
     connect(ui->aQuit, SIGNAL(triggered()), this, SLOT(quit()));
+    connect(ui->aOpen, SIGNAL(triggered()), this, SLOT(load()));
 }
 
 MainWindow::~MainWindow()
@@ -62,7 +63,7 @@ void MainWindow::quit() {
 
 void MainWindow::createDocument() {
     // disconnect old slots
-    if (this->activeDocument) {
+    if (this->activeDocument && this->mdiArea->subWindowList().size() > 0) {
         disconnect(ui->aAddLabel, SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
         disconnect(ui->aSave, SIGNAL(triggered()), this->activeWindow, SLOT(save()));
     }
@@ -94,5 +95,12 @@ void MainWindow::setActiveDocument() {
 void MainWindow::closeEvent(QCloseEvent *ev){
     ev->ignore();
     this->quit();
+}
+
+void MainWindow::load() {
+    this->createDocument();
+    if (!this->activeWindow->load()) {
+        this->activeWindow->close();
+    }
 }
 

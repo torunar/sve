@@ -24,6 +24,7 @@ Document::Document(QMdiSubWindow *parent) {
     this->changed = false;
 
     this->xml = new QDomDocument("SVE");
+    this->xml->appendChild(this->xml->createElement("document"));
 }
 
 /*
@@ -63,7 +64,12 @@ bool Document::isChanged() {
 void Document::addLabel(const QString text) {
     EditableLabel *label = new EditableLabel(text, this->xml, this->workarea);
     connect(label, SIGNAL(altered(int)), this, SLOT(handleChildSignals(int)));
-    label->show();
+    this->changed = true;
+}
+
+void Document::addLabel(const QDomNode node) {
+    EditableLabel *label = new EditableLabel(node, this->xml, this->workarea);
+    connect(label, SIGNAL(altered(int)), this, SLOT(handleChildSignals(int)));
     this->changed = true;
 }
 
@@ -85,7 +91,22 @@ void Document::save(QString filename) {
     fileOut.open(QFile::WriteOnly);
     fileOut.write(this->xml->toString().toAscii());
     fileOut.close();
-    this->changed = false;
+    this->setChanged(false);
+}
+
+void Document::load(QString filename) {
+    this->filename = filename;
+    this->title = QFileInfo(filename).baseName() + ".sve";
+    QFile fileIn(this->filename);
+    fileIn.open(QFile::ReadOnly);
+    QString file = fileIn.readAll();
+    QString erm;
+    int l, c;
+    if (!this->xml->setContent(file, &erm, &l, &c)) {
+        qDebug() << erm << ':' << l << '-' << c;
+    }
+    this->setChanged(false);
+    fileIn.close();
 }
 
 /*
@@ -103,4 +124,18 @@ void Document::handleChildSignals(int signalType) {
         setChanged(true);
         emit altered(true);
     }
+}
+
+QDomDocument *Document::getXml() {
+    return this->xml;
+}
+
+void Document::renderNodes() {
+    qDebug() << this->xml->toString();
+    QDomNodeList labels = this->xml->elementsByTagName("label");
+    int n = labels.size();
+    for (int i = 0; i < n; i++) {
+        this->addLabel(labels.at(i));
+    }
+    qDebug() << this->xml->toString();
 }

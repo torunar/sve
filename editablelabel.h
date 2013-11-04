@@ -16,10 +16,12 @@ class EditableLabel : public QLabel
 {
     Q_OBJECT
 public:
-    EditableLabel(const QString text, QDomDocument *xml, QWidget *parent = 0);
+    EditableLabel(const QString  text, QDomDocument *xml, QWidget *parent = 0);
+    EditableLabel(const QDomNode node, QDomDocument *xml, QWidget *parent = 0);
     ~EditableLabel(){}
     QDomElement node;
     QDomDocument* xml;
+    void setPosition(int x, int y);
 
 protected:
     void mousePressEvent(QMouseEvent *ev);

@@ -19,6 +19,7 @@ public:
 
 private:
     Document* document;
+    void renderNodes();
 
 protected:
     void closeEvent(QCloseEvent *closeEvent);
@@ -27,7 +28,7 @@ public slots:
     void setChanged(bool changed);
     void addLabel();
     void save();
-
+    bool load();
 };
 
 #endif // DOCWINDOW_H

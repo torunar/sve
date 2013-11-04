@@ -30,6 +30,7 @@ public slots:
     void createDocument();
     void setActiveDocument();
     void quit();
+    void load();
 
 protected:
     void closeEvent(QCloseEvent *);

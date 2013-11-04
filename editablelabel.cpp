@@ -5,13 +5,29 @@ EditableLabel::EditableLabel(const QString text, QDomDocument *xml, QWidget *par
     this->setObjectName("EditableLabel");
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
     this->xml = xml;
-
+    // create via domdocument call
     this->node = xml->createElement("label");
-    this->node.setAttribute("name", QString::number(QDateTime::currentMSecsSinceEpoch()));
+    // set attributes
+    this->node.setAttribute("id", QString::number(QDateTime::currentMSecsSinceEpoch()));
     this->node.setAttribute("x", 0);
     this->node.setAttribute("y", 0);
     this->node.setAttribute("text", text);
-    xml->appendChild(this->node);
+    // append to root node
+    xml->firstChild().appendChild(this->node);
+    this->show();
+    this->startPos = QPoint(0, 0);
+}
+
+EditableLabel::EditableLabel(const QDomNode node, QDomDocument *xml, QWidget *parent) : QLabel(node.toElement().attribute("text"), parent) {
+    this->setContextMenuPolicy(Qt::CustomContextMenu);
+    this->setObjectName("EditableLabel");
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
+    this->xml = xml;
+    this->node = node.toElement();
+    this->show();
+    // move
+    this->setPosition(this->node.attribute("x").toInt(), this->node.attribute("y").toInt());
+    this->startPos = QPoint(0, 0);
 }
 
 void EditableLabel::showContextMenu(const QPoint& pos) {
@@ -46,7 +62,9 @@ void EditableLabel::editText() {
 
 void EditableLabel::deleteLabel() {
     // remove from xml
-    this->xml->removeChild(this->node);
+    qDebug() << this->xml->toString();
+    this->xml->firstChild().removeChild(this->node);
+    qDebug() << this->xml->toString();
     emit altered(3);
     // remove from the world
     delete(this);
@@ -82,4 +100,15 @@ void EditableLabel::performDrag(const QPoint endPos) {
         this->width(),
         this->height()
     );
+}
+
+void EditableLabel::setPosition(int x, int y) {
+    this->setGeometry(
+        (x >= 0) ? x : 0,
+        (y >= 0) ? y : 0,
+        this->width(),
+        this->height()
+    );
+    this->node.setAttribute("x", x);
+    this->node.setAttribute("y", y);
 }
