@@ -73,6 +73,7 @@ void MainWindow::createDocument() {
     // set context
     this->activeDocument = this->activeWindow->getDocument();
     connect(ui->aAddLabel, SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
+    connect(ui->aAddNode, SIGNAL(triggered()), this->activeWindow, SLOT(addElementNode()));
     connect(ui->aSave, SIGNAL(triggered()), this->activeWindow, SLOT(save()));
     // resize
     this->activeDocument->resize(settings->value("Size").toSize());

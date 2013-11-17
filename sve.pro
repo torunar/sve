@@ -14,12 +14,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     document.cpp \
     docwindow.cpp \
-    editablelabel.cpp
+    editablelabel.cpp \
+    elementnode.cpp
 
 HEADERS  += mainwindow.h \
     document.h \
     docwindow.h \
-    editablelabel.h
+    editablelabel.h \
+    elementnode.h
 
 FORMS    += mainwindow.ui
 

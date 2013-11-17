@@ -73,6 +73,12 @@ void Document::addLabel(const QDomNode node) {
     this->changed = true;
 }
 
+void Document::addElementNode() {
+    ElementNode *elementNode = new ElementNode(this->workarea);
+    connect(elementNode, SIGNAL(altered(int)), this, SLOT(handleChildSignals(int)));
+    this->changed = true;
+}
+
 /*
  * Add any abstract node
  * TODO: probably, remove

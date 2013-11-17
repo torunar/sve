@@ -1,5 +1,10 @@
 #include "editablelabel.h"
 
+EditableLabel::EditableLabel(QWidget *parent) : QLabel(parent) {
+    this->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
+}
+
 EditableLabel::EditableLabel(const QString text, QDomDocument *xml, QWidget *parent) : QLabel(text, parent) {
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     this->setObjectName("EditableLabel");
@@ -92,8 +97,8 @@ void EditableLabel::mouseReleaseEvent(QMouseEvent *ev) {
 }
 
 void EditableLabel::performDrag(const QPoint endPos) {
-    int newX = (this->x() + (endPos - startPos).x()) / 10 * 10 - 1;
-    int newY = (this->y() + (endPos - startPos).y()) / 10 * 10 - 1;
+    int newX = (this->x() + (endPos - startPos).x());
+    int newY = (this->y() + (endPos - startPos).y());
     this->setGeometry(
         (newX >= 0) ? newX : 0,
         (newY >= 0) ? newY : 0,

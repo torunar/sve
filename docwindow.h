@@ -27,6 +27,7 @@ protected:
 public slots:
     void setChanged(bool changed);
     void addLabel();
+    void addElementNode();
     void save();
     bool load();
 };

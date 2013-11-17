@@ -16,6 +16,7 @@ class EditableLabel : public QLabel
 {
     Q_OBJECT
 public:
+    EditableLabel(QWidget *parent = 0);
     EditableLabel(const QString  text, QDomDocument *xml, QWidget *parent = 0);
     EditableLabel(const QDomNode node, QDomDocument *xml, QWidget *parent = 0);
     ~EditableLabel(){}

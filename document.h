@@ -14,6 +14,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <editablelabel.h>
+#include <elementnode.h>
 
 
 typedef enum {
@@ -38,6 +39,7 @@ public:
 
     void addLabel(const QString text);
     void addLabel(const QDomNode node);
+    void addElementNode();
     void addNode(const QString nodeName, const NodeType nodeType);
 
     void renderNodes();

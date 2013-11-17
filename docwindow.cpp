@@ -100,6 +100,11 @@ void DocWindow::addLabel() {
     }
 }
 
+void DocWindow::addElementNode() {
+    this->document->addElementNode();
+    this->setChanged(true);
+}
+
 void DocWindow::setChanged(bool changed) {
     this->document->setChanged(changed);
     if (changed && !this->windowTitle().endsWith("*")) {
