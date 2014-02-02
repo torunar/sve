@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QtGui>
-#include <QtWebKit/QWebView>
+#include <QtWebKitWidgets/QWebView>
 #include "docwindow.h"
 
 namespace Ui {

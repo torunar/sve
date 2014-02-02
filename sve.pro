@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui webkit xml
+QT       += core gui webkitwidgets xml
 
 TARGET = sve
 TEMPLATE = app

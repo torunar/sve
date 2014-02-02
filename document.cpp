@@ -95,7 +95,7 @@ void Document::save(QString filename) {
     this->title = QFileInfo(filename).baseName() + ".sve";
     QFile fileOut(this->filename);
     fileOut.open(QFile::WriteOnly);
-    fileOut.write(this->xml->toString().toAscii());
+    fileOut.write(this->xml->toString().toUtf8());//.toAscii());
     fileOut.close();
     this->setChanged(false);
 }
