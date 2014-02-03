@@ -15,15 +15,18 @@ SOURCES += main.cpp\
     document.cpp \
     docwindow.cpp \
     editablelabel.cpp \
-    elementnode.cpp
+    elementnode.cpp \
+    nodepropertieswindow.cpp
 
 HEADERS  += mainwindow.h \
     document.h \
     docwindow.h \
     editablelabel.h \
-    elementnode.h
+    elementnode.h \
+    nodepropertieswindow.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    nodepropertieswindow.ui
 
 RESOURCES += \
     ui.qrc

@@ -8,9 +8,10 @@
 #include <QMouseEvent>
 #include <QDateTime>
 #include <QtXml/QDomElement>
-#include <QDebug>
 #include <QEvent>
 #include <QMdiSubWindow>
+
+#include <QDebug>
 
 class EditableLabel : public QLabel
 {

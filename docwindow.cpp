@@ -30,17 +30,18 @@ void DocWindow::closeEvent(QCloseEvent *closeEvent) {
         mb->addButton(tr("Save"), QMessageBox::AcceptRole);
         mb->addButton(tr("Cancel"), QMessageBox::RejectRole);
         // "delete this" is a trick to really DeleteOnClose as defined above
+        // NOTE: this tricks seems to be no longer needed
         switch (mb->exec()) {
         // close without saving
         case 0:
             closeEvent->accept();
-            delete this;
+//            delete this;
             break;
         // save
         case 1:
             this->save();
             closeEvent->accept();
-            delete this;
+//            delete this;
             break;
         // cancel
         case 2:
@@ -50,7 +51,7 @@ void DocWindow::closeEvent(QCloseEvent *closeEvent) {
     }
     else {
         closeEvent->accept();
-        delete this;
+//        delete this;
     }
 }
 
