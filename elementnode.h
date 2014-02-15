@@ -1,8 +1,8 @@
 #ifndef ELEMENTNODE_H
 #define ELEMENTNODE_H
 
-#include <QPixmap>
-#include <editablelabel.h>
+#include "plugin.h"
+#include "editablelabel.h"
 
 #include <QDebug>
 #include "nodepropertieswindow.h"

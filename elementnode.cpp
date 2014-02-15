@@ -4,8 +4,13 @@ ElementNode::ElementNode(QWidget *parent) : EditableLabel(parent) {
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
 
+    /*
     QPixmap background("../plugins/and/plugin.svg");
     background = background.scaled(80, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    */
+    QDir d("../plugins/and/");
+    Plugin *p = new Plugin(d);
+    QPixmap background = p->getPixmap(QSize(80, 60));
     this->setPixmap(background);
     this->show();
 }

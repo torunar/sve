@@ -16,14 +16,16 @@ SOURCES += main.cpp\
     docwindow.cpp \
     editablelabel.cpp \
     elementnode.cpp \
-    nodepropertieswindow.cpp
+    nodepropertieswindow.cpp \
+    plugin.cpp
 
 HEADERS  += mainwindow.h \
     document.h \
     docwindow.h \
     editablelabel.h \
     elementnode.h \
-    nodepropertieswindow.h
+    nodepropertieswindow.h \
+    plugin.h
 
 FORMS    += mainwindow.ui \
     nodepropertieswindow.ui

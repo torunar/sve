@@ -30,7 +30,8 @@ void DocWindow::closeEvent(QCloseEvent *closeEvent) {
         mb->addButton(tr("Save"), QMessageBox::AcceptRole);
         mb->addButton(tr("Cancel"), QMessageBox::RejectRole);
         // "delete this" is a trick to really DeleteOnClose as defined above
-        // NOTE: this tricks seems to be no longer needed
+        // TODO: with qt5, this tends to segfault.
+        // Find a way to ACTUALLY delete tab
         switch (mb->exec()) {
         // close without saving
         case 0:

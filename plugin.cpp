@@ -1,0 +1,73 @@
+#include "plugin.h"
+
+QVector<QString> Plugin::getElementAttributes(QString element, QString attribute){
+    QVector<QString> values;
+    QDomNodeList elements = this->node.elementsByTagName(element);
+    for (int i = 0; i < elements.size(); i++) {
+        values.append(elements.at(i).toElement().attribute(attribute));
+    }
+    return values;
+}
+
+Plugin::Plugin(QString filename){
+    QFile fileIn(filename);
+    fileIn.open(QFile::ReadOnly);
+    QString file = fileIn.readAll();
+    fileIn.close();
+    QString erm;
+    int l, c;
+    QDomDocument *xml = new QDomDocument();
+    if (!xml->setContent(file, &erm, &l, &c)) {
+        qDebug() << erm << ':' << l << '-' << c;
+    }
+    this->node = xml->firstChildElement("plugin");
+}
+
+Plugin::Plugin(QDir directory){
+    QString xmlPath = directory.absolutePath() + QDir::separator() + "plugin.xml";
+    QString imgPath = directory.absolutePath() + QDir::separator() + "plugin.svg";
+    // load xml
+    if (QFile::exists(xmlPath)) {
+        QFile fileIn(xmlPath);
+        fileIn.open(QFile::ReadOnly);
+        QString file = fileIn.readAll();
+        fileIn.close();
+        QString erm;
+        int l, c;
+        QDomDocument *xml = new QDomDocument();
+        if (!xml->setContent(file, &erm, &l, &c)) {
+            qDebug() << erm << ':' << l << '-' << c;
+        }
+        this->node = xml->firstChildElement("plugin");
+    }
+    else {
+        qDebug() << 'Plugin not found';
+    }
+    // load pixmap
+    if (QFile::exists(imgPath)) {
+        this->pixmap = QPixmap(imgPath);
+    }
+    else {
+        qDebug() << 'Pixmap not found';
+    }
+}
+
+Plugin::Plugin(QDomElement node){
+    this->node = node;
+}
+
+QVector<QString> Plugin::getIns(){
+    return this->getElementAttributes("in", "name");
+}
+
+QVector<QString> Plugin::getOuts(){
+    return this->getElementAttributes("out", "name");
+}
+
+QString Plugin::getSource(){
+    return this->node.firstChildElement("src").text();
+}
+
+QPixmap Plugin::getPixmap(QSize size){
+    return this->pixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+}
