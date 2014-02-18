@@ -19,6 +19,10 @@ public:
     Plugin(QString filename);   // load from file
     Plugin(QDir directory);     // load from path
     Plugin(QDomElement node);   // load from proto
+    bool isValid();
+    QString getName();
+    QString getAuthor();
+    QString getDescription();
     QVector<QString> getIns();
     QVector<QString> getOuts();
     QString getSource();

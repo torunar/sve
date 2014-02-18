@@ -17,7 +17,8 @@ SOURCES += main.cpp\
     editablelabel.cpp \
     elementnode.cpp \
     nodepropertieswindow.cpp \
-    plugin.cpp
+    plugin.cpp \
+    pluginlistwindow.cpp
 
 HEADERS  += mainwindow.h \
     document.h \
@@ -25,10 +26,12 @@ HEADERS  += mainwindow.h \
     editablelabel.h \
     elementnode.h \
     nodepropertieswindow.h \
-    plugin.h
+    plugin.h \
+    pluginlistwindow.h
 
 FORMS    += mainwindow.ui \
-    nodepropertieswindow.ui
+    nodepropertieswindow.ui \
+    pluginlistwindow.ui
 
 RESOURCES += \
     ui.qrc

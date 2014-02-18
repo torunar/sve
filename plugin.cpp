@@ -24,6 +24,7 @@ Plugin::Plugin(QString filename){
 }
 
 Plugin::Plugin(QDir directory){
+    qDebug() << "Loading plugin from" << directory.absolutePath();
     QString xmlPath = directory.absolutePath() + QDir::separator() + "plugin.xml";
     QString imgPath = directory.absolutePath() + QDir::separator() + "plugin.svg";
     // load xml
@@ -41,19 +42,35 @@ Plugin::Plugin(QDir directory){
         this->node = xml->firstChildElement("plugin");
     }
     else {
-        qDebug() << 'Plugin not found';
+        qDebug() << "Plugin not found";
     }
     // load pixmap
     if (QFile::exists(imgPath)) {
         this->pixmap = QPixmap(imgPath);
     }
     else {
-        qDebug() << 'Pixmap not found';
+        qDebug() << "Pixmap not found";
     }
 }
 
 Plugin::Plugin(QDomElement node){
     this->node = node;
+}
+
+bool Plugin::isValid() {
+    return !(this->node.isNull() || this->pixmap.isNull());
+}
+
+QString Plugin::getName() {
+    return this->node.attribute("name");
+}
+
+QString Plugin::getAuthor() {
+    return this->getElementAttributes("info", "author").first();
+}
+
+QString Plugin::getDescription() {
+    return this->getElementAttributes("info", "description").first();
 }
 
 QVector<QString> Plugin::getIns(){
