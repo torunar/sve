@@ -4,50 +4,94 @@
 PluginListWindow::PluginListWindow(QWidget *parent) : QDialog(parent), ui(new Ui::PluginListWindow) {
     ui->setupUi(this);
     this->settings = new QSettings("torunar", "sve");
-    this->settings->beginGroup("Plugins");
+    this->settings->beginGroup("plugins");
+
+    // plugins root
+    QString pluginsPath = this->settings->value("plugin_dir", "./plugins/").toString();
+    this->pluginsDir    = QDir(pluginsPath);
+
+    // load plugins list on start
+    QList<QTreeWidgetItem*> plugins = this->loadPluginsList();
+    this->ui->pluginList->insertTopLevelItems(0, plugins);
 
     connect(this->ui->refreshButton, SIGNAL(clicked()), this, SLOT(refreshList()));
-    connect(this->ui->cancelButton, SIGNAL(clicked()), this, SLOT(close()));
+    connect(this->ui->cancelButton,  SIGNAL(clicked()), this, SLOT(close()));
+    connect(this->ui->okButton,      SIGNAL(clicked()), this, SLOT(save()));
 }
 
 PluginListWindow::~PluginListWindow() {
     delete ui;
 }
 
-void PluginListWindow::refreshList() {
-    // plugins root
-    QString path = settings->value("PluginDir", "./plugins/").toString();
-    QDir dir(path);
+QList<QTreeWidgetItem *> PluginListWindow::loadPluginsList() {
+    QList<QTreeWidgetItem*> items;
 
     // possible plugins
-    QStringList plugins = dir.entryList(QDir::NoDotAndDotDot | QDir::Dirs, QDir::Name);
+    QStringList plugins        = this->pluginsDir.entryList(QDir::NoDotAndDotDot | QDir::Dirs, QDir::Name);
+    QStringList enabledPlugins = this->settings->value("enabled",  "").toStringList();
+    QStringList panelPlugins   = this->settings->value("on_panel", "").toStringList();
 
-    // loading plugins
-    this->ui->pluginList->clear();
     foreach(QString p, plugins) {
         // change to plugin directory
-        dir.cd(p);
-        Plugin *plugin = new Plugin(dir);
-        dir.cdUp();
+        this->pluginsDir.cd(p);
+        Plugin *plugin = new Plugin(this->pluginsDir);
+        this->pluginsDir.cdUp();
         if (plugin->isValid()) {
+            QString pluginName = plugin->getName();
             // add list item
-            QStringList row;
-            row << p;
             QTreeWidgetItem *i = new QTreeWidgetItem();
             i->setFlags(i->flags() | Qt::ItemIsUserCheckable);
-            // enabled
-            i->setText(0, "");
-            i->setCheckState(0, Qt::Unchecked);
+            // is enabled
+            i->setText((int)LCol::isEnabled, "");
+            i->setCheckState(
+                (int)LCol::isEnabled,
+                (Qt::CheckState)(2 * enabledPlugins.contains(pluginName, Qt::CaseInsensitive)) // (false, true) = (0, 2)
+            );
             // plugin name
-            i->setText(1, plugin->getName());
-            // on panel
-            i->setText(2, "");
-            i->setCheckState(2, Qt::Unchecked);
+            i->setText((int)LCol::pluginName, pluginName);
+            // is on panel
+            i->setText((int)LCol::isOnPanel, "");
+            i->setCheckState(
+                (int)LCol::isOnPanel,
+                (Qt::CheckState)(2 * panelPlugins.contains(pluginName, Qt::CaseInsensitive)) // (false, true) = (0, 2)
+            );
             // author
-            i->setText(3, plugin->getAuthor());
+            i->setText((int)LCol::author, plugin->getAuthor());
             // description
-            i->setText(4, plugin->getDescription());
-            this->ui->pluginList->insertTopLevelItem(0, i);
+            i->setText((int)LCol::description, plugin->getDescription());
+            items.append(i);
         }
     }
+    return items;
+}
+
+void PluginListWindow::refreshList() {
+    // clear list
+    this->ui->pluginList->clear();
+    // load plugins
+    QList<QTreeWidgetItem *> plugins = this->loadPluginsList();
+    this->ui->pluginList->insertTopLevelItems(0, plugins);
+}
+
+void PluginListWindow::save() {
+    QList<QTreeWidgetItem *> plugins = this->ui->pluginList->findItems("*", Qt::MatchWildcard, (int)LCol::pluginName);
+    QString name;
+    bool isEnabled, isOnPanel;
+    QStringList enabledPlugins, panelPlugins;
+    foreach(QTreeWidgetItem *plugin, plugins) {
+        name = plugin->text((int)LCol::pluginName);
+        isEnabled = plugin->checkState((int)LCol::isEnabled);
+        isOnPanel = plugin->checkState((int)LCol::isOnPanel);
+        if (isEnabled) {
+            enabledPlugins.append(name);
+            if (isOnPanel) {
+                panelPlugins.append(name);
+            }
+        }
+    }
+
+    this->settings->setValue("enabled",  enabledPlugins);
+    this->settings->setValue("on_panel", panelPlugins);
+
+    this->close();
 }

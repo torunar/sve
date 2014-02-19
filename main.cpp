@@ -3,24 +3,22 @@
 #include "mainwindow.h"
 #include <QSettings>
 
-#include "pluginlistwindow.h"
-
 int main(int argc, char *argv[])
 {
     QSettings settings("torunar", "sve");
     // Blank document settings
-    settings.beginGroup("DefaultDoc");
-    if (settings.value("ListSize",  "") == "") {
-        settings.setValue("ListSize",  QSize(980, 560));
+    settings.beginGroup("default_doc");
+    if (settings.value("blank_size",  "") == "") {
+        settings.setValue("blank_size",  QSize(980, 560));
     }
-    if (settings.value("NodeSize",  "") == "") {
-        settings.setValue("NodeSize",  QSize(80, 60));
+    if (settings.value("node_size",  "") == "") {
+        settings.setValue("node_size",  QSize(80, 60));
     }
     settings.endGroup();
     // Plugins
-    settings.beginGroup("Plugins");
-    if (settings.value("PluginDir", "") == "") {
-        settings.setValue("PluginDir", "\"./plugins/\"");
+    settings.beginGroup("plugins");
+    if (settings.value("plugin_dir", "") == "") {
+        settings.setValue("plugin_dir", "./plugins/");
     }
     settings.endGroup();
 
@@ -36,7 +34,5 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.showMaximized();
 
-    PluginListWindow pw;
-    pw.show();
     return a.exec();
 }

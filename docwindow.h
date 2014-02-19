@@ -15,10 +15,10 @@ public:
     ~DocWindow(){}
 
     void setTitle(const QString title);
-    Document* getDocument();
+    Document *getDocument();
 
 private:
-    Document* document;
+    Document *document;
     void renderNodes();
 
 protected:

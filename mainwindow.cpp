@@ -6,19 +6,19 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     settings = new QSettings("torunar", "sve");
-    settings->beginGroup("DefaultDoc");
+    settings->beginGroup("default_doc");
 
     ui->setupUi(this);
 
     this->setStyleSheet(
-                "#DocumentArea {"
-                    "background: #fff;"
-                    "background-image: url(:/ui/grid);"
-                    "background-repeat: repeat-xy;"
-                "}"
-                "#EditableLabel:hover {"
-                    "background: #eee;"
-                "}"
+        "#DocumentArea {"
+            "background: #fff;"
+            "background-image: url(:/ui/grid);"
+            "background-repeat: repeat-xy;"
+        "}"
+        "#EditableLabel:hover {"
+            "background: #eee;"
+        "}"
     );
 
     for (int i = 0; i < 5; i++) {
@@ -34,13 +34,14 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setCentralWidget(mdiArea);
 
     this->activeDocument = NULL;
-    this->activeWindow = NULL;
+    this->activeWindow   = NULL;
 
     this->createDocument();
 
-    connect(ui->aNew, SIGNAL(triggered()), this, SLOT(createDocument()));
-    connect(ui->aQuit, SIGNAL(triggered()), this, SLOT(quit()));
-    connect(ui->aOpen, SIGNAL(triggered()), this, SLOT(load()));
+    connect(ui->aNew,     SIGNAL(triggered()), this, SLOT(createDocument()));
+    connect(ui->aQuit,    SIGNAL(triggered()), this, SLOT(quit()));
+    connect(ui->aOpen,    SIGNAL(triggered()), this, SLOT(load()));
+    connect(ui->aPlugins, SIGNAL(triggered()), this, SLOT(showPluginListWindow()));
 }
 
 MainWindow::~MainWindow()
@@ -76,7 +77,7 @@ void MainWindow::createDocument() {
     connect(ui->aAddNode, SIGNAL(triggered()), this->activeWindow, SLOT(addElementNode()));
     connect(ui->aSave, SIGNAL(triggered()), this->activeWindow, SLOT(save()));
     // resize
-    this->activeDocument->resize(settings->value("ListSize").toSize());
+    this->activeDocument->resize(settings->value("blank_size").toSize());
 }
 
 void MainWindow::setActiveDocument() {
@@ -103,5 +104,10 @@ void MainWindow::load() {
     if (!this->activeWindow->load()) {
         this->activeWindow->close();
     }
+}
+
+void MainWindow::showPluginListWindow() {
+    PluginListWindow *pw = new PluginListWindow(this);
+    pw->show();
 }
 

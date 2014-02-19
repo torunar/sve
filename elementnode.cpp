@@ -1,16 +1,16 @@
 #include "elementnode.h"
 
 ElementNode::ElementNode(QWidget *parent) : EditableLabel(parent) {
+    this->settings = new QSettings("torunar", "sve");
+    this->settings->beginGroup("default_doc");
+
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
 
-    /*
-    QPixmap background("../plugins/and/plugin.svg");
-    background = background.scaled(80, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    */
     QDir d("../plugins/and/");
     Plugin *p = new Plugin(d);
-    QPixmap background = p->getPixmap(QSize(80, 60));
+
+    QPixmap background = p->getPixmap(this->settings->value("node_size").toSize());
     this->setPixmap(background);
     this->show();
 }

@@ -5,6 +5,7 @@
 #include <QtGui>
 #include <QtWebKitWidgets/QWebView>
 #include "docwindow.h"
+#include "pluginlistwindow.h"
 
 namespace Ui {
 class MainWindow;
@@ -31,6 +32,7 @@ public slots:
     void setActiveDocument();
     void quit();
     void load();
+    void showPluginListWindow();
 
 protected:
     void closeEvent(QCloseEvent *);
