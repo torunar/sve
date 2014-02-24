@@ -27,6 +27,7 @@ public:
     QVector<QString> getOuts();
     QString getSource();
     QPixmap getPixmap(QSize size);
+    QDomElement getNode();
     static QList<Plugin *> loadByList(QDir directory, QStringList filterPlugins);
 };
 

@@ -36,6 +36,7 @@ public slots:
     void load();
     void showPluginListWindow();
     void initPluginsToolbar();
+    void grabPlugin();
 
 protected:
     void closeEvent(QCloseEvent *);

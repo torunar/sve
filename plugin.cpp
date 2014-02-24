@@ -89,6 +89,10 @@ QPixmap Plugin::getPixmap(QSize size){
     return this->pixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }
 
+QDomElement Plugin::getNode() {
+    return this->node;
+}
+
 QList<Plugin *> Plugin::loadByList(QDir pluginsDir, QStringList filterPlugins) {
     QList<Plugin *> plugins;
     QStringList pluginList = pluginsDir.entryList(QDir::NoDotAndDotDot | QDir::Dirs, QDir::Name);

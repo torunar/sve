@@ -66,25 +66,17 @@ void Document::addLabel(const QString text) {
     connect(label, SIGNAL(altered(int)), this, SLOT(handleChildSignals(int)));
     this->changed = true;
 }
-
 void Document::addLabel(const QDomNode node) {
     EditableLabel *label = new EditableLabel(node, this->xml, this->workarea);
     connect(label, SIGNAL(altered(int)), this, SLOT(handleChildSignals(int)));
     this->changed = true;
 }
 
-void Document::addElementNode() {
-    ElementNode *elementNode = new ElementNode(this->workarea);
+// add plugin node
+void Document::addNode(Plugin *plugin) {
+    ElementNode *elementNode = new ElementNode(plugin, this->xml, this->workarea);
     connect(elementNode, SIGNAL(altered(int)), this, SLOT(handleChildSignals(int)));
     this->changed = true;
-}
-
-/*
- * Add any abstract node
- * TODO: probably, remove
- */
-void Document::addNode(const QString nodeName = NULL, const NodeType nodeType = Stub) {
-    qDebug() << nodeName << nodeType;
 }
 
 /*

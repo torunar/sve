@@ -39,8 +39,7 @@ public:
 
     void addLabel(const QString text);
     void addLabel(const QDomNode node);
-    void addElementNode();
-    void addNode(const QString nodeName, const NodeType nodeType);
+    void addNode(Plugin *plugin);
 
     void renderNodes();
 

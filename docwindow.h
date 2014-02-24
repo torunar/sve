@@ -17,6 +17,8 @@ public:
     void setTitle(const QString title);
     Document *getDocument();
 
+    void addNode(Plugin *plugin);
+
 private:
     Document *document;
     void renderNodes();

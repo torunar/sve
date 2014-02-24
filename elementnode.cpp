@@ -14,6 +14,18 @@ ElementNode::ElementNode(QWidget *parent) : EditableLabel(parent) {
     this->show();
 }
 
+ElementNode::ElementNode(Plugin *plugin, QDomDocument *xml, QWidget *parent) : EditableLabel(parent) {
+    this->settings = new QSettings("torunar", "sve");
+
+    this->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
+
+    QSize pixmapSize = this->settings->value("default_doc/node_size").toSize();
+    this->setPixmap(plugin->getPixmap(pixmapSize));
+    this->show();
+//    qDebug() << "heavy metal pirates";
+}
+
 void ElementNode::setProperties(NodePropertiesWindow *window) {
     QVector<QString> *vIn = new QVector<QString>;
     vIn->append("in-1");

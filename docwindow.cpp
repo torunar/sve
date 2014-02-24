@@ -103,7 +103,11 @@ void DocWindow::addLabel() {
 }
 
 void DocWindow::addNode() {
-    this->document->addElementNode();
+    qDebug() << "show window with all enabled plugins";
+}
+
+void DocWindow::addNode(Plugin *plugin) {
+    this->document->addNode(plugin);
     this->setChanged(true);
 }
 

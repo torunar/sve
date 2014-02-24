@@ -13,6 +13,7 @@ class ElementNode : public EditableLabel
     Q_OBJECT
 public:
     ElementNode(QWidget *parent = 0);
+    ElementNode(Plugin *plugin, QDomDocument *xml, QWidget* parent = 0);
     void setProperties(NodePropertiesWindow *window);
 
 private:

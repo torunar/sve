@@ -56,13 +56,25 @@ void MainWindow::initPluginsToolbar() {
     this->ui->pluginBar->clear();
     QStringList panelPlugins = this->settings->value("plugins/on_panel").toStringList();
     foreach(Plugin *p, this->plugins) {
+        QAction *a = new QAction(
+            p->getPixmap(this->settings->value("plugins/icon_size").toSize()),
+            p->getName(),
+            0
+        );
+        a->setObjectName(p->getName());
+        connect(a, SIGNAL(triggered()), this, SLOT(grabPlugin()));
         if (panelPlugins.contains(p->getName(), Qt::CaseInsensitive)) {
-            this->ui->pluginBar->addAction(
-                p->getPixmap(this->settings->value("plugins/icon_size").toSize()),
-                p->getName(),
-                this->activeWindow,
-                SLOT(addNode())
-            );
+            this->ui->pluginBar->insertAction(0, a);
+        }
+    }
+}
+
+// route sidebar click
+void MainWindow::grabPlugin() {
+    QString activatedPlugin = this->sender()->objectName();
+    foreach(Plugin *p, this->plugins) {
+        if (p->getName() == activatedPlugin) {
+            this->activeWindow->addNode(p);
         }
     }
 }
@@ -86,10 +98,6 @@ void MainWindow::createDocument() {
     if (this->activeDocument && this->mdiArea->subWindowList().size() > 0) {
         disconnect(ui->aAddLabel, SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
         disconnect(ui->aSave,     SIGNAL(triggered()), this->activeWindow, SLOT(save()));
-        // disconnect actions from plugin toolbar
-        foreach(QAction *a, ui->pluginBar->actions()) {
-            disconnect(a, SIGNAL(triggered()), this->activeWindow, SLOT(addNode()));
-        }
     }
     // create new window
     this->activeWindow = new DocWindow(mdiArea);
@@ -99,10 +107,6 @@ void MainWindow::createDocument() {
     connect(ui->aAddLabel, SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
     connect(ui->aAddNode,  SIGNAL(triggered()), this->activeWindow, SLOT(addNode()));
     connect(ui->aSave,     SIGNAL(triggered()), this->activeWindow, SLOT(save()));
-    // connect plugin toolbar
-    foreach(QAction *a, ui->pluginBar->actions()) {
-        connect(a, SIGNAL(triggered()), this->activeWindow, SLOT(addNode()));
-    }
     // resize
     this->activeDocument->resize(settings->value("default_doc/blank_size").toSize());
 }
@@ -113,21 +117,13 @@ void MainWindow::setActiveDocument() {
     if (this->activeDocument) {
         disconnect(ui->aAddLabel, SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
         disconnect(ui->aSave,     SIGNAL(triggered()), this->activeWindow, SLOT(save()));
-        // disconnect actions from plugin toolbar
-        foreach(QAction *a, ui->pluginBar->actions()) {
-            disconnect(a, SIGNAL(triggered()), this->activeWindow, SLOT(addNode()));
-        }
     }
     // switch context
     this->activeWindow = ((DocWindow*) this->sender());
     this->activeDocument = this->activeWindow->getDocument();
     // connect new slots
     connect(ui->aAddLabel, SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
-    connect(ui->aSave, SIGNAL(triggered()), this->activeWindow, SLOT(save()));
-    // connect plugin toolbar
-    foreach(QAction *a, ui->pluginBar->actions()) {
-        connect(a, SIGNAL(triggered()), this->activeWindow, SLOT(addNode()));
-    }
+    connect(ui->aSave,     SIGNAL(triggered()), this->activeWindow, SLOT(save()));
 }
 
 void MainWindow::closeEvent(QCloseEvent *ev){
