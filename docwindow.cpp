@@ -59,7 +59,7 @@ void DocWindow::closeEvent(QCloseEvent *closeEvent) {
 void DocWindow::save() {
     QString filename;
     if (this->document->filename == "") {
-        QFileDialog *fd = new QFileDialog();
+        QFileDialog *fd = new QFileDialog(this);
         fd->setDefaultSuffix(".sve");
         filename = fd->getSaveFileName(0, tr("Save as..."), "", "*.sve");
         // saving cancelled

@@ -1,17 +1,7 @@
 #include "elementnode.h"
 
 ElementNode::ElementNode(QWidget *parent) : EditableLabel(parent) {
-    this->settings = new QSettings("torunar", "sve");
-
-    this->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
-
-    QDir d("../plugins/and_gate/");
-    Plugin *p = new Plugin(d);
-
-    QPixmap background = p->getPixmap(this->settings->value("default_doc/node_size").toSize());
-    this->setPixmap(background);
-    this->show();
+    // stub
 }
 
 ElementNode::ElementNode(Plugin *plugin, QDomDocument *xml, QWidget *parent) : EditableLabel(parent) {
@@ -20,10 +10,22 @@ ElementNode::ElementNode(Plugin *plugin, QDomDocument *xml, QWidget *parent) : E
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
 
+    this->xml = xml;
+
+    this->node = this->xml->createElement("node");
+    // set attributes
+    this->node.setAttribute("id", QString::number(QDateTime::currentMSecsSinceEpoch()));
+    this->node.setAttribute("x", 0);
+    this->node.setAttribute("y", 0);
+    this->node.setAttribute("plugin", plugin->getName());
+    // append to root node
+    this->xml->firstChild().appendChild(this->node);
+
     QSize pixmapSize = this->settings->value("default_doc/node_size").toSize();
     this->setPixmap(plugin->getPixmap(pixmapSize));
     this->show();
-//    qDebug() << "heavy metal pirates";
+
+    qDebug() << this->xml->toString();
 }
 
 void ElementNode::setProperties(NodePropertiesWindow *window) {
