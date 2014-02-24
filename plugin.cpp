@@ -88,3 +88,24 @@ QString Plugin::getSource(){
 QPixmap Plugin::getPixmap(QSize size){
     return this->pixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }
+
+QList<Plugin *> Plugin::loadByList(QDir pluginsDir, QStringList filterPlugins) {
+    QList<Plugin *> plugins;
+    QStringList pluginList = pluginsDir.entryList(QDir::NoDotAndDotDot | QDir::Dirs, QDir::Name);
+
+    foreach(QString p, pluginList) {
+        // change to plugin directory
+        pluginsDir.cd(p);
+        Plugin *plugin = new Plugin(pluginsDir);
+        if (filterPlugins.contains(plugin->getName(), Qt::CaseInsensitive)) {
+            if (plugin->isValid()) {
+                plugins.append(plugin);
+            }
+            else {
+                qDebug() << "Plugin" << plugin->getName() << "seems broken";
+            }
+        }
+        pluginsDir.cdUp();
+    }
+    return plugins;
+}

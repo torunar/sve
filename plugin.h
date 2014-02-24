@@ -27,6 +27,7 @@ public:
     QVector<QString> getOuts();
     QString getSource();
     QPixmap getPixmap(QSize size);
+    static QList<Plugin *> loadByList(QDir directory, QStringList filterPlugins);
 };
 
 #endif // PLUGIN_H

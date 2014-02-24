@@ -30,7 +30,7 @@ void DocWindow::closeEvent(QCloseEvent *closeEvent) {
         mb->addButton(tr("Save"), QMessageBox::AcceptRole);
         mb->addButton(tr("Cancel"), QMessageBox::RejectRole);
         // "delete this" is a trick to really DeleteOnClose as defined above
-        // TODO: with qt5, this tends to segfault.
+        // TODO: this tends to segfault.
         // Find a way to ACTUALLY delete tab
         switch (mb->exec()) {
         // close without saving
@@ -102,7 +102,7 @@ void DocWindow::addLabel() {
     }
 }
 
-void DocWindow::addElementNode() {
+void DocWindow::addNode() {
     this->document->addElementNode();
     this->setChanged(true);
 }

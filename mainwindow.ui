@@ -27,6 +27,18 @@
      <height>25</height>
     </rect>
    </property>
+   <property name="contextMenuPolicy">
+    <enum>Qt::NoContextMenu</enum>
+   </property>
+   <property name="acceptDrops">
+    <bool>false</bool>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="defaultUp">
+    <bool>false</bool>
+   </property>
    <widget class="QMenu" name="mFile">
     <property name="title">
      <string>File</string>
@@ -111,10 +123,28 @@
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="pluginBar">
    <property name="windowTitle">
-    <string>toolBar</string>
+    <string>Plugin toolbar</string>
+   </property>
+   <property name="whatsThis">
+    <string/>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="movable">
+    <bool>false</bool>
    </property>
    <property name="allowedAreas">
     <set>Qt::AllToolBarAreas</set>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>32</width>
+     <height>32</height>
+    </size>
+   </property>
+   <property name="floatable">
+    <bool>false</bool>
    </property>
    <attribute name="toolBarArea">
     <enum>LeftToolBarArea</enum>
@@ -137,7 +167,7 @@
   </action>
   <action name="aOpen">
    <property name="icon">
-    <iconset>
+    <iconset resource="ui.qrc">
      <normaloff>:/icons/file-open</normaloff>:/icons/file-open</iconset>
    </property>
    <property name="text">
@@ -149,7 +179,7 @@
   </action>
   <action name="aSave">
    <property name="icon">
-    <iconset>
+    <iconset resource="ui.qrc">
      <normaloff>:/icons/file-save</normaloff>:/icons/file-save</iconset>
    </property>
    <property name="text">
@@ -161,7 +191,7 @@
   </action>
   <action name="aSaveAs">
    <property name="icon">
-    <iconset>
+    <iconset resource="ui.qrc">
      <normaloff>:/icons/file-save</normaloff>:/icons/file-save</iconset>
    </property>
    <property name="text">
@@ -170,7 +200,7 @@
   </action>
   <action name="aQuit">
    <property name="icon">
-    <iconset>
+    <iconset resource="ui.qrc">
      <normaloff>:/icons/file-exit</normaloff>:/icons/file-exit</iconset>
    </property>
    <property name="text">
@@ -182,7 +212,7 @@
   </action>
   <action name="aUndo">
    <property name="icon">
-    <iconset>
+    <iconset resource="ui.qrc">
      <normaloff>:/icons/edit-undo</normaloff>:/icons/edit-undo</iconset>
    </property>
    <property name="text">
@@ -194,7 +224,7 @@
   </action>
   <action name="aRedo">
    <property name="icon">
-    <iconset>
+    <iconset resource="ui.qrc">
      <normaloff>:/icons/edit-redo</normaloff>:/icons/edit-redo</iconset>
    </property>
    <property name="text">
@@ -206,7 +236,7 @@
   </action>
   <action name="aCopy">
    <property name="icon">
-    <iconset>
+    <iconset resource="ui.qrc">
      <normaloff>:/icons/edit-copy</normaloff>:/icons/edit-copy</iconset>
    </property>
    <property name="text">
@@ -218,7 +248,7 @@
   </action>
   <action name="aCut">
    <property name="icon">
-    <iconset>
+    <iconset resource="ui.qrc">
      <normaloff>:/icons/edit-cut</normaloff>:/icons/edit-cut</iconset>
    </property>
    <property name="text">
@@ -230,7 +260,7 @@
   </action>
   <action name="aPaste">
    <property name="icon">
-    <iconset>
+    <iconset resource="ui.qrc">
      <normaloff>:/icons/edit-paste</normaloff>:/icons/edit-paste</iconset>
    </property>
    <property name="text">
@@ -242,7 +272,7 @@
   </action>
   <action name="aAddNode">
    <property name="icon">
-    <iconset>
+    <iconset resource="ui.qrc">
      <normaloff>:/icons/scheme-add-node</normaloff>:/icons/scheme-add-node</iconset>
    </property>
    <property name="text">
@@ -254,7 +284,7 @@
   </action>
   <action name="aViewVHDL">
    <property name="icon">
-    <iconset>
+    <iconset resource="ui.qrc">
      <normaloff>:/icons/scheme-vhdl</normaloff>:/icons/scheme-vhdl</iconset>
    </property>
    <property name="text">
@@ -263,7 +293,7 @@
   </action>
   <action name="aEdit">
    <property name="icon">
-    <iconset>
+    <iconset resource="ui.qrc">
      <normaloff>:/icons/scheme-edit</normaloff>:/icons/scheme-edit</iconset>
    </property>
    <property name="text">
@@ -275,7 +305,7 @@
   </action>
   <action name="aPlugins">
    <property name="icon">
-    <iconset>
+    <iconset resource="ui.qrc">
      <normaloff>:/icons/properties-plugins</normaloff>:/icons/properties-plugins</iconset>
    </property>
    <property name="text">
@@ -284,7 +314,7 @@
   </action>
   <action name="aSettings">
    <property name="icon">
-    <iconset>
+    <iconset resource="ui.qrc">
      <normaloff>:/icons/properties-settings</normaloff>:/icons/properties-settings</iconset>
    </property>
    <property name="text">
@@ -293,7 +323,7 @@
   </action>
   <action name="aAddLink">
    <property name="icon">
-    <iconset>
+    <iconset resource="ui.qrc">
      <normaloff>:/icons/scheme-add-link</normaloff>:/icons/scheme-add-link</iconset>
    </property>
    <property name="text">
@@ -305,7 +335,7 @@
   </action>
   <action name="aAddLabel">
    <property name="icon">
-    <iconset>
+    <iconset resource="ui.qrc">
      <normaloff>:/icons/scheme-add-label</normaloff>:/icons/scheme-add-label</iconset>
    </property>
    <property name="text">
@@ -317,7 +347,7 @@
   </action>
   <action name="aAbout">
    <property name="icon">
-    <iconset>
+    <iconset resource="ui.qrc">
      <normaloff>:/icons/help-about</normaloff>:/icons/help-about</iconset>
    </property>
    <property name="text">
@@ -329,7 +359,7 @@
   </action>
   <action name="aMan">
    <property name="icon">
-    <iconset>
+    <iconset resource="ui.qrc">
      <normaloff>:/icons/help-man</normaloff>:/icons/help-man</iconset>
    </property>
    <property name="text">
@@ -349,7 +379,7 @@
   </action>
   <action name="aLicence">
    <property name="icon">
-    <iconset>
+    <iconset resource="ui.qrc">
      <normaloff>:/icons/help-license</normaloff>:/icons/help-license</iconset>
    </property>
    <property name="text">

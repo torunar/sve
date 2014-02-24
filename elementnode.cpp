@@ -2,15 +2,14 @@
 
 ElementNode::ElementNode(QWidget *parent) : EditableLabel(parent) {
     this->settings = new QSettings("torunar", "sve");
-    this->settings->beginGroup("default_doc");
 
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
 
-    QDir d("../plugins/and/");
+    QDir d("../plugins/and_gate/");
     Plugin *p = new Plugin(d);
 
-    QPixmap background = p->getPixmap(this->settings->value("node_size").toSize());
+    QPixmap background = p->getPixmap(this->settings->value("default_doc/node_size").toSize());
     this->setPixmap(background);
     this->show();
 }

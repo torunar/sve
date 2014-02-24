@@ -4,7 +4,6 @@
 PluginListWindow::PluginListWindow(QWidget *parent) : QDialog(parent), ui(new Ui::PluginListWindow) {
     ui->setupUi(this);
     this->settings = new QSettings("torunar", "sve");
-    this->settings->beginGroup("plugins");
 
     // plugins root
     QString pluginsPath = this->settings->value("plugin_dir", "./plugins/").toString();
@@ -23,13 +22,14 @@ PluginListWindow::~PluginListWindow() {
     delete ui;
 }
 
+// load list of plugins from disk
 QList<QTreeWidgetItem *> PluginListWindow::loadPluginsList() {
     QList<QTreeWidgetItem*> items;
 
     // possible plugins
     QStringList plugins        = this->pluginsDir.entryList(QDir::NoDotAndDotDot | QDir::Dirs, QDir::Name);
-    QStringList enabledPlugins = this->settings->value("enabled",  "").toStringList();
-    QStringList panelPlugins   = this->settings->value("on_panel", "").toStringList();
+    QStringList enabledPlugins = this->settings->value("plugins/enabled",  "").toStringList();
+    QStringList panelPlugins   = this->settings->value("plugins/on_panel", "").toStringList();
 
     foreach(QString p, plugins) {
         // change to plugin directory
@@ -65,6 +65,7 @@ QList<QTreeWidgetItem *> PluginListWindow::loadPluginsList() {
     return items;
 }
 
+// refresh view
 void PluginListWindow::refreshList() {
     // clear list
     this->ui->pluginList->clear();
@@ -73,6 +74,7 @@ void PluginListWindow::refreshList() {
     this->ui->pluginList->insertTopLevelItems(0, plugins);
 }
 
+// dump changes to config
 void PluginListWindow::save() {
     QList<QTreeWidgetItem *> plugins = this->ui->pluginList->findItems("*", Qt::MatchWildcard, (int)LCol::pluginName);
     QString name;
@@ -90,8 +92,8 @@ void PluginListWindow::save() {
         }
     }
 
-    this->settings->setValue("enabled",  enabledPlugins);
-    this->settings->setValue("on_panel", panelPlugins);
+    this->settings->setValue("plugins/enabled",  enabledPlugins);
+    this->settings->setValue("plugins/on_panel", panelPlugins);
 
     this->close();
 }
