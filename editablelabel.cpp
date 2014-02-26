@@ -1,7 +1,9 @@
 #include "editablelabel.h"
 
 EditableLabel::EditableLabel(QWidget *parent) : QLabel(parent) {
-    // stub
+    this->setContextMenuPolicy(Qt::CustomContextMenu);
+    this->setObjectName("EditableLabel");
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
 }
 
 EditableLabel::EditableLabel(const QString text, QDomDocument *xml, QWidget *parent) : QLabel(text, parent) {
@@ -38,15 +40,15 @@ void EditableLabel::showContextMenu(const QPoint& pos) {
     QPoint globalPos = this->mapToGlobal(pos);
     QMenu menu;
     QAction *edit = new QAction(tr("Edit text"), this);
-            connect(edit, SIGNAL(triggered()), this, SLOT(editText()));
+            connect(edit, SIGNAL(triggered()), this, SLOT(edit()));
             menu.addAction(edit);
     QAction *del = new QAction(tr("Delete"), this);
-            connect(del, SIGNAL(triggered()), this, SLOT(deleteLabel()));
+            connect(del, SIGNAL(triggered()), this, SLOT(remove()));
             menu.addAction(del);
     menu.exec(globalPos);
 }
 
-void EditableLabel::editText() {
+void EditableLabel::edit() {
     bool ok;
     QString text = QInputDialog::getText(this,
         tr("New label"),
@@ -64,7 +66,7 @@ void EditableLabel::editText() {
     }
 }
 
-void EditableLabel::deleteLabel() {
+void EditableLabel::remove() {
     // remove from xml
     qDebug() << this->xml->toString();
     this->xml->firstChild().removeChild(this->node);
@@ -88,7 +90,7 @@ void EditableLabel::mouseMoveEvent(QMouseEvent *ev) {
     }
 }
 
-void EditableLabel::mouseReleaseEvent(QMouseEvent *ev) {
+void EditableLabel::mouseReleaseEvent(QMouseEvent *) {
     this->node.setAttribute("x", this->x());
     this->node.setAttribute("y", this->y());
     // document changed flag
@@ -96,8 +98,9 @@ void EditableLabel::mouseReleaseEvent(QMouseEvent *ev) {
 }
 
 void EditableLabel::performDrag(const QPoint endPos) {
-    int newX = (this->x() + (endPos - startPos).x());
-    int newY = (this->y() + (endPos - startPos).y());
+    // grid positioning
+    int newX = 10 * ((this->x() + (endPos - startPos).x()) / 10);
+    int newY = 10 * ((this->y() + (endPos - startPos).y()) / 10);
     this->setGeometry(
         (newX >= 0) ? newX : 0,
         (newY >= 0) ? newY : 0,

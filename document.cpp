@@ -78,6 +78,13 @@ void Document::addNode(Plugin *plugin) {
     connect(elementNode, SIGNAL(altered(int)), this, SLOT(handleChildSignals(int)));
     this->changed = true;
 }
+void Document::addNode(const QDomNode node){
+    QString pluginName = node.toElement().attribute("plugin");
+    Plugin *plugin = this->getPlugin(pluginName);
+    ElementNode *elementNode = new ElementNode(node, plugin, this->xml, this->workarea);
+    connect(elementNode , SIGNAL(altered(int)), this, SLOT(handleChildSignals(int)));
+    this->changed = true;
+}
 
 /*
  * Save document to file
@@ -131,9 +138,26 @@ QDomDocument *Document::getXml() {
 void Document::renderNodes() {
     qDebug() << this->xml->toString();
     QDomNodeList labels = this->xml->elementsByTagName("label");
-    int n = labels.size();
-    for (int i = 0; i < n; i++) {
+    QDomNodeList nodes = this->xml->elementsByTagName("node");
+    // so we can't iterate with foreach, huh?
+    for (int i = 0; i < labels.size(); i++) {
         this->addLabel(labels.at(i));
     }
+    for (int i = 0; i < nodes.size(); i++) {
+        this->addNode(nodes.at(i));
+    }
     qDebug() << this->xml->toString();
+}
+
+Plugin* Document::getPlugin(QString name) {
+    foreach(Plugin *p, this->plugins) {
+        if (p->getName() == name) {
+            return p;
+        }
+    }
+    return 0;
+}
+
+void Document::setPlugins(QList<Plugin *> plugins) {
+    this->plugins = plugins;
 }

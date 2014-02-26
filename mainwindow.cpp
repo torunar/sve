@@ -62,7 +62,7 @@ void MainWindow::initPluginsToolbar() {
             0
         );
         a->setObjectName(p->getName());
-        connect(a, SIGNAL(triggered()), this, SLOT(grabPlugin()));
+        connect(a, SIGNAL(triggered()), this, SLOT(findPlugin()));
         if (panelPlugins.contains(p->getName(), Qt::CaseInsensitive)) {
             this->ui->pluginBar->insertAction(0, a);
         }
@@ -70,13 +70,10 @@ void MainWindow::initPluginsToolbar() {
 }
 
 // route sidebar click
-void MainWindow::grabPlugin() {
+void MainWindow::findPlugin() {
     QString activatedPlugin = this->sender()->objectName();
-    foreach(Plugin *p, this->plugins) {
-        if (p->getName() == activatedPlugin) {
-            this->activeWindow->addNode(p);
-        }
-    }
+    Plugin *p = this->activeDocument->getPlugin(activatedPlugin);
+    this->activeWindow->addNode(p);
 }
 
 void MainWindow::quit() {
@@ -104,6 +101,8 @@ void MainWindow::createDocument() {
     connect(this->activeWindow, SIGNAL(aboutToActivate()), this, SLOT(setActiveDocument()));
     // set context
     this->activeDocument = this->activeWindow->getDocument();
+    this->activeDocument->setPlugins(this->plugins);
+
     connect(ui->aAddLabel, SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
     connect(ui->aAddNode,  SIGNAL(triggered()), this->activeWindow, SLOT(addNode()));
     connect(ui->aSave,     SIGNAL(triggered()), this->activeWindow, SLOT(save()));

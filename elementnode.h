@@ -14,17 +14,18 @@ class ElementNode : public EditableLabel
 public:
     ElementNode(QWidget *parent = 0);
     ElementNode(Plugin *plugin, QDomDocument *xml, QWidget* parent = 0);
+    ElementNode(const QDomNode node, Plugin *plugin, QDomDocument *xml, QWidget *parent = 0);
     void setProperties(NodePropertiesWindow *window);
 
 private:
     QSettings *settings;
+    QPoint startPos;
 
 public slots:
     void showContextMenu(const QPoint &pos);
 
 private slots:
-    void editNode();
-    void deleteNode();
+    void edit();
 };
 
 #endif // ELEMENTNODE_H

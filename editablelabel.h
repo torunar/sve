@@ -28,7 +28,7 @@ public:
 protected:
     void mousePressEvent(QMouseEvent *ev);
     void mouseMoveEvent(QMouseEvent *ev);
-    void mouseReleaseEvent(QMouseEvent *ev);
+    void mouseReleaseEvent(QMouseEvent *);
 
 private:
     QPoint startPos;
@@ -47,8 +47,8 @@ public slots:
     void showContextMenu(const QPoint &pos);
 
 private slots:
-    void editText();
-    void deleteLabel();
+    void edit();
+    void remove();
 };
 
 #endif // EDITABLELABEL_H

@@ -24,7 +24,7 @@ public:
     QSettings *settings;
     
 private:
-    QList<Plugin*> plugins;
+    QList<Plugin *> plugins;
     Ui::MainWindow *ui;
     QMdiArea *mdiArea;
     void loadPlugins();
@@ -36,7 +36,7 @@ public slots:
     void load();
     void showPluginListWindow();
     void initPluginsToolbar();
-    void grabPlugin();
+    void findPlugin();
 
 protected:
     void closeEvent(QCloseEvent *);

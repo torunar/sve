@@ -16,7 +16,6 @@
 #include <editablelabel.h>
 #include <elementnode.h>
 
-
 typedef enum {
     Stub = 0,
     Entity = 1,
@@ -40,8 +39,11 @@ public:
     void addLabel(const QString text);
     void addLabel(const QDomNode node);
     void addNode(Plugin *plugin);
+    void addNode(const QDomNode node);
 
     void renderNodes();
+    Plugin *getPlugin(QString name);
+    void setPlugins(QList<Plugin*> plugins);
 
     QDomDocument* getXml();
     QString title;
@@ -58,6 +60,7 @@ public slots:
 private:
     QMdiSubWindow *parent;
     QScrollArea *container;
+    QList<Plugin*> plugins;
     QFrame *workarea;
     QDomDocument *xml;
     bool changed;
