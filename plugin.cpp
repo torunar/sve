@@ -25,7 +25,7 @@ Plugin::Plugin(QString filename){
 
 Plugin::Plugin(QDir directory){
     qDebug() << "Loading plugin from" << directory.absolutePath();
-    QString xmlPath = directory.absolutePath() + QDir::separator() + "plugin.xml";
+    QString xmlPath = directory.absolutePath() + QDir::separator() + "plugin.svx";
     QString imgPath = directory.absolutePath() + QDir::separator() + "plugin.svg";
     // load xml
     if (QFile::exists(xmlPath)) {
@@ -73,11 +73,11 @@ QString Plugin::getDescription() {
     return this->getElementAttributes("info", "description").first();
 }
 
-QVector<QString> Plugin::getIns(){
+QVector<QString> Plugin::getInputs(){
     return this->getElementAttributes("in", "name");
 }
 
-QVector<QString> Plugin::getOuts(){
+QVector<QString> Plugin::getOutputs(){
     return this->getElementAttributes("out", "name");
 }
 

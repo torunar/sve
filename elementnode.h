@@ -15,11 +15,13 @@ public:
     ElementNode(QWidget *parent = 0);
     ElementNode(Plugin *plugin, QDomDocument *xml, QWidget* parent = 0);
     ElementNode(const QDomNode node, Plugin *plugin, QDomDocument *xml, QWidget *parent = 0);
-    void setProperties(NodePropertiesWindow *window);
+    void setCounters(uint inCounter, uint outCounter);
 
 private:
     QSettings *settings;
     QPoint startPos;
+    Plugin *plugin;
+    uint inCounter, outCounter;
 
 public slots:
     void showContextMenu(const QPoint &pos);

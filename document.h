@@ -64,6 +64,9 @@ private:
     QFrame *workarea;
     QDomDocument *xml;
     bool changed;
+
+    uint inCounter;
+    uint outCounter;
 };
 
 #endif // DOCUMENT_H

@@ -3,19 +3,15 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     this->settings = new QSettings("torunar", "sve");
-
     ui->setupUi(this);
 
-    this->setStyleSheet(
-        "#DocumentArea {"
-            "background: #fff;"
-            "background-image: url(:/ui/grid);"
-            "background-repeat: repeat-xy;"
-        "}"
-        "#EditableLabel:hover {"
-            "background: #eee;"
-        "}"
-    );
+    /* load css */
+    // TODO: change path to binary-related
+    QFile cssFile("../src/ui.conf");
+    cssFile.open(QFile::ReadOnly);
+    QString css = cssFile.readAll();
+    cssFile.close();
+    this->setStyleSheet(css);
 
     /* set MDI options */
     this->mdiArea = new QMdiArea;
@@ -25,13 +21,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     this->mdiArea->setActivationOrder(QMdiArea::ActivationHistoryOrder);
     this->setCentralWidget(mdiArea);
 
+    /* set initial states */
     this->activeDocument = NULL;
     this->activeWindow   = NULL;
 
+    /* load plugins in program */
     this->loadPlugins();
 
+    /* create blank document window */
     this->createDocument();
 
+    /* load plugins into sidebar */
     this->initPluginsToolbar();
 
     connect(ui->aNew,     SIGNAL(triggered()), this, SLOT(createDocument()));
@@ -76,6 +76,7 @@ void MainWindow::findPlugin() {
     this->activeWindow->addNode(p);
 }
 
+// close opened documents and quit
 void MainWindow::quit() {
     for (int i = this->mdiArea->subWindowList(QMdiArea::ActivationHistoryOrder).length() - 1; i >= 0; i--) {
         int before = this->mdiArea->subWindowList().length();

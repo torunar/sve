@@ -22,6 +22,8 @@ Document::Document(QMdiSubWindow *parent) {
     this->title = "";
 
     this->changed = false;
+    this->inCounter = 0;
+    this->outCounter = 0;
 
     this->xml = new QDomDocument("SVE");
     this->xml->appendChild(this->xml->createElement("document"));
@@ -76,6 +78,11 @@ void Document::addLabel(const QDomNode node) {
 void Document::addNode(Plugin *plugin) {
     ElementNode *elementNode = new ElementNode(plugin, this->xml, this->workarea);
     connect(elementNode, SIGNAL(altered(int)), this, SLOT(handleChildSignals(int)));
+    // update internal counters
+    elementNode->setCounters(inCounter, outCounter);
+    this->inCounter  += plugin->getInputs().size();
+    this->outCounter += plugin->getOutputs().size();
+    // set changed flag
     this->changed = true;
 }
 void Document::addNode(const QDomNode node){
@@ -83,6 +90,11 @@ void Document::addNode(const QDomNode node){
     Plugin *plugin = this->getPlugin(pluginName);
     ElementNode *elementNode = new ElementNode(node, plugin, this->xml, this->workarea);
     connect(elementNode , SIGNAL(altered(int)), this, SLOT(handleChildSignals(int)));
+    // update internal counters
+    elementNode->setCounters(inCounter, outCounter);
+    this->inCounter  += plugin->getInputs().size();
+    this->outCounter += plugin->getOutputs().size();
+    // set changed flag
     this->changed = true;
 }
 

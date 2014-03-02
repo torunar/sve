@@ -1,9 +1,7 @@
 #include "editablelabel.h"
 
 EditableLabel::EditableLabel(QWidget *parent) : QLabel(parent) {
-    this->setContextMenuPolicy(Qt::CustomContextMenu);
-    this->setObjectName("EditableLabel");
-    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
+    // stub
 }
 
 EditableLabel::EditableLabel(const QString text, QDomDocument *xml, QWidget *parent) : QLabel(text, parent) {

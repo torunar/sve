@@ -11,6 +11,7 @@ ElementNode::ElementNode(Plugin *plugin, QDomDocument *xml, QWidget *parent) : E
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
 
     this->xml = xml;
+    this->plugin = plugin;
 
     this->node = this->xml->createElement("node");
     // set attributes
@@ -25,7 +26,6 @@ ElementNode::ElementNode(Plugin *plugin, QDomDocument *xml, QWidget *parent) : E
     this->setPixmap(plugin->getPixmap(pixmapSize));
     this->show();
 
-    qDebug() << this->xml->toString();
 }
 
 ElementNode::ElementNode(const QDomNode node, Plugin *plugin, QDomDocument *xml, QWidget *parent) : EditableLabel(parent) {
@@ -33,9 +33,9 @@ ElementNode::ElementNode(const QDomNode node, Plugin *plugin, QDomDocument *xml,
 
     this->xml = xml;
     this->node = node.toElement();
+    this->plugin = plugin;
 
     QSize pixmapSize = this->settings->value("default_doc/node_size").toSize();
-    qDebug() << plugin->getAuthor() << plugin->getDescription() << plugin->getName();
     this->setPixmap(plugin->getPixmap(pixmapSize));
 
     this->show();
@@ -44,18 +44,9 @@ ElementNode::ElementNode(const QDomNode node, Plugin *plugin, QDomDocument *xml,
     this->startPos = QPoint(0, 0);
 }
 
-void ElementNode::setProperties(NodePropertiesWindow *window) {
-    QVector<QString> *vIn = new QVector<QString>;
-    vIn->append("in-1");
-    vIn->append("in-2");
-    vIn->append("in-3");
-    window->setInputs(vIn);
-    QVector<QString> *vOut = new QVector<QString>;
-    vOut->append("out-1");
-    vOut->append("out-2");
-    vOut->append("out-3");
-    window->setOutputs(vOut);
-    window->setSource("{\n\tlol;\n}");
+void ElementNode::setCounters(uint inCounter, uint outCounter) {
+    this->inCounter  = inCounter;
+    this->outCounter = outCounter;
 }
 
 void ElementNode::showContextMenu(const QPoint &pos) {
@@ -72,7 +63,10 @@ void ElementNode::showContextMenu(const QPoint &pos) {
 
 void ElementNode::edit() {
     NodePropertiesWindow *np = new NodePropertiesWindow();
-    this->setProperties(np);
+    np->setCounters(this->inCounter, this->outCounter);
+    np->setInputs(this->plugin->getInputs());
+    np->setOutputs(this->plugin->getOutputs());
+    np->setSource(this->plugin->getSource());
     np->show();
-    qDebug() << "edit, ha";
+//    qDebug() << "edit, ha";
 }

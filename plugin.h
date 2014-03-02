@@ -23,8 +23,8 @@ public:
     QString getName();
     QString getAuthor();
     QString getDescription();
-    QVector<QString> getIns();
-    QVector<QString> getOuts();
+    QVector<QString> getInputs();
+    QVector<QString> getOutputs();
     QString getSource();
     QPixmap getPixmap(QSize size);
     QDomElement getNode();
