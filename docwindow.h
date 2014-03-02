@@ -3,9 +3,11 @@
 
 #include <QWidget>
 #include <QMdiSubWindow>
-#include <document.h>
+#include "document.h"
 #include <QString>
 #include <QObject>
+
+#include "addnodedialog.h"
 
 class DocWindow : public QMdiSubWindow {
     Q_OBJECT

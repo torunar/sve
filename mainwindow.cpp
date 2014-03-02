@@ -116,6 +116,7 @@ void MainWindow::setActiveDocument() {
     // disconnect old slots
     if (this->activeDocument) {
         disconnect(ui->aAddLabel, SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
+        disconnect(ui->aAddNode,  SIGNAL(triggered()), this->activeWindow, SLOT(addNode()));
         disconnect(ui->aSave,     SIGNAL(triggered()), this->activeWindow, SLOT(save()));
     }
     // switch context
@@ -123,6 +124,7 @@ void MainWindow::setActiveDocument() {
     this->activeDocument = this->activeWindow->getDocument();
     // connect new slots
     connect(ui->aAddLabel, SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
+    connect(ui->aAddNode,  SIGNAL(triggered()), this->activeWindow, SLOT(addNode()));
     connect(ui->aSave,     SIGNAL(triggered()), this->activeWindow, SLOT(save()));
 }
 

@@ -6,7 +6,7 @@ PluginListWindow::PluginListWindow(QWidget *parent) : QDialog(parent), ui(new Ui
     this->settings = new QSettings("torunar", "sve");
 
     // plugins root
-    QString pluginsPath = this->settings->value("plugin_dir", "./plugins/").toString();
+    QString pluginsPath = this->settings->value("plugins/plugin_dir", "./plugins/").toString();
     this->pluginsDir    = QDir(pluginsPath);
 
     // load plugins list on start

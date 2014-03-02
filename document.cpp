@@ -126,6 +126,10 @@ void Document::load(QString filename) {
     fileIn.close();
 }
 
+void Document::addNode(QString plugin){
+    this->addNode(this->getPlugin(plugin));
+}
+
 /*
  * Set document changed flag
  */
@@ -168,6 +172,14 @@ Plugin* Document::getPlugin(QString name) {
         }
     }
     return 0;
+}
+
+QStringList Document::getPlugins() {
+    QStringList ps;
+    foreach(Plugin *p, this->plugins) {
+        ps << p->getName();
+    }
+    return ps;
 }
 
 void Document::setPlugins(QList<Plugin *> plugins) {

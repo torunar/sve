@@ -59,7 +59,7 @@ void DocWindow::closeEvent(QCloseEvent *closeEvent) {
 void DocWindow::save() {
     QString filename;
     if (this->document->filename == "") {
-        QFileDialog *fd = new QFileDialog(this);
+        QFileDialog *fd = new QFileDialog();
         fd->setDefaultSuffix(".sve");
         filename = fd->getSaveFileName(0, tr("Save as..."), "", "*.sve");
         // saving cancelled
@@ -103,7 +103,9 @@ void DocWindow::addLabel() {
 }
 
 void DocWindow::addNode() {
-    qDebug() << "show window with all enabled plugins";
+    AddNodeDialog *ad = new AddNodeDialog(this->document->getPlugins());
+    connect(ad, SIGNAL(itemSelected(QString)), this->document, SLOT(addNode(QString)));
+    ad->exec();
 }
 
 void DocWindow::addNode(Plugin *plugin) {

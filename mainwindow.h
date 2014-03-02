@@ -6,6 +6,7 @@
 #include <QtWebKitWidgets/QWebView>
 #include "docwindow.h"
 #include "pluginlistwindow.h"
+#include <QPainterPath>
 
 namespace Ui {
 class MainWindow;

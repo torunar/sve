@@ -31,6 +31,9 @@ ElementNode::ElementNode(Plugin *plugin, QDomDocument *xml, QWidget *parent) : E
 ElementNode::ElementNode(const QDomNode node, Plugin *plugin, QDomDocument *xml, QWidget *parent) : EditableLabel(parent) {
     this->settings = new QSettings("torunar", "sve");
 
+    this->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
+
     this->xml = xml;
     this->node = node.toElement();
     this->plugin = plugin;
@@ -68,5 +71,4 @@ void ElementNode::edit() {
     np->setOutputs(this->plugin->getOutputs());
     np->setSource(this->plugin->getSource());
     np->show();
-//    qDebug() << "edit, ha";
 }

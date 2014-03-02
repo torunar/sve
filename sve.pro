@@ -18,7 +18,10 @@ SOURCES += main.cpp\
     elementnode.cpp \
     nodepropertieswindow.cpp \
     plugin.cpp \
-    pluginlistwindow.cpp
+    pluginlistwindow.cpp \
+    nodelink.cpp \
+    linkwidget.cpp \
+    addnodedialog.cpp
 
 HEADERS  += mainwindow.h \
     document.h \
@@ -27,11 +30,15 @@ HEADERS  += mainwindow.h \
     elementnode.h \
     nodepropertieswindow.h \
     plugin.h \
-    pluginlistwindow.h
+    pluginlistwindow.h \
+    nodelink.h \
+    linkwidget.h \
+    addnodedialog.h
 
 FORMS    += mainwindow.ui \
     nodepropertieswindow.ui \
-    pluginlistwindow.ui
+    pluginlistwindow.ui \
+    addnodedialog.ui
 
 RESOURCES += \
     ui.qrc

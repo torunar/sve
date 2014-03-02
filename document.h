@@ -13,8 +13,10 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QFileInfo>
-#include <editablelabel.h>
-#include <elementnode.h>
+
+#include "editablelabel.h"
+#include "elementnode.h"
+#include "linkwidget.h"
 
 typedef enum {
     Stub = 0,
@@ -43,6 +45,7 @@ public:
 
     void renderNodes();
     Plugin *getPlugin(QString name);
+    QStringList getPlugins();
     void setPlugins(QList<Plugin*> plugins);
 
     QDomDocument* getXml();
@@ -56,6 +59,7 @@ public slots:
     void handleChildSignals(int signalType);
     void save(QString filename);
     void load(QString filename);
+    void addNode(QString plugin);
 
 private:
     QMdiSubWindow *parent;
