@@ -72,6 +72,7 @@ void DocWindow::save() {
     }
     this->document->save(filename);
     this->setTitle(this->document->title);
+    this->setStatus(tr("File saved"), 2000);
 }
 
 bool DocWindow::load() {
@@ -106,11 +107,23 @@ void DocWindow::addNode() {
     AddNodeDialog *ad = new AddNodeDialog(this->document->getPlugins());
     connect(ad, SIGNAL(itemSelected(QString)), this->document, SLOT(addNode(QString)));
     ad->exec();
+    this->setChanged(this->document->isChanged());
+}
+
+void DocWindow::addLink() {
+    this->setStatus(tr("Set beginning node"), 0);
+//    this->document->switchMode(DocumentMode::SelectNode);
+//    this->document->addLink();
+//    this->setChanged(this->document->isChanged());
 }
 
 void DocWindow::addNode(Plugin *plugin) {
     this->document->addNode(plugin);
     this->setChanged(true);
+}
+
+void DocWindow::attachStatusBar(QStatusBar *statusBar) {
+    this->statusBar = statusBar;
 }
 
 void DocWindow::setChanged(bool changed) {
@@ -122,4 +135,8 @@ void DocWindow::setChanged(bool changed) {
 
 void DocWindow::renderNodes() {
     this->document->renderNodes();
+}
+
+void DocWindow::setStatus(QString text, int timeout = 0) {
+    this->statusBar->showMessage(text, timeout);
 }

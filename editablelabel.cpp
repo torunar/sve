@@ -77,6 +77,7 @@ void EditableLabel::remove() {
 void EditableLabel::mousePressEvent(QMouseEvent *ev) {
     if (ev->button() == Qt::LeftButton) {
         this->startPos = ev->pos();
+        emit activated(this->node);
     }
 }
 

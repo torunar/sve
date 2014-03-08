@@ -1,22 +1,21 @@
 #include "nodelink.h"
 
-NodeLink::NodeLink(){
-    this->points = QVector<QPoint>(4, QPoint(0, 0));
+NodeLink::NodeLink(QWidget *parent) : EditableLabel(parent) {
+    this->painter = new QPainter();
+    this->pen = QPen(Qt::black,1,Qt::SolidLine);
+    this->setGeometry(10,10,301,301);
+    this->show();
 }
 
-void NodeLink::setBegin(QPoint point){
-    this->points[0] = point;
-}
-
-void NodeLink::setEnd(QPoint point){
-    this->points[3] = point;
-}
-
-void NodeLink::setMiddle(QPoint point){
-    this->points[1] = QPoint(point.x(), this->points[0].y());
-    this->points[2] = QPoint(point.x(), this->points[3].y());
-}
-
-QVector<QPoint> NodeLink::getPoints(){
-    return this->points;
+void NodeLink::paintEvent(QPaintEvent *) {
+    this->painter->begin(this);
+    this->painter->setPen(this->pen);
+    QVector<QPoint> line;
+    line
+        << QPoint(0,                 0)
+        << QPoint(this->width() / 2, 0)
+        << QPoint(this->width() / 2, this->height()-1)
+        << QPoint(this->width(),     this->height()-1);
+    this->painter->drawPolyline(line);
+    this->painter->end();
 }

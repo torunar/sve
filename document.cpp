@@ -78,6 +78,7 @@ void Document::addLabel(const QDomNode node) {
 void Document::addNode(Plugin *plugin) {
     ElementNode *elementNode = new ElementNode(plugin, this->xml, this->workarea);
     connect(elementNode, SIGNAL(altered(int)), this, SLOT(handleChildSignals(int)));
+    connect(elementNode, SIGNAL(activated(QDomElement)), this, SLOT(setActiveElement(QDomElement)));
     // update internal counters
     elementNode->setCounters(inCounter, outCounter);
     this->inCounter  += plugin->getInputs().size();
@@ -89,13 +90,22 @@ void Document::addNode(const QDomNode node){
     QString pluginName = node.toElement().attribute("plugin");
     Plugin *plugin = this->getPlugin(pluginName);
     ElementNode *elementNode = new ElementNode(node, plugin, this->xml, this->workarea);
-    connect(elementNode , SIGNAL(altered(int)), this, SLOT(handleChildSignals(int)));
+    connect(elementNode, SIGNAL(altered(int)),      this, SLOT(handleChildSignals(int)));
+    connect(elementNode, SIGNAL(activated(QDomElement)), this, SLOT(setActiveElement(QDomElement)));
     // update internal counters
     elementNode->setCounters(inCounter, outCounter);
     this->inCounter  += plugin->getInputs().size();
     this->outCounter += plugin->getOutputs().size();
     // set changed flag
     this->changed = true;
+}
+
+void Document::addLink() {
+    NodeLink *nl = new NodeLink(this->workarea);
+    this->changed = true;
+}
+
+void Document::addLink(const QDomNode node) {
 }
 
 /*
@@ -147,6 +157,13 @@ void Document::handleChildSignals(int signalType) {
     }
 }
 
+/*
+ * Last clicked element for stuff
+ */
+void Document::setActiveElement(QDomElement element) {
+    qDebug() << element.attribute("id");
+}
+
 QDomDocument *Document::getXml() {
     return this->xml;
 }
@@ -184,4 +201,8 @@ QStringList Document::getPlugins() {
 
 void Document::setPlugins(QList<Plugin *> plugins) {
     this->plugins = plugins;
+}
+
+void Document::setMode(DocumentMode documentMode) {
+
 }

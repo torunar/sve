@@ -6,6 +6,7 @@
 #include "document.h"
 #include <QString>
 #include <QObject>
+#include <QStatusBar>
 
 #include "addnodedialog.h"
 
@@ -20,10 +21,13 @@ public:
     Document *getDocument();
 
     void addNode(Plugin *plugin);
+    void attachStatusBar(QStatusBar *statusBar);
 
 private:
     Document *document;
     void renderNodes();
+    QStatusBar *statusBar;
+    void setStatus(QString text, int timeout);
 
 protected:
     void closeEvent(QCloseEvent *closeEvent);
@@ -32,6 +36,7 @@ public slots:
     void setChanged(bool changed);
     void addLabel();
     void addNode();
+    void addLink();
     void save();
     bool load();
 };

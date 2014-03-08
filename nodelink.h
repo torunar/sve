@@ -1,24 +1,28 @@
 #ifndef NODELINK_H
 #define NODELINK_H
 
-#include <QPoint>
-#include <QLine>
-#include <QPolygon>
-#include <QVector>
+#include <QImage>
+#include <QPainter>
+#include "editablelabel.h"
+#include "nodelink.h"
 
-#include <QDebug>
-
-class NodeLink
+class NodeLink : public EditableLabel
 {
+    Q_OBJECT
 public:
-    NodeLink();
-    void setBegin(QPoint point);
-    void setEnd(QPoint point);
-    void setMiddle(QPoint point);
-    QVector<QPoint> getPoints();
+    explicit NodeLink(QWidget *parent = 0);
 
 private:
-    QVector<QPoint> points;
+    QPainter *painter;
+    QImage   buffer;
+    QPen     pen;
+    void paintEvent(QPaintEvent *);
+    QVector<QPoint> line;
+
+signals:
+
+public slots:
+
 };
 
 #endif // NODELINK_H

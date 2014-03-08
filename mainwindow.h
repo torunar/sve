@@ -29,6 +29,8 @@ private:
     Ui::MainWindow *ui;
     QMdiArea *mdiArea;
     void loadPlugins();
+    void disconnectSlots();
+    void connectSlots();
 
 public slots:
     void createDocument();

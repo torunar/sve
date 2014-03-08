@@ -42,6 +42,7 @@ signals:
       2: Text edited
       3: Deleted
     */
+    void activated(QDomElement node);
 
 public slots:
     void showContextMenu(const QPoint &pos);

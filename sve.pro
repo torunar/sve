@@ -20,7 +20,6 @@ SOURCES += main.cpp\
     plugin.cpp \
     pluginlistwindow.cpp \
     nodelink.cpp \
-    linkwidget.cpp \
     addnodedialog.cpp
 
 HEADERS  += mainwindow.h \
@@ -32,7 +31,6 @@ HEADERS  += mainwindow.h \
     plugin.h \
     pluginlistwindow.h \
     nodelink.h \
-    linkwidget.h \
     addnodedialog.h
 
 FORMS    += mainwindow.ui \

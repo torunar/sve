@@ -51,6 +51,20 @@ void MainWindow::loadPlugins() {
     this->plugins = Plugin::loadByList(pluginDir, enabledPlugins);
 }
 
+void MainWindow::disconnectSlots() {
+    disconnect(ui->aAddLabel, SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
+    disconnect(ui->aAddNode,  SIGNAL(triggered()), this->activeWindow, SLOT(addNode()));
+    disconnect(ui->aAddLink,  SIGNAL(triggered()), this->activeWindow, SLOT(addLink()));
+    disconnect(ui->aSave,     SIGNAL(triggered()), this->activeWindow, SLOT(save()));
+}
+
+void MainWindow::connectSlots() {
+    connect(ui->aAddLabel, SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
+    connect(ui->aAddNode,  SIGNAL(triggered()), this->activeWindow, SLOT(addNode()));
+    connect(ui->aAddLink,  SIGNAL(triggered()), this->activeWindow, SLOT(addLink()));
+    connect(ui->aSave,     SIGNAL(triggered()), this->activeWindow, SLOT(save()));
+}
+
 // init sidebar
 void MainWindow::initPluginsToolbar() {
     this->ui->pluginBar->clear();
@@ -94,19 +108,17 @@ void MainWindow::quit() {
 void MainWindow::createDocument() {
     // disconnect old slots
     if (this->activeDocument && this->mdiArea->subWindowList().size() > 0) {
-        disconnect(ui->aAddLabel, SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
-        disconnect(ui->aSave,     SIGNAL(triggered()), this->activeWindow, SLOT(save()));
+        this->disconnectSlots();
     }
     // create new window
     this->activeWindow = new DocWindow(mdiArea);
     connect(this->activeWindow, SIGNAL(aboutToActivate()), this, SLOT(setActiveDocument()));
+    this->activeWindow->attachStatusBar(this->ui->statusBar);
     // set context
     this->activeDocument = this->activeWindow->getDocument();
     this->activeDocument->setPlugins(this->plugins);
+    this->connectSlots();
 
-    connect(ui->aAddLabel, SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
-    connect(ui->aAddNode,  SIGNAL(triggered()), this->activeWindow, SLOT(addNode()));
-    connect(ui->aSave,     SIGNAL(triggered()), this->activeWindow, SLOT(save()));
     // resize
     this->activeDocument->resize(settings->value("default_doc/blank_size").toSize());
 }
@@ -115,17 +127,12 @@ void MainWindow::createDocument() {
 void MainWindow::setActiveDocument() {
     // disconnect old slots
     if (this->activeDocument) {
-        disconnect(ui->aAddLabel, SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
-        disconnect(ui->aAddNode,  SIGNAL(triggered()), this->activeWindow, SLOT(addNode()));
-        disconnect(ui->aSave,     SIGNAL(triggered()), this->activeWindow, SLOT(save()));
+        this->disconnectSlots();
     }
     // switch context
     this->activeWindow = ((DocWindow*) this->sender());
     this->activeDocument = this->activeWindow->getDocument();
-    // connect new slots
-    connect(ui->aAddLabel, SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
-    connect(ui->aAddNode,  SIGNAL(triggered()), this->activeWindow, SLOT(addNode()));
-    connect(ui->aSave,     SIGNAL(triggered()), this->activeWindow, SLOT(save()));
+    this->connectSlots();
 }
 
 void MainWindow::closeEvent(QCloseEvent *ev){
