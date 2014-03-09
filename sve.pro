@@ -14,24 +14,26 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     document.cpp \
     docwindow.cpp \
-    editablelabel.cpp \
     elementnode.cpp \
     nodepropertieswindow.cpp \
     plugin.cpp \
     pluginlistwindow.cpp \
-    nodelink.cpp \
-    addnodedialog.cpp
+    addnodedialog.cpp \
+    unode.cpp \
+    labelnode.cpp \
+    linknode.cpp
 
 HEADERS  += mainwindow.h \
     document.h \
     docwindow.h \
-    editablelabel.h \
-    elementnode.h \
     nodepropertieswindow.h \
     plugin.h \
     pluginlistwindow.h \
-    nodelink.h \
-    addnodedialog.h
+    addnodedialog.h \
+    unode.h \
+    linknode.h \
+    elementnode.h \
+    labelnode.h
 
 FORMS    += mainwindow.ui \
     nodepropertieswindow.ui \

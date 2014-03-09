@@ -1,0 +1,31 @@
+#include "nodelink.h"
+
+NodeLink::NodeLink(QList<QDomElement> linkNodes, QDomDocument *xml, QWidget *parent) : EditableLabel(parent) {
+    QSettings *settings = new QSettings("torunar", "sve");
+    QSize nodeSize     = settings->value("default_doc/node_size").toSize();
+    QPoint topLeft(
+    linkNodes[0].attribute("x").toInt() + nodeSize.width(),
+                linkNodes[0].attribute("y").toInt() + nodeSize.height() / 2
+    );
+    QPoint bottomRight(linkNodes[1].attribute("x").toInt(), linkNodes[1].attribute("y").toInt() + nodeSize.height() / 2);
+    qDebug() << topLeft << bottomRight;
+    /*
+    this->painter = new QPainter();
+    this->pen = QPen(Qt::black,1,Qt::SolidLine);
+    this->setGeometry(10,10,301,301);
+    this->show();
+    */
+}
+
+void NodeLink::paintEvent(QPaintEvent *) {
+    this->painter->begin(this);
+    this->painter->setPen(this->pen);
+    QVector<QPoint> line;
+    line
+        << QPoint(0,                 0)
+        << QPoint(this->width() / 2, 0)
+        << QPoint(this->width() / 2, this->height()-1)
+        << QPoint(this->width(),     this->height()-1);
+    this->painter->drawPolyline(line);
+    this->painter->end();
+}

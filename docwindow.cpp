@@ -72,7 +72,7 @@ void DocWindow::save() {
     }
     this->document->save(filename);
     this->setTitle(this->document->title);
-    this->setStatus(tr("File saved"), 2000);
+    this->setStatus(tr("Document saved"), 2000);
 }
 
 bool DocWindow::load() {
@@ -85,7 +85,20 @@ bool DocWindow::load() {
     this->setTitle(this->document->title);
     this->renderNodes();
     this->document->setChanged(false);
+    this->setStatus(tr("Document loaded"), 2000);
     return true;
+}
+
+void DocWindow::setLinkNode(QDomElement node, uint nodeCounter) {
+    this->linkNodes << node;
+    if (nodeCounter == 1) {
+        this->setStatus(tr("Set ending node"), 0);
+    }
+    else if (nodeCounter == 2) {
+        this->document->addLink(this->linkNodes);
+        this->linkNodes.clear();
+        this->setStatus("", 0);
+    }
 }
 
 void DocWindow::addLabel() {
@@ -112,9 +125,9 @@ void DocWindow::addNode() {
 
 void DocWindow::addLink() {
     this->setStatus(tr("Set beginning node"), 0);
-//    this->document->switchMode(DocumentMode::SelectNode);
-//    this->document->addLink();
-//    this->setChanged(this->document->isChanged());
+    this->document->setMode(DocumentMode::SelectNode);
+    // future opertations take place in setLinkNode
+    connect(this->document, SIGNAL(elementActivated(QDomElement, uint)), this, SLOT(setLinkNode(QDomElement, uint)));
 }
 
 void DocWindow::addNode(Plugin *plugin) {

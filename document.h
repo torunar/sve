@@ -14,9 +14,9 @@
 #include <QFile>
 #include <QFileInfo>
 
-#include "editablelabel.h"
+#include "labelnode.h"
 #include "elementnode.h"
-#include "nodelink.h"
+#include "linknode.h"
 
 typedef enum {
     Stub = 0,
@@ -49,7 +49,7 @@ public:
     void addNode(Plugin *plugin);
     void addNode(const QDomNode node);
 
-    void addLink();
+    void addLink(QList<QDomElement> elementNodes);
     void addLink(const QDomNode node);
 
     void renderNodes();
@@ -66,21 +66,28 @@ public:
 
 signals:
     void altered(bool);
+    void elementActivated(QDomElement, uint);
 
 public slots:
     void handleChildSignals(int signalType);
-    void setActiveElement(QDomElement element);
+    void setActiveElement(QDomElement);
     void save(QString filename);
     void load(QString filename);
     void addNode(QString plugin);
 
 private:
     QMdiSubWindow *parent;
-    QScrollArea *container;
+    QScrollArea   *container;
+    QFrame        *workarea;
+    QDomDocument  *xml;
+
+    bool         changed;
+    DocumentMode mode;
+
     QList<Plugin*> plugins;
-    QFrame *workarea;
-    QDomDocument *xml;
-    bool changed;
+
+    UNode activeElement;
+    uint  nodeCounter;
 
     uint inCounter;
     uint outCounter;

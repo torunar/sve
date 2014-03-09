@@ -27,6 +27,9 @@ Document::Document(QMdiSubWindow *parent) {
 
     this->xml = new QDomDocument("SVE");
     this->xml->appendChild(this->xml->createElement("document"));
+
+    this->mode = DocumentMode::Default;
+    this->nodeCounter = 0;
 }
 
 /*
@@ -64,12 +67,12 @@ bool Document::isChanged() {
  * Add label to the document and xml tree
  */
 void Document::addLabel(const QString text) {
-    EditableLabel *label = new EditableLabel(text, this->xml, this->workarea);
+    LabelNode *label = new LabelNode(text, this->xml, this->workarea);
     connect(label, SIGNAL(altered(int)), this, SLOT(handleChildSignals(int)));
     this->changed = true;
 }
 void Document::addLabel(const QDomNode node) {
-    EditableLabel *label = new EditableLabel(node, this->xml, this->workarea);
+    LabelNode *label = new LabelNode(node, this->xml, this->workarea);
     connect(label, SIGNAL(altered(int)), this, SLOT(handleChildSignals(int)));
     this->changed = true;
 }
@@ -77,8 +80,8 @@ void Document::addLabel(const QDomNode node) {
 // add plugin node
 void Document::addNode(Plugin *plugin) {
     ElementNode *elementNode = new ElementNode(plugin, this->xml, this->workarea);
-    connect(elementNode, SIGNAL(altered(int)), this, SLOT(handleChildSignals(int)));
     connect(elementNode, SIGNAL(activated(QDomElement)), this, SLOT(setActiveElement(QDomElement)));
+    connect(elementNode, SIGNAL(altered(int)),           this, SLOT(handleChildSignals(int)));
     // update internal counters
     elementNode->setCounters(inCounter, outCounter);
     this->inCounter  += plugin->getInputs().size();
@@ -90,8 +93,8 @@ void Document::addNode(const QDomNode node){
     QString pluginName = node.toElement().attribute("plugin");
     Plugin *plugin = this->getPlugin(pluginName);
     ElementNode *elementNode = new ElementNode(node, plugin, this->xml, this->workarea);
-    connect(elementNode, SIGNAL(altered(int)),      this, SLOT(handleChildSignals(int)));
     connect(elementNode, SIGNAL(activated(QDomElement)), this, SLOT(setActiveElement(QDomElement)));
+    connect(elementNode, SIGNAL(altered(int)),           this, SLOT(handleChildSignals(int)));
     // update internal counters
     elementNode->setCounters(inCounter, outCounter);
     this->inCounter  += plugin->getInputs().size();
@@ -100,8 +103,9 @@ void Document::addNode(const QDomNode node){
     this->changed = true;
 }
 
-void Document::addLink() {
-    NodeLink *nl = new NodeLink(this->workarea);
+void Document::addLink(QList<QDomElement> elementNodes) {
+    LinkNode *nl = new LinkNode(elementNodes, this->xml, this->workarea);
+    this->setMode(DocumentMode::Default);
     this->changed = true;
 }
 
@@ -155,13 +159,20 @@ void Document::handleChildSignals(int signalType) {
         setChanged(true);
         emit altered(true);
     }
+    // redraw links if element was moved
+    if (signalType == 1) {
+
+    }
 }
 
 /*
  * Last clicked element for stuff
  */
 void Document::setActiveElement(QDomElement element) {
-    qDebug() << element.attribute("id");
+    if (this->mode == DocumentMode::SelectNode && this->nodeCounter < 2) {
+        this->nodeCounter++;
+        emit(elementActivated(element, this->nodeCounter));
+    }
 }
 
 QDomDocument *Document::getXml() {
@@ -204,5 +215,12 @@ void Document::setPlugins(QList<Plugin *> plugins) {
 }
 
 void Document::setMode(DocumentMode documentMode) {
-
+    this->mode = documentMode;
+    switch(documentMode) {
+    case DocumentMode::Default:
+        this->nodeCounter = 0;
+        break;
+    default:
+        break;
+    }
 }

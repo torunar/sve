@@ -2,26 +2,26 @@
 #define ELEMENTNODE_H
 
 #include "plugin.h"
-#include "editablelabel.h"
+#include "unode.h"
 #include <QSettings>
 
 #include <QDebug>
 #include "nodepropertieswindow.h"
 
-class ElementNode : public EditableLabel
+class ElementNode : public UNode
 {
     Q_OBJECT
 public:
     ElementNode(QWidget *parent = 0);
-    ElementNode(Plugin *plugin, QDomDocument *xml, QWidget* parent = 0);
+    ElementNode(                     Plugin *plugin, QDomDocument *xml, QWidget* parent = 0);
     ElementNode(const QDomNode node, Plugin *plugin, QDomDocument *xml, QWidget *parent = 0);
+    ~ElementNode(){}
     void setCounters(uint inCounter, uint outCounter);
 
 private:
+    Plugin    *plugin;
     QSettings *settings;
-    QPoint startPos;
-    Plugin *plugin;
-    uint inCounter, outCounter;
+    uint       inCounter, outCounter;
 
 public slots:
     void showContextMenu(const QPoint &pos);

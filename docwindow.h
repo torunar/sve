@@ -17,16 +17,18 @@ public:
     DocWindow(QWidget *parent);
     ~DocWindow(){}
 
-    void setTitle(const QString title);
+    void      setTitle(const QString title);
     Document *getDocument();
 
     void addNode(Plugin *plugin);
     void attachStatusBar(QStatusBar *statusBar);
 
 private:
-    Document *document;
+    Document          *document;
+    QStatusBar        *statusBar;
+    QList<QDomElement> linkNodes;
+
     void renderNodes();
-    QStatusBar *statusBar;
     void setStatus(QString text, int timeout);
 
 protected:
@@ -39,6 +41,7 @@ public slots:
     void addLink();
     void save();
     bool load();
+    void setLinkNode(QDomElement node, uint nodeCounter);
 };
 
 #endif // DOCWINDOW_H

@@ -1,13 +1,12 @@
 #include "elementnode.h"
 
-ElementNode::ElementNode(QWidget *parent) : EditableLabel(parent) {
+ElementNode::ElementNode(QWidget *parent) : UNode(parent) {
     // stub
 }
 
-ElementNode::ElementNode(Plugin *plugin, QDomDocument *xml, QWidget *parent) : EditableLabel(parent) {
+ElementNode::ElementNode(Plugin *plugin, QDomDocument *xml, QWidget *parent) : UNode(parent) {
     this->settings = new QSettings("torunar", "sve");
 
-    this->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
 
     this->xml = xml;
@@ -28,10 +27,9 @@ ElementNode::ElementNode(Plugin *plugin, QDomDocument *xml, QWidget *parent) : E
 
 }
 
-ElementNode::ElementNode(const QDomNode node, Plugin *plugin, QDomDocument *xml, QWidget *parent) : EditableLabel(parent) {
+ElementNode::ElementNode(const QDomNode node, Plugin *plugin, QDomDocument *xml, QWidget *parent) : UNode(parent) {
     this->settings = new QSettings("torunar", "sve");
 
-    this->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
 
     this->xml = xml;
