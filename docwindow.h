@@ -9,6 +9,7 @@
 #include <QStatusBar>
 
 #include "addnodedialog.h"
+#include "connectiondialog.h"
 
 class DocWindow : public QMdiSubWindow {
     Q_OBJECT
@@ -24,9 +25,9 @@ public:
     void attachStatusBar(QStatusBar *statusBar);
 
 private:
-    Document          *document;
-    QStatusBar        *statusBar;
-    QList<QDomElement> linkNodes;
+    Document      *document;
+    QStatusBar    *statusBar;
+    QList<UNode *> linkNodes;
 
     void renderNodes();
     void setStatus(QString text, int timeout);
@@ -41,7 +42,7 @@ public slots:
     void addLink();
     void save();
     bool load();
-    void setLinkNode(QDomElement node, uint nodeCounter);
+    void setLinkNode(UNode *node, uint nodeCounter);
 };
 
 #endif // DOCWINDOW_H

@@ -15,6 +15,10 @@ UNode::UNode(const UNode &unode) : QLabel() {
     this->setContextMenuPolicy(Qt::CustomContextMenu);
 }
 
+QString UNode::getID() {
+    return this->node.attribute("id");
+}
+
 void UNode::setPosition(int x, int y) {
     this->setGeometry(
         (x >= 0) ? x : 0,
@@ -29,7 +33,7 @@ void UNode::setPosition(int x, int y) {
 void UNode::mousePressEvent(QMouseEvent *ev) {
     if (ev->button() == Qt::LeftButton) {
         this->startPos = ev->pos();
-        emit activated(this->node);
+        emit(activated());
     }
 }
 
@@ -45,7 +49,7 @@ void UNode::mouseReleaseEvent(QMouseEvent *) {
     this->node.setAttribute("x", this->x());
     this->node.setAttribute("y", this->y());
     // document changed flag
-    emit altered(1);
+    emit altered(AlterType::Moved);
 }
 
 void UNode::performDrag(const QPoint endPos) {
@@ -64,6 +68,6 @@ void UNode::performDrag(const QPoint endPos) {
 // remove from xml
 void UNode::remove() {
     this->xml->firstChild().removeChild(this->node);
-    emit altered(3);
+    emit altered(AlterType::Deleted);
     delete(this);
 }

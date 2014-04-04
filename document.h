@@ -49,7 +49,7 @@ public:
     void addNode(Plugin *plugin);
     void addNode(const QDomNode node);
 
-    void addLink(QList<QDomElement> elementNodes);
+    void addLink(QList<UNode *> elementNodes);
     void addLink(const QDomNode node);
 
     void renderNodes();
@@ -64,13 +64,16 @@ public:
     QString       title;
     QString       filename;
 
+    uint inCounter;
+    uint outCounter;
+
 signals:
     void altered(bool);
-    void elementActivated(QDomElement, uint);
+    void elementActivated(UNode*, uint);
 
 public slots:
-    void handleChildSignals(int signalType);
-    void setActiveElement(QDomElement);
+    void handleChildSignals(AlterType type);
+    void setActiveElement();
     void save(QString filename);
     void load(QString filename);
     void addNode(QString plugin);
@@ -86,11 +89,8 @@ private:
 
     QList<Plugin*> plugins;
 
-    UNode activeElement;
-    uint  nodeCounter;
-
-    uint inCounter;
-    uint outCounter;
+    UNode *activeElement;
+    uint   nodeCounter;
 };
 
 #endif // DOCUMENT_H

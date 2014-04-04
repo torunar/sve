@@ -5,7 +5,8 @@ ElementNode::ElementNode(QWidget *parent) : UNode(parent) {
 }
 
 ElementNode::ElementNode(Plugin *plugin, QDomDocument *xml, QWidget *parent) : UNode(parent) {
-    this->settings = new QSettings("torunar", "sve");
+    this->setObjectName("element_node");
+    this->settings = new QSettings("mike-schekotov", "sve");
 
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
 
@@ -28,7 +29,8 @@ ElementNode::ElementNode(Plugin *plugin, QDomDocument *xml, QWidget *parent) : U
 }
 
 ElementNode::ElementNode(const QDomNode node, Plugin *plugin, QDomDocument *xml, QWidget *parent) : UNode(parent) {
-    this->settings = new QSettings("torunar", "sve");
+    this->setObjectName("element_node");
+    this->settings = new QSettings("mike-schekotov", "sve");
 
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
 
@@ -48,6 +50,10 @@ ElementNode::ElementNode(const QDomNode node, Plugin *plugin, QDomDocument *xml,
 void ElementNode::setCounters(uint inCounter, uint outCounter) {
     this->inCounter  = inCounter;
     this->outCounter = outCounter;
+}
+
+Plugin *ElementNode::getPlugin() {
+    return this->plugin;
 }
 
 void ElementNode::showContextMenu(const QPoint &pos) {

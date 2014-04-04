@@ -3,7 +3,7 @@
 
 PluginListWindow::PluginListWindow(QWidget *parent) : QDialog(parent), ui(new Ui::PluginListWindow) {
     ui->setupUi(this);
-    this->settings = new QSettings("torunar", "sve");
+    this->settings = new QSettings("mike-schekotov", "sve");
 
     // plugins root
     QString pluginsPath = this->settings->value("plugins/plugin_dir", "./plugins/").toString();

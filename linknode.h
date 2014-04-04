@@ -10,18 +10,22 @@ class LinkNode : public UNode
 {
     Q_OBJECT
 public:
-    LinkNode(QList<QDomElement> elementNodes, QDomDocument *xml, QWidget *parent = 0);
+    LinkNode(QList<UNode*> elementNodes, QDomDocument *xml, QWidget *parent = 0);
     ~LinkNode(){}
+    bool hasNode(QString nodeID);
 
 private:
     QPainter       *painter;
     QImage          buffer;
     QPen            pen;
+    QSettings      *settings;
 
+    QList<UNode *>  nodes;
     QVector<QPoint> line;
 
 protected:
     void paintEvent(QPaintEvent *);
+    void mouseMoveEvent(QMouseEvent *ev);
 
 signals:
 

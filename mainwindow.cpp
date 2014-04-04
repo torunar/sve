@@ -2,7 +2,7 @@
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
-    this->settings = new QSettings("torunar", "sve");
+    this->settings = new QSettings("mike-schekotov", "sve");
     ui->setupUi(this);
 
     /* load css */

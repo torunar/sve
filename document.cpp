@@ -5,31 +5,29 @@
  */
 Document::Document(QMdiSubWindow *parent) {
     this->parent = parent;
-    this->setObjectName("Doc");
+    this->setObjectName("document");
 
     // scroll area inside of subwindow
     this->container = new QScrollArea(this->parent);
 
     // finally, workarea
     this->workarea = new QFrame(this->container);
-    this->workarea->setObjectName("DocumentArea");
+    this->workarea->setObjectName("document_area");
     this->workarea->setFrameStyle(QFrame::StyledPanel);
 
     this->container->setWidget(workarea);
 
     if (parent) this->parent->setWidget(this->container);
 
-    this->title = "";
-
-    this->changed = false;
-    this->inCounter = 0;
-    this->outCounter = 0;
+    this->title       = "";
+    this->changed     = false;
+    this->inCounter   = 0;
+    this->outCounter  = 0;
+    this->mode        = DocumentMode::Default;
+    this->nodeCounter = 0;
 
     this->xml = new QDomDocument("SVE");
     this->xml->appendChild(this->xml->createElement("document"));
-
-    this->mode = DocumentMode::Default;
-    this->nodeCounter = 0;
 }
 
 /*
@@ -45,6 +43,8 @@ void Document::resize(const int w, const int h) {
  */
 void Document::resize(const QSize size) {
     this->workarea->resize(size);
+    this->xml->firstChild().toElement().setAttribute("width",  size.width());
+    this->xml->firstChild().toElement().setAttribute("height", size.height());
 }
 
 /*
@@ -68,20 +68,20 @@ bool Document::isChanged() {
  */
 void Document::addLabel(const QString text) {
     LabelNode *label = new LabelNode(text, this->xml, this->workarea);
-    connect(label, SIGNAL(altered(int)), this, SLOT(handleChildSignals(int)));
+    connect(label, SIGNAL(altered(AlterType)), this, SLOT(handleChildSignals(AlterType)));
     this->changed = true;
 }
 void Document::addLabel(const QDomNode node) {
     LabelNode *label = new LabelNode(node, this->xml, this->workarea);
-    connect(label, SIGNAL(altered(int)), this, SLOT(handleChildSignals(int)));
+    connect(label, SIGNAL(altered(AlterType)), this, SLOT(handleChildSignals(AlterType)));
     this->changed = true;
 }
 
 // add plugin node
 void Document::addNode(Plugin *plugin) {
     ElementNode *elementNode = new ElementNode(plugin, this->xml, this->workarea);
-    connect(elementNode, SIGNAL(activated(QDomElement)), this, SLOT(setActiveElement(QDomElement)));
-    connect(elementNode, SIGNAL(altered(int)),           this, SLOT(handleChildSignals(int)));
+    connect(elementNode, SIGNAL(activated()),   this, SLOT(setActiveElement()));
+    connect(elementNode, SIGNAL(altered(AlterType)), this, SLOT(handleChildSignals(AlterType)));
     // update internal counters
     elementNode->setCounters(inCounter, outCounter);
     this->inCounter  += plugin->getInputs().size();
@@ -93,8 +93,8 @@ void Document::addNode(const QDomNode node){
     QString pluginName = node.toElement().attribute("plugin");
     Plugin *plugin = this->getPlugin(pluginName);
     ElementNode *elementNode = new ElementNode(node, plugin, this->xml, this->workarea);
-    connect(elementNode, SIGNAL(activated(QDomElement)), this, SLOT(setActiveElement(QDomElement)));
-    connect(elementNode, SIGNAL(altered(int)),           this, SLOT(handleChildSignals(int)));
+    connect(elementNode, SIGNAL(activated(QDomElement)),   this, SLOT(setActiveElement(QDomElement)));
+    connect(elementNode, SIGNAL(altered(AlterType)), this, SLOT(handleChildSignals(AlterType)));
     // update internal counters
     elementNode->setCounters(inCounter, outCounter);
     this->inCounter  += plugin->getInputs().size();
@@ -103,7 +103,7 @@ void Document::addNode(const QDomNode node){
     this->changed = true;
 }
 
-void Document::addLink(QList<QDomElement> elementNodes) {
+void Document::addLink(QList<UNode*> elementNodes) {
     LinkNode *nl = new LinkNode(elementNodes, this->xml, this->workarea);
     this->setMode(DocumentMode::Default);
     this->changed = true;
@@ -154,24 +154,29 @@ void Document::setChanged(bool changed) {
 /*
  * Handle signals from child elements like labels and nodes
  */
-void Document::handleChildSignals(int signalType) {
-    if (signalType != 0) {
+void Document::handleChildSignals(AlterType type) {
+    if (type != AlterType::None) {
         setChanged(true);
         emit altered(true);
     }
     // redraw links if element was moved
-    if (signalType == 1) {
-
+    if ((type == AlterType::Moved) && (this->sender()->objectName() == "element_node")) {
+        foreach(QObject *item, this->workarea->children()) {
+            if ((item->objectName() == "link_node") && ((LinkNode*)item)->hasNode(((UNode*)this->sender())->getID())) {
+                ((UNode*)item)->repaint();
+            }
+        }
     }
 }
 
 /*
  * Last clicked element for stuff
  */
-void Document::setActiveElement(QDomElement element) {
+void Document::setActiveElement() {
     if (this->mode == DocumentMode::SelectNode && this->nodeCounter < 2) {
         this->nodeCounter++;
-        emit(elementActivated(element, this->nodeCounter));
+        this->activeElement = (UNode*)this->sender();
+        emit(elementActivated(this->activeElement, this->nodeCounter));
     }
 }
 
@@ -180,7 +185,6 @@ QDomDocument *Document::getXml() {
 }
 
 void Document::renderNodes() {
-    qDebug() << this->xml->toString();
     QDomNodeList labels = this->xml->elementsByTagName("label");
     QDomNodeList nodes = this->xml->elementsByTagName("node");
     // so we can't iterate with foreach, huh?
@@ -190,7 +194,6 @@ void Document::renderNodes() {
     for (int i = 0; i < nodes.size(); i++) {
         this->addNode(nodes.at(i));
     }
-    qDebug() << this->xml->toString();
 }
 
 Plugin* Document::getPlugin(QString name) {

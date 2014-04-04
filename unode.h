@@ -11,6 +11,15 @@
 // id in xml
 #include <QDateTime>
 
+#include <QDebug>
+
+typedef enum {
+    None    = 0,
+    Moved   = 1,
+    Edited  = 2,
+    Deleted = 3
+} AlterType;
+
 class UNode : public QLabel
 {
     Q_OBJECT
@@ -20,8 +29,9 @@ public:
     UNode(const UNode &unode);
     ~UNode(){}
 
-    QDomElement  node;
+    QDomElement   node;
     QDomDocument *xml;
+    QString getID();
 
     void setPosition(int x, int y);
 
@@ -34,14 +44,8 @@ protected:
     void performDrag(const QPoint endPos);
     
 signals:
-    void altered(int signalType);
-    /*
-      0: None
-      1: Moved
-      2: Text edited
-      3: Deleted
-    */
-    void activated(QDomElement);
+    void altered(AlterType);
+    void activated();
     
 public slots:
 

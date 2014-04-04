@@ -6,7 +6,7 @@ DocWindow::DocWindow(QWidget *parent) : QMdiSubWindow(parent) {
     this->setWindowTitle(QObject::tr("Untitled") + " " + QString::number(n));
     this->showMaximized();
     this->setAttribute(Qt::WA_DeleteOnClose);
-    this->setObjectName("DocWindow");
+    this->setObjectName("document_window");
 
     document = new Document(this);
     // to set window title
@@ -89,12 +89,15 @@ bool DocWindow::load() {
     return true;
 }
 
-void DocWindow::setLinkNode(QDomElement node, uint nodeCounter) {
+void DocWindow::setLinkNode(UNode *node, uint nodeCounter) {
     this->linkNodes << node;
     if (nodeCounter == 1) {
         this->setStatus(tr("Set ending node"), 0);
     }
     else if (nodeCounter == 2) {
+        ConnectionDialog *cd = new ConnectionDialog(this->linkNodes);
+        cd->setCounters(this->document->inCounter, this->document->outCounter);
+        cd->exec();
         this->document->addLink(this->linkNodes);
         this->linkNodes.clear();
         this->setStatus("", 0);
@@ -127,7 +130,7 @@ void DocWindow::addLink() {
     this->setStatus(tr("Set beginning node"), 0);
     this->document->setMode(DocumentMode::SelectNode);
     // future opertations take place in setLinkNode
-    connect(this->document, SIGNAL(elementActivated(QDomElement, uint)), this, SLOT(setLinkNode(QDomElement, uint)));
+    connect(this->document, SIGNAL(elementActivated(UNode*, uint)), this, SLOT(setLinkNode(UNode*, uint)));
 }
 
 void DocWindow::addNode(Plugin *plugin) {

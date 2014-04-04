@@ -5,7 +5,7 @@
 
 int main(int argc, char *argv[])
 {
-    QSettings settings("torunar", "sve");
+    QSettings settings("mike-schekotov", "sve");
     // Blank document settings
     if (settings.value("default_doc/blank_size",  "") == "") {
         settings.setValue("default_doc/blank_size",  QSize(980, 560));

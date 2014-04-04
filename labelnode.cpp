@@ -5,7 +5,7 @@ LabelNode::LabelNode(QWidget *parent) : UNode(parent) {
 }
 
 LabelNode::LabelNode(const QString text, QDomDocument *xml, QWidget *parent) : UNode(text, parent) {
-    this->setObjectName("EditableLabel");
+    this->setObjectName("label_node");
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
     this->xml = xml;
     // create via domdocument call
@@ -22,7 +22,7 @@ LabelNode::LabelNode(const QString text, QDomDocument *xml, QWidget *parent) : U
 }
 
 LabelNode::LabelNode(const QDomNode node, QDomDocument *xml, QWidget *parent) : UNode(node.toElement().attribute("text"), parent) {
-    this->setObjectName("EditableLabel");
+    this->setObjectName("label_node");
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
     this->xml = xml;
     this->node = node.toElement();
@@ -58,6 +58,6 @@ void LabelNode::edit() {
         this->adjustSize();
         this->node.setAttribute("text", text);
         // document changed flag
-        emit altered(2);
+        emit altered(AlterType::Edited);
     }
 }
