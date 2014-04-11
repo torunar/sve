@@ -133,9 +133,7 @@ void DocWindow::addLink() {
     this->setStatus(tr("Set beginning node"), 0);
     this->document->setMode(DocumentMode::SelectNode);
     // future opertations take place in setLinkNode
-    // TODO: add check if slot is already conencted to prevent multiple connection dialog show
-    disconnect(this->document, SIGNAL(elementActivated(UNode*, uint)));
-    connect(this->document, SIGNAL(elementActivated(UNode*, uint)), this, SLOT(setLinkNode(UNode*, uint)));
+    connect(this->document, SIGNAL(elementActivated(UNode*, uint)), this, SLOT(setLinkNode(UNode*, uint)), Qt::UniqueConnection);
 }
 
 void DocWindow::addNode(Plugin *plugin) {

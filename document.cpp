@@ -19,12 +19,13 @@ Document::Document(QMdiSubWindow *parent) {
 
     if (parent) this->parent->setWidget(this->container);
 
-    this->title       = "";
-    this->changed     = false;
-    this->inCounter   = 0;
-    this->outCounter  = 0;
-    this->mode        = DocumentMode::Default;
-    this->nodeCounter = 0;
+    this->title         = "";
+    this->changed       = false;
+    this->inCounter     = 0;
+    this->outCounter    = 0;
+    this->mode          = DocumentMode::Default;
+    this->nodeCounter   = 0;
+    this->activeElement = 0;
 
     this->xml = new QDomDocument("SVE");
     this->xml->appendChild(this->xml->createElement("document"));
@@ -80,7 +81,7 @@ void Document::addLabel(const QDomNode node) {
 // add plugin node
 void Document::addNode(Plugin *plugin) {
     ElementNode *elementNode = new ElementNode(plugin, this->xml, this->workarea);
-    connect(elementNode, SIGNAL(activated()),   this, SLOT(setActiveElement()));
+    connect(elementNode, SIGNAL(activated()),        this, SLOT(setActiveElement()));
     connect(elementNode, SIGNAL(altered(AlterType)), this, SLOT(handleChildSignals(AlterType)));
     // update internal counters
     elementNode->setCounters(inCounter, outCounter);
@@ -93,7 +94,7 @@ void Document::addNode(const QDomNode node){
     QString pluginName = node.toElement().attribute("plugin");
     Plugin *plugin = this->getPlugin(pluginName);
     ElementNode *elementNode = new ElementNode(node, plugin, this->xml, this->workarea);
-    connect(elementNode, SIGNAL(activated(QDomElement)),   this, SLOT(setActiveElement(QDomElement)));
+    connect(elementNode, SIGNAL(activated()),        this, SLOT(setActiveElement()));
     connect(elementNode, SIGNAL(altered(AlterType)), this, SLOT(handleChildSignals(AlterType)));
     // update internal counters
     elementNode->setCounters(inCounter, outCounter);
@@ -176,6 +177,7 @@ void Document::setActiveElement() {
     if (this->mode == DocumentMode::SelectNode && this->nodeCounter < 2) {
         this->nodeCounter++;
         this->activeElement = (UNode*)this->sender();
+        qDebug() << "emit";
         emit(elementActivated(this->activeElement, this->nodeCounter));
     }
 }
