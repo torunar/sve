@@ -177,7 +177,6 @@ void Document::setActiveElement() {
     if (this->mode == DocumentMode::SelectNode && this->nodeCounter < 2) {
         this->nodeCounter++;
         this->activeElement = (UNode*)this->sender();
-        qDebug() << "emit";
         emit(elementActivated(this->activeElement, this->nodeCounter));
     }
 }

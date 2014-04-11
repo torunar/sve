@@ -84,7 +84,6 @@ bool DocWindow::load() {
 }
 
 void DocWindow::setLinkNode(UNode *node, uint nodeCounter) {
-    qDebug() << node->node.attribute("id") << nodeCounter;
     ConnectionDialog *cd;
     this->linkNodes << node;
     switch(nodeCounter) {

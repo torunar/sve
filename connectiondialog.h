@@ -1,6 +1,7 @@
 #ifndef CONNECTIONDIALOG_H
 #define CONNECTIONDIALOG_H
 
+#include <QListWidgetItem>
 #include <QDialog>
 #include "elementnode.h"
 
@@ -20,11 +21,14 @@ public:
     ~ConnectionDialog();
     uint inCounter, outCounter;
     void setCounters(uint inCounter, uint outCounter);
+    int selectedInput, selectedOutput;
     
 private:
     Ui::ConnectionDialog *ui;
 
 public slots:
+    void setInput(QListWidgetItem *);
+    void setOutput(QListWidgetItem *);
     void getSelection();
 };
 

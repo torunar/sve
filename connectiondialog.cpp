@@ -21,8 +21,13 @@ ConnectionDialog::ConnectionDialog(QList<UNode *> nodes, QWidget *parent) : QDia
         new QListWidgetItem(outputText, this->ui->outList);
     }
 
-    connect(this->ui->cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
-    connect(this->ui->okButton,     SIGNAL(clicked()), this, SLOT(getSelection()));
+    this->selectedInput  = -1;
+    this->selectedOutput = -1;
+
+    connect(this->ui->cancelButton, SIGNAL(clicked()),              this, SLOT(reject()));
+    connect(this->ui->okButton,     SIGNAL(clicked()),              this, SLOT(getSelection()));
+    connect(this->ui->inList,       SIGNAL(itemPressed(QListWidgetItem *)), this, SLOT(setInput(QListWidgetItem *)));
+    connect(this->ui->outList,      SIGNAL(itemPressed(QListWidgetItem *)), this, SLOT(setOutput(QListWidgetItem *)));
 }
 
 ConnectionDialog::~ConnectionDialog() {
@@ -34,6 +39,26 @@ void ConnectionDialog::setCounters(uint inCounter, uint outCounter) {
     this->outCounter = outCounter;
 }
 
-void ConnectionDialog::getSelection() {
+void ConnectionDialog::setInput(QListWidgetItem *) {
+    QModelIndexList l = this->ui->inList->selectionModel()->selectedIndexes();
+    foreach(QModelIndex i, l) {
+        this->selectedInput = i.row();
+    }
+    if ((selectedInput != -1) && (selectedOutput != -1)) {
+        this->ui->okButton->setEnabled(true);
+    }
+}
 
+void ConnectionDialog::setOutput(QListWidgetItem *) {
+    QModelIndexList l = this->ui->outList->selectionModel()->selectedIndexes();
+    foreach(QModelIndex i, l) {
+        this->selectedOutput = i.row();
+    }
+    if ((selectedInput != -1) && (selectedOutput != -1)) {
+        this->ui->okButton->setEnabled(true);
+    }
+}
+
+void ConnectionDialog::getSelection() {
+    this->accept();
 }
