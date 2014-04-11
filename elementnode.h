@@ -11,6 +11,7 @@
 class ElementNode : public UNode
 {
     Q_OBJECT
+
 public:
     ElementNode(QWidget *parent = 0);
     ElementNode(                     Plugin *plugin, QDomDocument *xml, QWidget* parent = 0);

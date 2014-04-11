@@ -4,13 +4,13 @@
 #include <QImage>
 #include <QPainter>
 #include <QSettings>
-#include "unode.h"
+#include "elementnode.h"
 
 class LinkNode : public UNode
 {
     Q_OBJECT
 public:
-    LinkNode(QList<UNode*> elementNodes, QDomDocument *xml, QWidget *parent = 0);
+    LinkNode(QList<UNode*> elementNodes, QPair<int, int> connectors, QDomDocument *xml, QWidget *parent = 0);
     ~LinkNode(){}
     bool hasNode(QString nodeID);
 
@@ -21,6 +21,7 @@ private:
     QSettings      *settings;
 
     QList<UNode *>  nodes;
+    QPair<int, int> connectors;
     QVector<QPoint> line;
 
 protected:

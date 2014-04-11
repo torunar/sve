@@ -31,7 +31,8 @@ public:
 
     QDomElement   node;
     QDomDocument *xml;
-    QString getID();
+
+    QString       getID();
 
     void setPosition(int x, int y);
 

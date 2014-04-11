@@ -104,8 +104,8 @@ void Document::addNode(const QDomNode node){
     this->changed = true;
 }
 
-void Document::addLink(QList<UNode*> elementNodes) {
-    LinkNode *nl = new LinkNode(elementNodes, this->xml, this->workarea);
+void Document::addLink(QList<UNode*> elementNodes, QPair<int, int> connectors) {
+    LinkNode *nl = new LinkNode(elementNodes, connectors, this->xml, this->workarea);
     this->setMode(DocumentMode::Default);
     this->changed = true;
 }

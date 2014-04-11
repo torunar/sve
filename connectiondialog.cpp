@@ -39,6 +39,10 @@ void ConnectionDialog::setCounters(uint inCounter, uint outCounter) {
     this->outCounter = outCounter;
 }
 
+QPair<int, int> ConnectionDialog::getConnectors() {
+    return QPair<int, int>(this->selectedOutput, this->selectedInput);
+}
+
 void ConnectionDialog::setInput(QListWidgetItem *) {
     QModelIndexList l = this->ui->inList->selectionModel()->selectedIndexes();
     foreach(QModelIndex i, l) {

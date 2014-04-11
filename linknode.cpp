@@ -1,13 +1,14 @@
 #include "linknode.h"
 
-LinkNode::LinkNode(QList<UNode*> elementNodes, QDomDocument *xml, QWidget *parent) : UNode(parent) {
+LinkNode::LinkNode(QList<UNode*> elementNodes, QPair<int, int> connectors, QDomDocument *xml, QWidget *parent) : UNode(parent) {
     this->setObjectName("link_node");
     disconnect(this, SIGNAL(customContextMenuRequested(const QPoint&)));
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
 
     this->settings = new QSettings("mike-schekotov", "sve");
 
-    this->nodes = elementNodes;
+    this->nodes      = elementNodes;
+    this->connectors = connectors;
 
     this->xml = xml;
     this->node = this->xml->createElement("link");
@@ -28,29 +29,46 @@ bool LinkNode::hasNode(QString nodeID) {
 
 void LinkNode::paintEvent(QPaintEvent *) {
     QSize nodeSize      = this->settings->value("default_doc/node_size").toSize();
+    ElementNode *firstNode = (ElementNode*) this->nodes.first();
+    ElementNode *lastNode  = (ElementNode*) this->nodes.last();
+
+    int nOuts  = ((ElementNode*) firstNode)->getPlugin()->getOutputs().size();
+    int nIns   = ((ElementNode*) lastNode)->getPlugin()->getInputs().size();
+
+    int xFirst = firstNode->node.attribute("x").toInt();
+    int xLast  = lastNode->node.attribute("x").toInt();
+
+    int yFirst = firstNode->node.attribute("y").toInt();
+    int yLast  = lastNode->node.attribute("y").toInt();
+
+    int marginFirst = (this->connectors.first  + 1) * nodeSize.height() / (nOuts + 1);
+    int marginLast  = (this->connectors.second + 1) * nodeSize.height() / (nIns  + 1);
+
     QPoint topLeft(
         std::min(
-            this->nodes.first()->node.attribute("x").toInt() + nodeSize.width(),
-            this->nodes.last()->node.attribute("x").toInt()
+            xFirst + nodeSize.width(),
+            xLast
         ),
         std::min(
-            this->nodes.first()->node.attribute("y").toInt() + nodeSize.height() / 2,
-            this->nodes.last()->node.attribute("y").toInt() + nodeSize.height() / 2
+            yFirst + marginFirst,
+            yLast  + marginLast
         )
     );
     QPoint bottomRight(
         std::max(
-            this->nodes.first()->node.attribute("x").toInt() + nodeSize.width(),
-            this->nodes.last()->node.attribute("x").toInt()
+            xFirst + nodeSize.width(),
+            xLast
         ),
         std::max(
-            this->nodes.first()->node.attribute("y").toInt() + nodeSize.height() / 2,
-            this->nodes.last()->node.attribute("y").toInt() + nodeSize.height() / 2
+            yFirst + marginFirst,
+            yLast  + marginLast
         )
     );
 
-    QPoint p1(nodes.first()->pos().x() - topLeft.x() + nodeSize.width(), nodes.first()->pos().y() - topLeft.y() + nodeSize.height() / 2);
-    QPoint p2(nodes.last()->pos().x()  - topLeft.x()                   , nodes.last()->pos().y()  - topLeft.y() + nodeSize.height() / 2);
+    QPoint p1(firstNode->pos().x() - topLeft.x() + nodeSize.width(), firstNode->pos().y() - topLeft.y() + marginFirst);
+    QPoint p2(lastNode->pos().x()  - topLeft.x()                   , lastNode->pos().y()  - topLeft.y() + marginLast);
+
+    qDebug() << topLeft << bottomRight << p1 << p2;
 
     bool lineType = (p1.x() < p2.x());
     line.clear();
@@ -85,8 +103,6 @@ void LinkNode::showContextMenu(const QPoint &p) {
     other << QPoint(p.x()-2, p.y()-2) << QPoint(p.x()+2, p.y()-2) << QPoint(p.x()+2, p.y()+2) << QPoint(p.x()-2, p.y()-2);
     qDebug() << QPolygon(line).containsPoint(p, Qt::OddEvenFill) << QPolygon(line).isSharedWith(other);
 
-//    QPixmap t = QScreen::grabWindow(this->winId(), QCursor::pos().x() -5, QCursor::pos().y()-5, 10, 10);
-//    qDebug() << t.colorCount();
     /*
     QPoint globalPos = this->mapToGlobal(pos);
     QMenu menu;

@@ -49,7 +49,7 @@ public:
     void addNode(Plugin *plugin);
     void addNode(const QDomNode node);
 
-    void addLink(QList<UNode *> elementNodes);
+    void addLink(QList<UNode *> elementNodes, QPair<int, int> connectors);
     void addLink(const QDomNode node);
 
     void renderNodes();

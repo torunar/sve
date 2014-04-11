@@ -98,7 +98,9 @@ void DocWindow::setLinkNode(UNode *node, uint nodeCounter) {
         cd = new ConnectionDialog(this->linkNodes);
         cd->setCounters(this->document->inCounter, this->document->outCounter);
         if (cd->exec() == QDialog::Accepted) {
-            this->document->addLink(this->linkNodes);
+            // output, input
+            QPair<int, int> connectors = cd->getConnectors();
+            this->document->addLink(this->linkNodes, connectors);
         }
         this->linkNodes.clear();
         delete cd;
