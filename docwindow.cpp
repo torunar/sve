@@ -29,20 +29,15 @@ void DocWindow::closeEvent(QCloseEvent *closeEvent) {
         mb->addButton(tr("Close without saving"), QMessageBox::DestructiveRole);
         mb->addButton(tr("Save"), QMessageBox::AcceptRole);
         mb->addButton(tr("Cancel"), QMessageBox::RejectRole);
-        // "delete this" is a trick to really DeleteOnClose as defined above
-        // TODO: this tends to segfault.
-        // Find a way to ACTUALLY delete tab
         switch (mb->exec()) {
         // close without saving
         case 0:
             closeEvent->accept();
-//            delete this;
             break;
         // save
         case 1:
             this->save();
             closeEvent->accept();
-//            delete this;
             break;
         // cancel
         case 2:
@@ -52,7 +47,6 @@ void DocWindow::closeEvent(QCloseEvent *closeEvent) {
     }
     else {
         closeEvent->accept();
-//        delete this;
     }
 }
 
@@ -90,17 +84,26 @@ bool DocWindow::load() {
 }
 
 void DocWindow::setLinkNode(UNode *node, uint nodeCounter) {
+    qDebug() << node->node.attribute("id") << nodeCounter;
+    ConnectionDialog *cd;
     this->linkNodes << node;
-    if (nodeCounter == 1) {
+    switch(nodeCounter) {
+    case 1:
         this->setStatus(tr("Set ending node"), 0);
-    }
-    else if (nodeCounter == 2) {
-        ConnectionDialog *cd = new ConnectionDialog(this->linkNodes);
-        cd->setCounters(this->document->inCounter, this->document->outCounter);
-        cd->exec();
-        this->document->addLink(this->linkNodes);
-        this->linkNodes.clear();
+        break;
+    case 2:
+        // clear
+        this->document->setMode(DocumentMode::Default);
         this->setStatus("", 0);
+        // show slot selector
+        cd = new ConnectionDialog(this->linkNodes);
+        cd->setCounters(this->document->inCounter, this->document->outCounter);
+        if (cd->exec() == QDialog::Accepted) {
+            this->document->addLink(this->linkNodes);
+        }
+        this->linkNodes.clear();
+        delete cd;
+        break;
     }
 }
 
@@ -130,6 +133,8 @@ void DocWindow::addLink() {
     this->setStatus(tr("Set beginning node"), 0);
     this->document->setMode(DocumentMode::SelectNode);
     // future opertations take place in setLinkNode
+    // TODO: add check if slot is already conencted to prevent multiple connection dialog show
+    disconnect(this->document, SIGNAL(elementActivated(UNode*, uint)));
     connect(this->document, SIGNAL(elementActivated(UNode*, uint)), this, SLOT(setLinkNode(UNode*, uint)));
 }
 

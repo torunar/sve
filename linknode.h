@@ -26,11 +26,12 @@ private:
 protected:
     void paintEvent(QPaintEvent *);
     void mouseMoveEvent(QMouseEvent *ev);
+//    void mousePressEvent(QMouseEvent *ev);
 
 signals:
 
 public slots:
-
+    void showContextMenu(const QPoint&);
 };
 
 #endif // LINKNODE_H

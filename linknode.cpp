@@ -2,6 +2,9 @@
 
 LinkNode::LinkNode(QList<UNode*> elementNodes, QDomDocument *xml, QWidget *parent) : UNode(parent) {
     this->setObjectName("link_node");
+    disconnect(this, SIGNAL(customContextMenuRequested(const QPoint&)));
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
+
     this->settings = new QSettings("mike-schekotov", "sve");
 
     this->nodes = elementNodes;
@@ -14,7 +17,8 @@ LinkNode::LinkNode(QList<UNode*> elementNodes, QDomDocument *xml, QWidget *paren
     this->xml->firstChild().appendChild(this->node);
 
     this->painter = new QPainter();
-    this->pen = QPen(Qt::black,1,Qt::SolidLine);
+    this->pen = QPen(Qt::black, 1, Qt::SolidLine);
+
     this->show();
 }
 
@@ -25,28 +29,31 @@ bool LinkNode::hasNode(QString nodeID) {
 void LinkNode::paintEvent(QPaintEvent *) {
     QSize nodeSize      = this->settings->value("default_doc/node_size").toSize();
     QPoint topLeft(
-        this->nodes.first()->node.attribute("x").toInt() + nodeSize.width(),
-        this->nodes.first()->node.attribute("y").toInt() + nodeSize.height() / 2
+        std::min(
+            this->nodes.first()->node.attribute("x").toInt() + nodeSize.width(),
+            this->nodes.last()->node.attribute("x").toInt()
+        ),
+        std::min(
+            this->nodes.first()->node.attribute("y").toInt() + nodeSize.height() / 2,
+            this->nodes.last()->node.attribute("y").toInt() + nodeSize.height() / 2
+        )
     );
     QPoint bottomRight(
-        this->nodes.last()->node.attribute("x").toInt(),
-        this->nodes.last()->node.attribute("y").toInt() + nodeSize.height() / 2
+        std::max(
+            this->nodes.first()->node.attribute("x").toInt() + nodeSize.width(),
+            this->nodes.last()->node.attribute("x").toInt()
+        ),
+        std::max(
+            this->nodes.first()->node.attribute("y").toInt() + nodeSize.height() / 2,
+            this->nodes.last()->node.attribute("y").toInt() + nodeSize.height() / 2
+        )
     );
-    if (topLeft.x() > bottomRight.x()) {
-        int x = topLeft.x();
-        topLeft.setX(bottomRight.x());
-        bottomRight.setX(x);
-    }
-    if (topLeft.y() > bottomRight.y()) {
-        int y = topLeft.y();
-        topLeft.setY(bottomRight.y());
-        bottomRight.setY(y);
-    }
 
     QPoint p1(nodes.first()->pos().x() - topLeft.x() + nodeSize.width(), nodes.first()->pos().y() - topLeft.y() + nodeSize.height() / 2);
     QPoint p2(nodes.last()->pos().x()  - topLeft.x()                   , nodes.last()->pos().y()  - topLeft.y() + nodeSize.height() / 2);
 
     bool lineType = (p1.x() < p2.x());
+    line.clear();
     if(lineType) {
         this->setGeometry(QRect(topLeft, bottomRight));
         line << QPoint(p1.x(),            p1.y())
@@ -67,9 +74,28 @@ void LinkNode::paintEvent(QPaintEvent *) {
     this->painter->begin(this);
     this->painter->setPen(this->pen);
     this->painter->drawPolyline(line);
-    line.clear();
     this->painter->end();
 }
 
 void LinkNode::mouseMoveEvent(QMouseEvent *ev) {
+}
+
+void LinkNode::showContextMenu(const QPoint &p) {
+    QVector<QPoint> other;
+    other << QPoint(p.x()-2, p.y()-2) << QPoint(p.x()+2, p.y()-2) << QPoint(p.x()+2, p.y()+2) << QPoint(p.x()-2, p.y()-2);
+    qDebug() << QPolygon(line).containsPoint(p, Qt::OddEvenFill) << QPolygon(line).isSharedWith(other);
+
+//    QPixmap t = QScreen::grabWindow(this->winId(), QCursor::pos().x() -5, QCursor::pos().y()-5, 10, 10);
+//    qDebug() << t.colorCount();
+    /*
+    QPoint globalPos = this->mapToGlobal(pos);
+    QMenu menu;
+    QAction *edit = new QAction(tr("Edit text"), this);
+            connect(edit, SIGNAL(triggered()), this, SLOT(edit()));
+            menu.addAction(edit);
+    QAction *del = new QAction(tr("Delete"), this);
+            connect(del, SIGNAL(triggered()), this, SLOT(remove()));
+            menu.addAction(del);
+    menu.exec(globalPos);
+    */
 }

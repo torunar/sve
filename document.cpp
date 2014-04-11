@@ -180,6 +180,10 @@ void Document::setActiveElement() {
     }
 }
 
+void Document::resetActiveElement() {
+    this->activeElement = 0;
+}
+
 QDomDocument *Document::getXml() {
     return this->xml;
 }
@@ -226,4 +230,8 @@ void Document::setMode(DocumentMode documentMode) {
     default:
         break;
     }
+}
+
+void Document::setNodeCounter(uint counter) {
+    this->nodeCounter = counter;
 }

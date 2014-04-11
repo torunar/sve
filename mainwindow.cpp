@@ -92,15 +92,16 @@ void MainWindow::findPlugin() {
 
 // close opened documents and quit
 void MainWindow::quit() {
-    for (int i = this->mdiArea->subWindowList(QMdiArea::ActivationHistoryOrder).length() - 1; i >= 0; i--) {
-        int before = this->mdiArea->subWindowList().length();
-        ((DocWindow*)this->mdiArea->subWindowList(QMdiArea::ActivationHistoryOrder).at(i))->close();
-        int after = this->mdiArea->subWindowList().length();
-        // closing of unsaved document was aborted with "cancel"
-        if (after == before) return;
-    }
-    if (this->mdiArea->subWindowList().length() == 0) {
+    this->mdiArea->closeAllSubWindows();
+    QMdiSubWindow *sb = this->mdiArea->activeSubWindow();
+    if (sb == 0) {
         exit(0);
+    }
+    else {
+        sb->activateWindow();
+        if (sb->isHidden()) {
+            exit(0);
+        }
     }
 }
 

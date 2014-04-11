@@ -59,6 +59,9 @@ public:
     void        setPlugins(QList<Plugin*> plugins);
 
     void setMode(DocumentMode documentMode);
+    void setNodeCounter(uint counter);
+
+    void resetActiveElement();
 
     QDomDocument *getXml();
     QString       title;
