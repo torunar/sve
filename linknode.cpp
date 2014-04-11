@@ -68,8 +68,6 @@ void LinkNode::paintEvent(QPaintEvent *) {
     QPoint p1(firstNode->pos().x() - topLeft.x() + nodeSize.width(), firstNode->pos().y() - topLeft.y() + marginFirst);
     QPoint p2(lastNode->pos().x()  - topLeft.x()                   , lastNode->pos().y()  - topLeft.y() + marginLast);
 
-    qDebug() << topLeft << bottomRight << p1 << p2;
-
     bool lineType = (p1.x() < p2.x());
     line.clear();
     if(lineType) {

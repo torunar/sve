@@ -15,6 +15,8 @@ UNode::UNode(const UNode &unode) : QLabel() {
     this->setContextMenuPolicy(Qt::CustomContextMenu);
 }
 
+UNode::~UNode() {}
+
 QString UNode::getID() {
     return this->node.attribute("id");
 }

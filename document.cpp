@@ -168,6 +168,14 @@ void Document::handleChildSignals(AlterType type) {
             }
         }
     }
+    // delete links if element was deleted
+    if ((type == AlterType::Deleted) && (this->sender()->objectName() == "element_node")) {
+        foreach(QObject *item, this->workarea->children()) {
+            if ((item->objectName() == "link_node") && ((LinkNode*)item)->hasNode(((UNode*)this->sender())->getID())) {
+                ((UNode*)item)->remove();
+            }
+        }
+    }
 }
 
 /*

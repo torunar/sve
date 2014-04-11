@@ -27,7 +27,7 @@ public:
     UNode(              QWidget *parent = 0);
     UNode(QString text, QWidget *parent = 0);
     UNode(const UNode &unode);
-    ~UNode(){}
+    ~UNode();
 
     QDomElement   node;
     QDomDocument *xml;
@@ -49,8 +49,6 @@ signals:
     void activated();
     
 public slots:
-
-private slots:
     void remove();
     
 };
