@@ -36,6 +36,7 @@ void LinkNode::paintEvent(QPaintEvent *) {
     int nOuts  = ((ElementNode*) firstNode)->getPlugin()->getOutputs().size();
     int nIns   = ((ElementNode*) lastNode)->getPlugin()->getInputs().size();
 
+    // geometry tricks
     int xFirst = firstNode->attr("x").toInt();
     int xLast  = lastNode->attr("x").toInt();
 
@@ -46,71 +47,83 @@ void LinkNode::paintEvent(QPaintEvent *) {
     int marginLast  = (this->connectors.second + 1) * nodeSize.height() / (nIns  + 1);
 
     QPoint topLeft(
-        std::min(
-            xFirst + nodeSize.width(),
-            xLast
-        ),
-        std::min(
-            yFirst + marginFirst,
-            yLast  + marginLast
-        )
+        std::min(xFirst + nodeSize.width(), xLast),
+        std::min(yFirst + marginFirst,      yLast  + marginLast)
     );
     QPoint bottomRight(
-        std::max(
-            xFirst + nodeSize.width(),
-            xLast
-        ),
-        std::max(
-            yFirst + marginFirst,
-            yLast  + marginLast
-        )
+        std::max(xFirst + nodeSize.width(), xLast),
+        std::max(yFirst + marginFirst,      yLast  + marginLast)
     );
 
     QPoint p1(firstNode->pos().x() - topLeft.x() + nodeSize.width(), firstNode->pos().y() - topLeft.y() + marginFirst);
     QPoint p2(lastNode->pos().x()  - topLeft.x()                   , lastNode->pos().y()  - topLeft.y() + marginLast);
 
-    bool lineType = (p1.x() < p2.x());
     line.clear();
-    if(lineType) {
-        this->setGeometry(QRect(topLeft, bottomRight));
-        line << QPoint(p1.x(),            p1.y())
-             << QPoint(this->width() / 2, p1.y())
-             << QPoint(this->width() / 2, p2.y())
-             << QPoint(p2.x(),            p2.y());
+
+    // shape of line
+    bool lineType = (p1.x() < p2.x());
+    if (lineType) {
+        this->setGeometry(topLeft.x(), topLeft.y() - 1, bottomRight.x() - topLeft.x(), bottomRight.y() - topLeft.y() + 3);
+        int fix = (p1.y() == 0) ? 1 : -1;
+        line << QPoint(p1.x(),            p1.y() + fix)
+             << QPoint(this->width() / 2, p1.y() + fix)
+             << QPoint(this->width() / 2, abs(p2.y() - fix))
+             << QPoint(p2.x(),            abs(p2.y() - fix));
     }
     else {
-        this->setGeometry(topLeft.x()-10, topLeft.y(), bottomRight.x() - topLeft.x() + 21, bottomRight.y() - topLeft.y() + 1);
-        line << QPoint(p1.x() + 10,       p1.y())
-             << QPoint(p1.x() + 20,       p1.y())
-             << QPoint(p1.x() + 20,       this->height() / 2)
-             << QPoint(p2.x(),            this->height() / 2)
-             << QPoint(p2.x(),            p2.y())
-             << QPoint(p2.x() + 10,       p2.y());
+        this->setGeometry(topLeft.x()-11, topLeft.y()-1, bottomRight.x() - topLeft.x() + 21, bottomRight.y() - topLeft.y() + 1);
+        int fixY = (p1.y() == 0) ? 1 : -1;
+        int fixX = (p1.x() == 0) ? 1 : -1;
+        line << QPoint(p1.x() + 10,        p1.y() + fixY)
+             << QPoint(p1.x() + 20 + fixX, p1.y() + fixY)
+             << QPoint(p1.x() + 20 + fixX, this->height() / 2)
+             << QPoint(p2.x() - fixX,      this->height() / 2)
+             << QPoint(p2.x() - fixX,      p2.y() - fixY)
+             << QPoint(p2.x() + 10,        p2.y() - fixY);
+    }
+
+    // mask to crop the widget
+    QRegion mask;
+    for (int i = 0; i < line.size() - 1; i++) {
+        QPoint xy1 = line[i];
+        QPoint xy2 = line[i+1];
+        if (xy1.y() == xy2.y()) {
+            xy1.setY(xy2.y() - 1);
+            xy2.setY(xy2.y() + 1);
+        }
+        else {
+            xy1.setX(xy1.x() - 1);
+            xy2.setX(xy2.x() + 1);
+        }
+        topLeft = QPoint(
+            std::min(xy1.x(), xy2.x()),
+            std::min(xy1.y(), xy2.y())
+        );
+        bottomRight = QPoint(
+            std::max(xy1.x(), xy2.x()),
+            std::max(xy1.y(), xy2.y())
+        );
+        mask += QRegion(QRect(topLeft, bottomRight));
     }
 
     this->painter->begin(this);
     this->painter->setPen(this->pen);
     this->painter->drawPolyline(line);
+    this->setMask(mask);
     this->painter->end();
 }
 
 void LinkNode::mouseMoveEvent(QMouseEvent *) {
 }
 
-void LinkNode::showContextMenu(const QPoint &p) {
-    QVector<QPoint> other;
-    other << QPoint(p.x()-2, p.y()-2) << QPoint(p.x()+2, p.y()-2) << QPoint(p.x()+2, p.y()+2) << QPoint(p.x()-2, p.y()-2);
-    qDebug() << QPolygon(line).containsPoint(p, Qt::OddEvenFill) << QPolygon(line).isSharedWith(other);
-
-    /*
+void LinkNode::showContextMenu(const QPoint &pos) {
     QPoint globalPos = this->mapToGlobal(pos);
     QMenu menu;
-    QAction *edit = new QAction(tr("Edit text"), this);
+    QAction *edit = new QAction(tr("Edit connectors"), this);
             connect(edit, SIGNAL(triggered()), this, SLOT(edit()));
             menu.addAction(edit);
     QAction *del = new QAction(tr("Delete"), this);
             connect(del, SIGNAL(triggered()), this, SLOT(remove()));
             menu.addAction(del);
     menu.exec(globalPos);
-    */
 }

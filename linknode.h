@@ -32,7 +32,7 @@ protected:
 signals:
 
 public slots:
-    void showContextMenu(const QPoint&);
+    void showContextMenu(const QPoint&pos);
 };
 
 #endif // LINKNODE_H
