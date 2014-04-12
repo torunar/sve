@@ -43,7 +43,7 @@ ElementNode::ElementNode(const QDomNode node, Plugin *plugin, QDomDocument *xml,
 
     this->show();
     // move
-    this->setPosition(this->node.attribute("x").toInt(), this->node.attribute("y").toInt());
+    this->setPosition(this->attr("x").toInt(), this->attr("y").toInt());
     this->startPos = QPoint(0, 0);
 }
 

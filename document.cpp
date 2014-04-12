@@ -90,6 +90,7 @@ void Document::addNode(Plugin *plugin) {
     // set changed flag
     this->changed = true;
 }
+// add node by xml node
 void Document::addNode(const QDomNode node){
     QString pluginName = node.toElement().attribute("plugin");
     Plugin *plugin = this->getPlugin(pluginName);
@@ -103,14 +104,42 @@ void Document::addNode(const QDomNode node){
     // set changed flag
     this->changed = true;
 }
+// add node by plugin name
+void Document::addNode(QString plugin){
+    this->addNode(this->getPlugin(plugin));
+}
 
+// add link
 void Document::addLink(QList<UNode*> elementNodes, QPair<int, int> connectors) {
-    LinkNode *nl = new LinkNode(elementNodes, connectors, this->xml, this->workarea);
+    new LinkNode(elementNodes, connectors, this->xml, this->workarea);
     this->setMode(DocumentMode::Default);
     this->changed = true;
 }
-
+// add link by xml node
 void Document::addLink(const QDomNode node) {
+    QDomElement e = node.toElement();
+
+    QString firstID = e.attribute("first_id");
+    QString lastID  = e.attribute("last_id");
+    QPair<int, int> connectors(e.attribute("first_connector").toInt(), e.attribute("last_connector").toInt());
+
+    UNode *firstNode = this->getNodeByID(firstID);
+    UNode *lastNode  = this->getNodeByID(lastID);
+
+    this->addLink({firstNode, lastNode}, connectors);
+}
+
+UNode* Document::getNodeByID(QString id) {
+    QString type;
+    foreach(QObject *item, this->workarea->children()) {
+        type = item->objectName();
+        if ((type == "link_node") || (type == "element_node") || (type == "label_node")) {
+            if (((UNode*) item)->attr("id") == id) {
+                return (UNode*) item;
+            }
+        }
+    }
+    return NULL;
 }
 
 /*
@@ -139,10 +168,6 @@ void Document::load(QString filename) {
     }
     this->setChanged(false);
     fileIn.close();
-}
-
-void Document::addNode(QString plugin){
-    this->addNode(this->getPlugin(plugin));
 }
 
 /*
@@ -199,13 +224,19 @@ QDomDocument *Document::getXml() {
 
 void Document::renderNodes() {
     QDomNodeList labels = this->xml->elementsByTagName("label");
-    QDomNodeList nodes = this->xml->elementsByTagName("node");
-    // so we can't iterate with foreach, huh?
-    for (int i = 0; i < labels.size(); i++) {
+    int l = labels.size();
+    for (int i = 0; i < l; i++) {
         this->addLabel(labels.at(i));
     }
-    for (int i = 0; i < nodes.size(); i++) {
+    QDomNodeList nodes = this->xml->elementsByTagName("node");
+    l = nodes.size();
+    for (int i = 0; i < l; i++) {
         this->addNode(nodes.at(i));
+    }
+    QDomNodeList links = this->xml->elementsByTagName("link");
+    l = links.size();
+    for (int i = 0; i < l; i++) {
+        this->addLink(links.at(i));
     }
 }
 

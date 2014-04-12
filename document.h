@@ -40,6 +40,7 @@ public:
     void attachToWindow(QMdiSubWindow *parent);
     void resize(const QSize size);
     void resize(const int w, const int h);
+
     bool isChanged();
     void setChanged(bool changed);
 
@@ -52,7 +53,8 @@ public:
     void addLink(QList<UNode *> elementNodes, QPair<int, int> connectors);
     void addLink(const QDomNode node);
 
-    void renderNodes();
+    UNode *getNodeByID(QString id);
+    void   renderNodes();
 
     Plugin     *getPlugin(QString name);
     QStringList getPlugins();

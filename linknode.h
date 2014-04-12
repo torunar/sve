@@ -26,7 +26,7 @@ private:
 
 protected:
     void paintEvent(QPaintEvent *);
-    void mouseMoveEvent(QMouseEvent *ev);
+    void mouseMoveEvent(QMouseEvent *);
 //    void mousePressEvent(QMouseEvent *ev);
 
 signals:

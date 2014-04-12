@@ -33,6 +33,7 @@ public:
     QDomDocument *xml;
 
     QString       getID();
+    QString       attr(QString attr);
 
     void setPosition(int x, int y);
 

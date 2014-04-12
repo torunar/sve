@@ -2,19 +2,20 @@
 
 LinkNode::LinkNode(QList<UNode*> elementNodes, QPair<int, int> connectors, QDomDocument *xml, QWidget *parent) : UNode(parent) {
     this->setObjectName("link_node");
-    disconnect(this, SIGNAL(customContextMenuRequested(const QPoint&)));
-    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)), Qt::UniqueConnection);
 
-    this->settings = new QSettings("mike-schekotov", "sve");
+    this->settings   = new QSettings("mike-schekotov", "sve");
 
     this->nodes      = elementNodes;
     this->connectors = connectors;
 
     this->xml = xml;
     this->node = this->xml->createElement("link");
-    this->node.setAttribute("id",    QString::number(QDateTime::currentMSecsSinceEpoch()));
-    this->node.setAttribute("first_id", elementNodes.first()->node.attribute("id"));
-    this->node.setAttribute("last_id",  elementNodes.last()->node.attribute("id"));
+    this->node.setAttribute("id",              QString::number(QDateTime::currentMSecsSinceEpoch()));
+    this->node.setAttribute("first_id",        elementNodes.first()->attr("id"));
+    this->node.setAttribute("last_id",         elementNodes.last()->attr("id"));
+    this->node.setAttribute("first_connector", connectors.first);
+    this->node.setAttribute("last_connector",  connectors.second);
     this->xml->firstChild().appendChild(this->node);
 
     this->painter = new QPainter();
@@ -24,7 +25,7 @@ LinkNode::LinkNode(QList<UNode*> elementNodes, QPair<int, int> connectors, QDomD
 }
 
 bool LinkNode::hasNode(QString nodeID) {
-    return (this->nodes.first()->node.attribute("id") == nodeID || this->nodes.last()->node.attribute("id") == nodeID);
+    return (this->nodes.first()->attr("id") == nodeID || this->nodes.last()->attr("id") == nodeID);
 }
 
 void LinkNode::paintEvent(QPaintEvent *) {
@@ -35,11 +36,11 @@ void LinkNode::paintEvent(QPaintEvent *) {
     int nOuts  = ((ElementNode*) firstNode)->getPlugin()->getOutputs().size();
     int nIns   = ((ElementNode*) lastNode)->getPlugin()->getInputs().size();
 
-    int xFirst = firstNode->node.attribute("x").toInt();
-    int xLast  = lastNode->node.attribute("x").toInt();
+    int xFirst = firstNode->attr("x").toInt();
+    int xLast  = lastNode->attr("x").toInt();
 
-    int yFirst = firstNode->node.attribute("y").toInt();
-    int yLast  = lastNode->node.attribute("y").toInt();
+    int yFirst = firstNode->attr("y").toInt();
+    int yLast  = lastNode->attr("y").toInt();
 
     int marginFirst = (this->connectors.first  + 1) * nodeSize.height() / (nOuts + 1);
     int marginLast  = (this->connectors.second + 1) * nodeSize.height() / (nIns  + 1);
@@ -93,7 +94,7 @@ void LinkNode::paintEvent(QPaintEvent *) {
     this->painter->end();
 }
 
-void LinkNode::mouseMoveEvent(QMouseEvent *ev) {
+void LinkNode::mouseMoveEvent(QMouseEvent *) {
 }
 
 void LinkNode::showContextMenu(const QPoint &p) {

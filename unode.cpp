@@ -18,7 +18,11 @@ UNode::UNode(const UNode &unode) : QLabel() {
 UNode::~UNode() {}
 
 QString UNode::getID() {
-    return this->node.attribute("id");
+    return this->attr("id");
+}
+
+QString UNode::attr(QString attr) {
+    return this->node.attribute(attr);
 }
 
 void UNode::setPosition(int x, int y) {
