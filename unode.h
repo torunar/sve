@@ -34,6 +34,11 @@ public:
 
     QString       getID();
     QString       attr(QString attr);
+    void          setNodeAttribute(QString attr, double  value);
+    void          setNodeAttribute(QString attr, float   value);
+    void          setNodeAttribute(QString attr, uint    value);
+    void          setNodeAttribute(QString attr, int     value);
+    void          setNodeAttribute(QString attr, QString value);
 
     void setPosition(int x, int y);
 

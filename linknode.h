@@ -4,7 +4,9 @@
 #include <QImage>
 #include <QPainter>
 #include <QSettings>
+
 #include "elementnode.h"
+#include "connectiondialog.h"
 
 class LinkNode : public UNode
 {
@@ -27,7 +29,6 @@ private:
 protected:
     void paintEvent(QPaintEvent *);
     void mouseMoveEvent(QMouseEvent *);
-//    void mousePressEvent(QMouseEvent *ev);
 
 signals:
     void showConnectionDialog(QList<UNode *> nodes);

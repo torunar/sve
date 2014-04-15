@@ -25,6 +25,22 @@ QString UNode::attr(QString attr) {
     return this->node.attribute(attr);
 }
 
+void UNode::setNodeAttribute(QString attr, double value) {
+    this->node.setAttribute(attr, value);
+}
+void UNode::setNodeAttribute(QString attr, float value) {
+    this->node.setAttribute(attr, value);
+}
+void UNode::setNodeAttribute(QString attr, uint value) {
+    this->node.setAttribute(attr, value);
+}
+void UNode::setNodeAttribute(QString attr, int value) {
+    this->node.setAttribute(attr, value);
+}
+void UNode::setNodeAttribute(QString attr, QString value) {
+    this->node.setAttribute(attr, value);
+}
+
 void UNode::setPosition(int x, int y) {
     this->setGeometry(
         (x >= 0) ? x : 0,

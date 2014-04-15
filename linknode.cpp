@@ -129,5 +129,12 @@ void LinkNode::showContextMenu(const QPoint &pos) {
 }
 
 void LinkNode::edit() {
-    emit(showConnectionDialog(this->nodes));
+    ConnectionDialog *cd = new ConnectionDialog(this->nodes);
+    cd->setConnectors(this->connectors);
+    if (cd->exec() == QDialog::Accepted) {
+        this->connectors = cd->getConnectors();
+        this->setNodeAttribute("first_connector", connectors.first);
+        this->setNodeAttribute("last_connector",  connectors.second);
+        emit(altered(AlterType::Edited));
+    }
 }

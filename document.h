@@ -8,9 +8,6 @@
 #include <QtXml/QDomDocument>
 #include <QLabel>
 #include <QObject>
-#include <QMessageBox>
-#include <QInputDialog>
-#include <QFileDialog>
 #include <QFile>
 #include <QFileInfo>
 #include <QStack>
@@ -49,11 +46,11 @@ public:
     void addLabel(const QString text,  bool skipHistory = false);
     void addLabel(const QDomNode node, bool skipHistory = false);
 
-    void addNode(Plugin *plugin,      bool skipHistory = false);
-    void addNode(const QDomNode node, bool skipHistory = false);
+    void addNode(Plugin *plugin,       bool skipHistory = false);
+    void addNode(const QDomNode node,  bool skipHistory = false);
 
     void addLink(QList<UNode *> elementNodes, QPair<int, int> connectors, bool skipHistory = false);
-    void addLink(const QDomNode node, bool skipHistory = false);
+    void addLink(const QDomNode node,  bool skipHistory = false);
 
     UNode *getNodeByID(QString id);
     void   renderNodes();

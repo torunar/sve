@@ -3,11 +3,14 @@
 
 #include <QWidget>
 #include <QMdiSubWindow>
-#include "document.h"
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QInputDialog>
 #include <QString>
 #include <QObject>
 #include <QStatusBar>
 
+#include "document.h"
 #include "addnodedialog.h"
 #include "connectiondialog.h"
 #include "documentoptionsdialog.h"

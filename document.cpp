@@ -1,8 +1,6 @@
 #include "document.h"
 
-/*
- * @ QMdiSubWindow parent : parent to embed document into
- */
+/* main constructor */
 Document::Document(QMdiSubWindow *parent) {
     this->parent = parent;
     this->setObjectName("document");
@@ -33,46 +31,36 @@ Document::Document(QMdiSubWindow *parent) {
     this->pushToHistory();
 }
 
-/*
- * @ int w: width
- * @ int h: height
- */
+/* resize workarea */
 void Document::resize(const int w, const int h) {
     this->workarea->resize(w, h);
 }
 
-/*
- * @ QSize size: new size to resize to
- */
+/* resize workarea */
 void Document::resize(const QSize size) {
     this->workarea->resize(size);
     this->xml->firstChild().toElement().setAttribute("width",  size.width());
     this->xml->firstChild().toElement().setAttribute("height", size.height());
 }
 
-/*
- * @ QMdiSubWindow parent: parent to attach document to
- */
+/* embed into DocWindow */
 void Document::attachToWindow(QMdiSubWindow *parent) {
     this->parent = parent;
     this->container->setParent(this->parent);
     this->parent->setWidget(this->container);
 }
 
+/* get size of workarea */
 QSize Document::getSize() {
     return this->workarea->size();
 }
 
-/*
- * @return: check if document tree was changed
- */
+/* check if document tree was changed */
 bool Document::isChanged() {
     return this->changed;
 }
 
-/*
- * Add label to the document and xml tree
- */
+/* add label to the document and xml tree */
 void Document::addLabel(const QString text, bool skipHistory) {
     if (!skipHistory) {
         this->pushToHistory();
@@ -81,6 +69,8 @@ void Document::addLabel(const QString text, bool skipHistory) {
     connect(label, SIGNAL(altered(AlterType)), this, SLOT(handleChildSignals(AlterType)));
     this->setChanged(true);
 }
+
+/* add label from xml node */
 void Document::addLabel(const QDomNode node, bool skipHistory) {
     if (!skipHistory) {
         this->pushToHistory();
@@ -90,7 +80,7 @@ void Document::addLabel(const QDomNode node, bool skipHistory) {
     this->setChanged(true);
 }
 
-// add plugin node
+/* add node */
 void Document::addNode(Plugin *plugin, bool skipHistory) {
     if (!skipHistory) {
         this->pushToHistory();
@@ -105,7 +95,8 @@ void Document::addNode(Plugin *plugin, bool skipHistory) {
     // set changed flag
     this->setChanged(true);
 }
-// add node by xml node
+
+/* add node by xml node */
 void Document::addNode(const QDomNode node, bool skipHistory){
     if (!skipHistory) {
         this->pushToHistory();
@@ -122,29 +113,26 @@ void Document::addNode(const QDomNode node, bool skipHistory){
     // set changed flag
     this->setChanged(true);
 }
-// add node by plugin name
+
+/* add node by plugin name */
 void Document::addNode(QString plugin){
     this->addNode(this->getPlugin(plugin));
 }
 
-void Document::undo(){
-    if(!this->history.empty()) {
-        QByteArray state = this->history.pop();
-        this->xml->setContent(state);
-        this->renderNodes();
-    };
-}
-
-// add link
+/* add link */
 void Document::addLink(QList<UNode*> elementNodes, QPair<int, int> connectors, bool skipHistory) {
     if (!skipHistory) {
         this->pushToHistory();
     }
-    new LinkNode(elementNodes, connectors, this->xml, this->workarea);
+    LinkNode *linkNode = new LinkNode(elementNodes, connectors, this->xml, this->workarea);
+    connect(linkNode, SIGNAL(activated()),        this, SLOT(setActiveElement()));
+    connect(linkNode, SIGNAL(altered(AlterType)), this, SLOT(handleChildSignals(AlterType)));
+    // reset document mode
     this->setMode(DocumentMode::Default);
     this->setChanged(true);
 }
-// add link by xml node
+
+/* add link by xml node */
 void Document::addLink(const QDomNode node, bool skipHistory) {
     QDomElement e = node.toElement();
 
@@ -158,6 +146,7 @@ void Document::addLink(const QDomNode node, bool skipHistory) {
     this->addLink({firstNode, lastNode}, connectors, skipHistory);
 }
 
+/* get node by xml node's id */
 UNode* Document::getNodeByID(QString id) {
     QString type;
     foreach(QObject *item, this->workarea->children()) {
@@ -171,9 +160,16 @@ UNode* Document::getNodeByID(QString id) {
     return NULL;
 }
 
-/*
- * Save document to file
- */
+/* undo last action */
+void Document::undo(){
+    if(!this->history.empty()) {
+        QByteArray state = this->history.pop();
+        this->xml->setContent(state);
+        this->renderNodes();
+    };
+}
+
+/* save document to file */
 void Document::save(QString filename) {
     this->filename = filename;
     this->title = QFileInfo(filename).baseName() + ".sve";
@@ -184,6 +180,7 @@ void Document::save(QString filename) {
     this->setChanged(false);
 }
 
+/* load from file */
 void Document::load(QString filename) {
     this->filename = filename;
     this->title = QFileInfo(filename).baseName() + ".sve";
@@ -199,16 +196,12 @@ void Document::load(QString filename) {
     fileIn.close();
 }
 
-/*
- * Set document changed flag
- */
+/* set document changed flag */
 void Document::setChanged(bool changed) {
     this->changed = changed;
 }
 
-/*
- * Handle signals from child elements like labels and nodes
- */
+/* handle signals from child elements */
 void Document::handleChildSignals(AlterType type) {
     if (type != AlterType::None) {
         this->pushToHistory();
@@ -233,9 +226,7 @@ void Document::handleChildSignals(AlterType type) {
     }
 }
 
-/*
- * Last clicked element for stuff
- */
+/* set last clicked element for all kinds of stuff */
 void Document::setActiveElement() {
     if (this->mode == DocumentMode::SelectNode && this->nodeCounter < 2) {
         this->nodeCounter++;
@@ -244,26 +235,30 @@ void Document::setActiveElement() {
     }
 }
 
+/* reset active element */
 void Document::resetActiveElement() {
     this->activeElement = 0;
 }
 
+/* save xml tree to history */
 void Document::pushToHistory() {
     QByteArray state = this->xml->toByteArray();
-    qDebug() << "<< " + state;
     this->history.push(state);
 }
 
+/* get screenshot of workarea */
 QPixmap Document::getImage() {
     QPixmap img(this->workarea->size());
     this->workarea->render(&img);
     return img;
 }
 
+/* return document's xml */
 QDomDocument *Document::getXml() {
     return this->xml;
 }
 
+/* create widgets from xml tree */
 void Document::renderNodes() {
     // remove children
     QObjectList children = this->workarea->children();
@@ -288,6 +283,7 @@ void Document::renderNodes() {
     }
 }
 
+/* get plugin by its name */
 Plugin* Document::getPlugin(QString name) {
     foreach(Plugin *p, this->plugins) {
         if (p->getName() == name) {
@@ -297,6 +293,7 @@ Plugin* Document::getPlugin(QString name) {
     return 0;
 }
 
+/* get list of plugins */
 QStringList Document::getPlugins() {
     QStringList ps;
     foreach(Plugin *p, this->plugins) {
@@ -305,10 +302,12 @@ QStringList Document::getPlugins() {
     return ps;
 }
 
+/* set plugins */
 void Document::setPlugins(QList<Plugin *> plugins) {
     this->plugins = plugins;
 }
 
+/* set document mode */
 void Document::setMode(DocumentMode documentMode) {
     this->mode = documentMode;
     switch(documentMode) {
@@ -320,6 +319,7 @@ void Document::setMode(DocumentMode documentMode) {
     }
 }
 
+/* set node counter */
 void Document::setNodeCounter(uint counter) {
     this->nodeCounter = counter;
 }

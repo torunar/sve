@@ -25,7 +25,7 @@ ConnectionDialog::ConnectionDialog(QList<UNode *> nodes, QWidget *parent) : QDia
     this->selectedOutput = -1;
 
     connect(this->ui->cancelButton, SIGNAL(clicked()),              this, SLOT(reject()));
-    connect(this->ui->okButton,     SIGNAL(clicked()),              this, SLOT(getSelection()));
+    connect(this->ui->okButton,     SIGNAL(clicked()),              this, SLOT(accept()));
     connect(this->ui->inList,       SIGNAL(itemPressed(QListWidgetItem *)), this, SLOT(setInput(QListWidgetItem *)));
     connect(this->ui->outList,      SIGNAL(itemPressed(QListWidgetItem *)), this, SLOT(setOutput(QListWidgetItem *)));
 }
@@ -41,6 +41,14 @@ void ConnectionDialog::setCounters(uint inCounter, uint outCounter) {
 
 QPair<int, int> ConnectionDialog::getConnectors() {
     return QPair<int, int>(this->selectedOutput, this->selectedInput);
+}
+
+void ConnectionDialog::setConnectors(QPair<int, int> connectors) {
+    this->selectedOutput = connectors.first;
+    this->selectedInput  = connectors.second;
+    this->ui->outList->setCurrentRow(connectors.first);
+    this->ui->inList->setCurrentRow(connectors.second);
+    this->ui->okButton->setEnabled(true);
 }
 
 void ConnectionDialog::setInput(QListWidgetItem *) {
@@ -61,8 +69,4 @@ void ConnectionDialog::setOutput(QListWidgetItem *) {
     if ((selectedInput != -1) && (selectedOutput != -1)) {
         this->ui->okButton->setEnabled(true);
     }
-}
-
-void ConnectionDialog::getSelection() {
-    this->accept();
 }

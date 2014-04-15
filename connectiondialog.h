@@ -3,9 +3,8 @@
 
 #include <QListWidgetItem>
 #include <QDialog>
-#include "elementnode.h"
 
-#include <QDebug>
+#include "elementnode.h"
 
 namespace Ui {
 class ConnectionDialog;
@@ -26,6 +25,7 @@ public:
     // indecies of output and input
     int selectedInput, selectedOutput;
     QPair<int, int> getConnectors();
+    void            setConnectors(QPair<int, int> connectors);
 
 signals:
     void selectedConnectors(int output, int input);
@@ -36,7 +36,6 @@ private:
 public slots:
     void setInput(QListWidgetItem *);
     void setOutput(QListWidgetItem *);
-    void getSelection();
 };
 
 #endif // CONNECTIONDIALOG_H
