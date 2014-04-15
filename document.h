@@ -13,6 +13,7 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QFileInfo>
+#include <QStack>
 
 #include "labelnode.h"
 #include "elementnode.h"
@@ -45,14 +46,14 @@ public:
     bool isChanged();
     void setChanged(bool changed);
 
-    void addLabel(const QString text);
-    void addLabel(const QDomNode node);
+    void addLabel(const QString text,  bool skipHistory = false);
+    void addLabel(const QDomNode node, bool skipHistory = false);
 
-    void addNode(Plugin *plugin);
-    void addNode(const QDomNode node);
+    void addNode(Plugin *plugin,      bool skipHistory = false);
+    void addNode(const QDomNode node, bool skipHistory = false);
 
-    void addLink(QList<UNode *> elementNodes, QPair<int, int> connectors);
-    void addLink(const QDomNode node);
+    void addLink(QList<UNode *> elementNodes, QPair<int, int> connectors, bool skipHistory = false);
+    void addLink(const QDomNode node, bool skipHistory = false);
 
     UNode *getNodeByID(QString id);
     void   renderNodes();
@@ -65,6 +66,8 @@ public:
     void setNodeCounter(uint counter);
 
     void resetActiveElement();
+
+    void pushToHistory();
 
     QPixmap getImage();
 
@@ -86,14 +89,17 @@ public slots:
     void load(QString filename);
     void addNode(QString plugin);
 
+    void undo();
+
 private:
     QMdiSubWindow *parent;
     QScrollArea   *container;
     QFrame        *workarea;
     QDomDocument  *xml;
 
-    bool         changed;
-    DocumentMode mode;
+    bool               changed;
+    DocumentMode       mode;
+    QStack<QByteArray> history;
 
     QList<Plugin*> plugins;
 

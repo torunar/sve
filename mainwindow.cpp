@@ -60,6 +60,8 @@ void MainWindow::disconnectSlots() {
     disconnect(ui->aSaveAs,      SIGNAL(triggered()), this->activeWindow, SLOT(saveAs()));
     disconnect(ui->aOptions,     SIGNAL(triggered()), this->activeWindow, SLOT(showOptionsDialog()));
     disconnect(ui->aExportImage, SIGNAL(triggered()), this->activeWindow, SLOT(showSaveImageDialog()));
+
+    disconnect(ui->aUndo,        SIGNAL(triggered()), this->activeDocument, SLOT(undo()));
 }
 
 void MainWindow::connectSlots() {
@@ -70,6 +72,8 @@ void MainWindow::connectSlots() {
     connect(ui->aSaveAs,      SIGNAL(triggered()), this->activeWindow, SLOT(saveAs()));
     connect(ui->aOptions,     SIGNAL(triggered()), this->activeWindow, SLOT(showOptionsDialog()));
     connect(ui->aExportImage, SIGNAL(triggered()), this->activeWindow, SLOT(showSaveImageDialog()));
+
+    connect(ui->aUndo,        SIGNAL(triggered()), this->activeDocument, SLOT(undo()));
 }
 
 // init sidebar

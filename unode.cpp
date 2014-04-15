@@ -52,10 +52,10 @@ void UNode::mouseMoveEvent(QMouseEvent *ev) {
 }
 
 void UNode::mouseReleaseEvent(QMouseEvent *) {
-    this->node.setAttribute("x", this->x());
-    this->node.setAttribute("y", this->y());
     // document changed flag
     emit altered(AlterType::Moved);
+    this->node.setAttribute("x", this->x());
+    this->node.setAttribute("y", this->y());
 }
 
 void UNode::performDrag(const QPoint endPos) {
@@ -73,7 +73,7 @@ void UNode::performDrag(const QPoint endPos) {
 
 // remove from xml
 void UNode::remove() {
-    this->xml->firstChild().removeChild(this->node);
     emit altered(AlterType::Deleted);
+    this->xml->firstChild().removeChild(this->node);
     delete(this);
 }

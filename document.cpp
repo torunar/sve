@@ -29,6 +29,8 @@ Document::Document(QMdiSubWindow *parent) {
 
     this->xml = new QDomDocument("SVE");
     this->xml->appendChild(this->xml->createElement("document"));
+
+    this->pushToHistory();
 }
 
 /*
@@ -71,19 +73,28 @@ bool Document::isChanged() {
 /*
  * Add label to the document and xml tree
  */
-void Document::addLabel(const QString text) {
+void Document::addLabel(const QString text, bool skipHistory) {
+    if (!skipHistory) {
+        this->pushToHistory();
+    }
     LabelNode *label = new LabelNode(text, this->xml, this->workarea);
     connect(label, SIGNAL(altered(AlterType)), this, SLOT(handleChildSignals(AlterType)));
-    this->changed = true;
+    this->setChanged(true);
 }
-void Document::addLabel(const QDomNode node) {
+void Document::addLabel(const QDomNode node, bool skipHistory) {
+    if (!skipHistory) {
+        this->pushToHistory();
+    }
     LabelNode *label = new LabelNode(node, this->xml, this->workarea);
     connect(label, SIGNAL(altered(AlterType)), this, SLOT(handleChildSignals(AlterType)));
-    this->changed = true;
+    this->setChanged(true);
 }
 
 // add plugin node
-void Document::addNode(Plugin *plugin) {
+void Document::addNode(Plugin *plugin, bool skipHistory) {
+    if (!skipHistory) {
+        this->pushToHistory();
+    }
     ElementNode *elementNode = new ElementNode(plugin, this->xml, this->workarea);
     connect(elementNode, SIGNAL(activated()),        this, SLOT(setActiveElement()));
     connect(elementNode, SIGNAL(altered(AlterType)), this, SLOT(handleChildSignals(AlterType)));
@@ -92,10 +103,13 @@ void Document::addNode(Plugin *plugin) {
     this->inCounter  += plugin->getInputs().size();
     this->outCounter += plugin->getOutputs().size();
     // set changed flag
-    this->changed = true;
+    this->setChanged(true);
 }
 // add node by xml node
-void Document::addNode(const QDomNode node){
+void Document::addNode(const QDomNode node, bool skipHistory){
+    if (!skipHistory) {
+        this->pushToHistory();
+    }
     QString pluginName = node.toElement().attribute("plugin");
     Plugin *plugin = this->getPlugin(pluginName);
     ElementNode *elementNode = new ElementNode(node, plugin, this->xml, this->workarea);
@@ -106,21 +120,32 @@ void Document::addNode(const QDomNode node){
     this->inCounter  += plugin->getInputs().size();
     this->outCounter += plugin->getOutputs().size();
     // set changed flag
-    this->changed = true;
+    this->setChanged(true);
 }
 // add node by plugin name
 void Document::addNode(QString plugin){
     this->addNode(this->getPlugin(plugin));
 }
 
+void Document::undo(){
+    if(!this->history.empty()) {
+        QByteArray state = this->history.pop();
+        this->xml->setContent(state);
+        this->renderNodes();
+    };
+}
+
 // add link
-void Document::addLink(QList<UNode*> elementNodes, QPair<int, int> connectors) {
+void Document::addLink(QList<UNode*> elementNodes, QPair<int, int> connectors, bool skipHistory) {
+    if (!skipHistory) {
+        this->pushToHistory();
+    }
     new LinkNode(elementNodes, connectors, this->xml, this->workarea);
     this->setMode(DocumentMode::Default);
-    this->changed = true;
+    this->setChanged(true);
 }
 // add link by xml node
-void Document::addLink(const QDomNode node) {
+void Document::addLink(const QDomNode node, bool skipHistory) {
     QDomElement e = node.toElement();
 
     QString firstID = e.attribute("first_id");
@@ -130,7 +155,7 @@ void Document::addLink(const QDomNode node) {
     UNode *firstNode = this->getNodeByID(firstID);
     UNode *lastNode  = this->getNodeByID(lastID);
 
-    this->addLink({firstNode, lastNode}, connectors);
+    this->addLink({firstNode, lastNode}, connectors, skipHistory);
 }
 
 UNode* Document::getNodeByID(QString id) {
@@ -186,7 +211,8 @@ void Document::setChanged(bool changed) {
  */
 void Document::handleChildSignals(AlterType type) {
     if (type != AlterType::None) {
-        setChanged(true);
+        this->pushToHistory();
+        this->setChanged(true);
         emit altered(true);
     }
     // redraw links if element was moved
@@ -222,6 +248,12 @@ void Document::resetActiveElement() {
     this->activeElement = 0;
 }
 
+void Document::pushToHistory() {
+    QByteArray state = this->xml->toByteArray();
+    qDebug() << "<< " + state;
+    this->history.push(state);
+}
+
 QPixmap Document::getImage() {
     QPixmap img(this->workarea->size());
     this->workarea->render(&img);
@@ -233,20 +265,26 @@ QDomDocument *Document::getXml() {
 }
 
 void Document::renderNodes() {
+    // remove children
+    QObjectList children = this->workarea->children();
+    foreach(QObject* child, children) {
+        delete child;
+    }
+    // append children
     QDomNodeList labels = this->xml->elementsByTagName("label");
     int l = labels.size();
     for (int i = 0; i < l; i++) {
-        this->addLabel(labels.at(i));
+        this->addLabel(labels.at(i), true);
     }
     QDomNodeList nodes = this->xml->elementsByTagName("node");
     l = nodes.size();
     for (int i = 0; i < l; i++) {
-        this->addNode(nodes.at(i));
+        this->addNode(nodes.at(i), true);
     }
     QDomNodeList links = this->xml->elementsByTagName("link");
     l = links.size();
     for (int i = 0; i < l; i++) {
-        this->addLink(links.at(i));
+        this->addLink(links.at(i), true);
     }
 }
 
