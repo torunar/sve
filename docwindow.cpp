@@ -117,6 +117,18 @@ void DocWindow::showOptionsDialog() {
     delete dod;
 }
 
+void DocWindow::showSaveImageDialog() {
+    QFileDialog *fd = new QFileDialog();
+    fd->setDefaultSuffix(".png");
+    QString filename = fd->getSaveFileName(0, tr("Save as..."), "", "*.png");
+    // saving cancelled
+    if (filename == "") return;
+    // setDefaultSuffix isn't working properly under Linux
+    if (!filename.endsWith(".sve")) filename += ".png";
+    QPixmap img = this->document->getImage();
+    img.save(filename, 0, -1);
+}
+
 void DocWindow::addLabel() {
     bool ok;
     QString text = QInputDialog::getText(0,

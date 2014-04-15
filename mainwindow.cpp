@@ -53,19 +53,21 @@ void MainWindow::loadPlugins() {
 }
 
 void MainWindow::disconnectSlots() {
-    disconnect(ui->aAddLabel, SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
-    disconnect(ui->aAddNode,  SIGNAL(triggered()), this->activeWindow, SLOT(addNode()));
-    disconnect(ui->aAddLink,  SIGNAL(triggered()), this->activeWindow, SLOT(addLink()));
-    disconnect(ui->aSave,     SIGNAL(triggered()), this->activeWindow, SLOT(save()));
-    disconnect(ui->aOptions,  SIGNAL(triggered()), this->activeWindow, SLOT(showOptionsDialog()));
+    disconnect(ui->aAddLabel,    SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
+    disconnect(ui->aAddNode,     SIGNAL(triggered()), this->activeWindow, SLOT(addNode()));
+    disconnect(ui->aAddLink,     SIGNAL(triggered()), this->activeWindow, SLOT(addLink()));
+    disconnect(ui->aSave,        SIGNAL(triggered()), this->activeWindow, SLOT(save()));
+    disconnect(ui->aOptions,     SIGNAL(triggered()), this->activeWindow, SLOT(showOptionsDialog()));
+    disconnect(ui->aExportImage, SIGNAL(triggered()), this->activeWindow, SLOT(showSaveImageDialog()));
 }
 
 void MainWindow::connectSlots() {
-    connect(ui->aAddLabel, SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
-    connect(ui->aAddNode,  SIGNAL(triggered()), this->activeWindow, SLOT(addNode()));
-    connect(ui->aAddLink,  SIGNAL(triggered()), this->activeWindow, SLOT(addLink()));
-    connect(ui->aSave,     SIGNAL(triggered()), this->activeWindow, SLOT(save()));
-    connect(ui->aOptions,  SIGNAL(triggered()), this->activeWindow, SLOT(showOptionsDialog()));
+    connect(ui->aAddLabel,    SIGNAL(triggered()), this->activeWindow, SLOT(addLabel()));
+    connect(ui->aAddNode,     SIGNAL(triggered()), this->activeWindow, SLOT(addNode()));
+    connect(ui->aAddLink,     SIGNAL(triggered()), this->activeWindow, SLOT(addLink()));
+    connect(ui->aSave,        SIGNAL(triggered()), this->activeWindow, SLOT(save()));
+    connect(ui->aOptions,     SIGNAL(triggered()), this->activeWindow, SLOT(showOptionsDialog()));
+    connect(ui->aExportImage, SIGNAL(triggered()), this->activeWindow, SLOT(showSaveImageDialog()));
 }
 
 // init sidebar

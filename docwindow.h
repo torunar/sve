@@ -45,6 +45,7 @@ public slots:
     bool load();
     void setLinkNode(UNode *node, uint nodeCounter);
     void showOptionsDialog();
+    void showSaveImageDialog();
 };
 
 #endif // DOCWINDOW_H

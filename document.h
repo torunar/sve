@@ -66,6 +66,8 @@ public:
 
     void resetActiveElement();
 
+    QPixmap getImage();
+
     QDomDocument *getXml();
     QString       title;
     QString       filename;

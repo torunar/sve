@@ -222,6 +222,12 @@ void Document::resetActiveElement() {
     this->activeElement = 0;
 }
 
+QPixmap Document::getImage() {
+    QPixmap img(this->workarea->size());
+    this->workarea->render(&img);
+    return img;
+}
+
 QDomDocument *Document::getXml() {
     return this->xml;
 }

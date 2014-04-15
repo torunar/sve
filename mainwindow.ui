@@ -70,6 +70,7 @@
     <addaction name="separator"/>
     <addaction name="aViewVHDL"/>
     <addaction name="aEdit"/>
+    <addaction name="aExportImage"/>
    </widget>
    <widget class="QMenu" name="mProperties">
     <property name="title">
@@ -392,6 +393,18 @@
   <action name="aOptions">
    <property name="text">
     <string>Options</string>
+   </property>
+  </action>
+  <action name="aExportImage">
+   <property name="icon">
+    <iconset resource="ui.qrc">
+     <normaloff>:/icons/plugin-empty</normaloff>:/icons/plugin-empty</iconset>
+   </property>
+   <property name="text">
+    <string>Export Image</string>
+   </property>
+   <property name="shortcut">
+    <string>, Ctrl+Shift+E</string>
    </property>
   </action>
  </widget>
