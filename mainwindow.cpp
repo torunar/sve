@@ -34,10 +34,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     /* load plugins into sidebar */
     this->initPluginsToolbar();
 
-    connect(ui->aNew,     SIGNAL(triggered()), this, SLOT(createDocument()));
-    connect(ui->aQuit,    SIGNAL(triggered()), this, SLOT(quit()));
-    connect(ui->aOpen,    SIGNAL(triggered()), this, SLOT(load()));
-    connect(ui->aPlugins, SIGNAL(triggered()), this, SLOT(showPluginListWindow()));
+    connect(ui->aNew,      SIGNAL(triggered()), this, SLOT(createDocument()));
+    connect(ui->aQuit,     SIGNAL(triggered()), this, SLOT(quit()));
+    connect(ui->aOpen,     SIGNAL(triggered()), this, SLOT(load()));
+    connect(ui->aPlugins,  SIGNAL(triggered()), this, SLOT(showPluginListWindow()));
+    connect(ui->aSettings, SIGNAL(triggered()), this, SLOT(showPreferencesDialog()));
 }
 
 MainWindow::~MainWindow() {
@@ -90,6 +91,14 @@ void MainWindow::findPlugin() {
     QString activatedPlugin = this->sender()->objectName();
     Plugin *p = this->activeDocument->getPlugin(activatedPlugin);
     this->activeWindow->addNode(p);
+}
+
+void MainWindow::showPreferencesDialog() {
+    PreferencesDialog *pd = new PreferencesDialog();
+    if (pd->exec() == QDialog::Accepted) {
+        ui->statusBar->showMessage(tr("Restart required for changes to apply"), 0);
+    }
+    delete pd;
 }
 
 // close opened documents and quit

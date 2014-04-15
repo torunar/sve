@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     labelnode.cpp \
     linknode.cpp \
     connectiondialog.cpp \
-    documentoptionsdialog.cpp
+    documentoptionsdialog.cpp \
+    preferencesdialog.cpp
 
 HEADERS  += mainwindow.h \
     document.h \
@@ -37,14 +38,16 @@ HEADERS  += mainwindow.h \
     elementnode.h \
     labelnode.h \
     connectiondialog.h \
-    documentoptionsdialog.h
+    documentoptionsdialog.h \
+    preferencesdialog.h
 
 FORMS    += mainwindow.ui \
     nodepropertieswindow.ui \
     pluginlistwindow.ui \
     addnodedialog.ui \
     connectiondialog.ui \
-    documentoptionsdialog.ui
+    documentoptionsdialog.ui \
+    preferencesdialog.ui
 
 RESOURCES += \
     ui.qrc

@@ -112,6 +112,7 @@ void DocWindow::showOptionsDialog() {
     dod->setDimensions(this->document->getSize());
     if (dod->exec() == QDialog::Accepted) {
         this->document->resize(dod->getDimensions());
+        this->setChanged(true);
     }
     delete dod;
 }

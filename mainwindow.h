@@ -4,9 +4,11 @@
 #include <QMainWindow>
 #include <QtGui>
 #include <QtWebKitWidgets/QWebView>
+#include <QPainterPath>
+
 #include "docwindow.h"
 #include "pluginlistwindow.h"
-#include <QPainterPath>
+#include "preferencesdialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -40,6 +42,7 @@ public slots:
     void showPluginListWindow();
     void initPluginsToolbar();
     void findPlugin();
+    void showPreferencesDialog();
 
 protected:
     void closeEvent(QCloseEvent *);
