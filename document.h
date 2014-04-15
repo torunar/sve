@@ -37,9 +37,10 @@ public:
     Document(QMdiSubWindow *parent = 0);
     ~Document(){}
 
-    void attachToWindow(QMdiSubWindow *parent);
-    void resize(const QSize size);
-    void resize(const int w, const int h);
+    void  attachToWindow(QMdiSubWindow *parent);
+    QSize getSize();
+    void  resize(const QSize size);
+    void  resize(const int w, const int h);
 
     bool isChanged();
     void setChanged(bool changed);

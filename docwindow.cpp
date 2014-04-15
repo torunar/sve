@@ -96,7 +96,6 @@ void DocWindow::setLinkNode(UNode *node, uint nodeCounter) {
         this->setStatus("", 0);
         // show slot selector
         cd = new ConnectionDialog(this->linkNodes);
-        cd->setCounters(this->document->inCounter, this->document->outCounter);
         if (cd->exec() == QDialog::Accepted) {
             // output, input
             QPair<int, int> connectors = cd->getConnectors();
@@ -106,6 +105,15 @@ void DocWindow::setLinkNode(UNode *node, uint nodeCounter) {
         delete cd;
         break;
     }
+}
+
+void DocWindow::showOptionsDialog() {
+    DocumentOptionsDialog *dod = new DocumentOptionsDialog();
+    dod->setDimensions(this->document->getSize());
+    if (dod->exec() == QDialog::Accepted) {
+        this->document->resize(dod->getDimensions());
+    }
+    delete dod;
 }
 
 void DocWindow::addLabel() {
@@ -133,7 +141,7 @@ void DocWindow::addNode() {
 void DocWindow::addLink() {
     this->setStatus(tr("Set beginning node"), 0);
     this->document->setMode(DocumentMode::SelectNode);
-    // future opertations take place in setLinkNode
+    // futher opertations take place in setLinkNode
     connect(this->document, SIGNAL(elementActivated(UNode*, uint)), this, SLOT(setLinkNode(UNode*, uint)), Qt::UniqueConnection);
 }
 

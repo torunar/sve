@@ -10,12 +10,12 @@ ConnectionDialog::ConnectionDialog(QList<UNode *> nodes, QWidget *parent) : QDia
 
     QVector<QString> inputs = ((ElementNode *)nodes.last())->getPlugin()->getInputs();
     QVector<QString> outputs = ((ElementNode *)nodes.first())->getPlugin()->getOutputs();
-    uint i = this->inCounter;
+    uint i = 0;
     for(QVector<QString>::Iterator inputName = inputs.begin(); inputName < inputs.end(); inputName++) {
         QString inputText = (*inputName).replace("%INC%", QString::number(++i));
         new QListWidgetItem(inputText, this->ui->inList);
     }
-    i = this->outCounter;
+    i = 0;
     for(QVector<QString>::Iterator outputName = outputs.begin(); outputName < outputs.end(); outputName++) {
         QString outputText = (*outputName).replace("%OUTC%", QString::number(++i));
         new QListWidgetItem(outputText, this->ui->outList);

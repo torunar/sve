@@ -125,5 +125,9 @@ void LinkNode::showContextMenu(const QPoint &pos) {
     QAction *del = new QAction(tr("Delete"), this);
             connect(del, SIGNAL(triggered()), this, SLOT(remove()));
             menu.addAction(del);
-    menu.exec(globalPos);
+            menu.exec(globalPos);
+}
+
+void LinkNode::edit() {
+    emit(showConnectionDialog(this->nodes));
 }

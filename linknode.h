@@ -30,9 +30,11 @@ protected:
 //    void mousePressEvent(QMouseEvent *ev);
 
 signals:
+    void showConnectionDialog(QList<UNode *> nodes);
 
 public slots:
     void showContextMenu(const QPoint&pos);
+    void edit();
 };
 
 #endif // LINKNODE_H

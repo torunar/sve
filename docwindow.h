@@ -10,6 +10,7 @@
 
 #include "addnodedialog.h"
 #include "connectiondialog.h"
+#include "documentoptionsdialog.h"
 
 class DocWindow : public QMdiSubWindow {
     Q_OBJECT
@@ -43,6 +44,7 @@ public slots:
     void save();
     bool load();
     void setLinkNode(UNode *node, uint nodeCounter);
+    void showOptionsDialog();
 };
 
 #endif // DOCWINDOW_H

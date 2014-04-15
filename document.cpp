@@ -57,6 +57,10 @@ void Document::attachToWindow(QMdiSubWindow *parent) {
     this->parent->setWidget(this->container);
 }
 
+QSize Document::getSize() {
+    return this->workarea->size();
+}
+
 /*
  * @return: check if document tree was changed
  */

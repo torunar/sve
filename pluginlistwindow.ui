@@ -43,22 +43,6 @@
      </widget>
     </item>
     <item>
-     <spacer name="spacer">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::MinimumExpanding</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>40</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item>
      <widget class="QPushButton" name="cancelButton">
       <property name="text">
        <string>Cancel</string>
@@ -151,11 +135,6 @@
     </item>
    </layout>
   </widget>
-  <zorder>horizontalLayoutWidget</zorder>
-  <zorder>horizontalLayoutWidget_2</zorder>
-  <zorder>cancelButton</zorder>
-  <zorder>cancelButton</zorder>
-  <zorder>cancelButton</zorder>
  </widget>
  <resources/>
  <connections/>
