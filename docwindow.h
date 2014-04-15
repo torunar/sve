@@ -42,6 +42,7 @@ public slots:
     void addNode();
     void addLink();
     void save();
+    void saveAs();
     bool load();
     void setLinkNode(UNode *node, uint nodeCounter);
     void showOptionsDialog();

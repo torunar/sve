@@ -69,6 +69,15 @@ void DocWindow::save() {
     this->setStatus(tr("Document saved"), 2000);
 }
 
+void DocWindow::saveAs() {
+    QString backupFilename = this->document->filename;
+    this->document->filename = "";
+    this->save();
+    if (this->document->filename == "") {
+        this->document->filename = backupFilename;
+    }
+}
+
 bool DocWindow::load() {
     QFileDialog *fd = new QFileDialog();
     fd->setDefaultSuffix(".sve");
