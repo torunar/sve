@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui webkitwidgets xml
+QT       += webkitwidgets core gui xml
 
 TARGET = sve
 TEMPLATE = app
@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     linknode.cpp \
     connectiondialog.cpp \
     documentoptionsdialog.cpp \
-    preferencesdialog.cpp
+    preferencesdialog.cpp \
+    sourceviewdialog.cpp
 
 HEADERS  += mainwindow.h \
     document.h \
@@ -39,7 +40,8 @@ HEADERS  += mainwindow.h \
     labelnode.h \
     connectiondialog.h \
     documentoptionsdialog.h \
-    preferencesdialog.h
+    preferencesdialog.h \
+    sourceviewdialog.h
 
 FORMS    += mainwindow.ui \
     nodepropertieswindow.ui \
@@ -47,7 +49,8 @@ FORMS    += mainwindow.ui \
     addnodedialog.ui \
     connectiondialog.ui \
     documentoptionsdialog.ui \
-    preferencesdialog.ui
+    preferencesdialog.ui \
+    sourceviewdialog.ui
 
 RESOURCES += \
     ui.qrc

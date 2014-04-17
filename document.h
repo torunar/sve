@@ -66,7 +66,8 @@ public:
 
     void pushToHistory();
 
-    QPixmap getImage();
+    QPixmap       getImage();
+    QString       getVHDL();
 
     QDomDocument *getXml();
     QString       title;

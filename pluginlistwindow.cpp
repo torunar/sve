@@ -14,7 +14,7 @@ PluginListWindow::PluginListWindow(QWidget *parent) : QDialog(parent), ui(new Ui
     this->ui->pluginList->insertTopLevelItems(0, plugins);
 
     connect(this->ui->refreshButton, SIGNAL(clicked()), this, SLOT(refreshList()));
-    connect(this->ui->cancelButton,  SIGNAL(clicked()), this, SLOT(close()));
+    connect(this->ui->cancelButton,  SIGNAL(clicked()), this, SLOT(reject()));
     connect(this->ui->okButton,      SIGNAL(clicked()), this, SLOT(save()));
 }
 
@@ -95,5 +95,5 @@ void PluginListWindow::save() {
     this->settings->setValue("plugins/enabled",  enabledPlugins);
     this->settings->setValue("plugins/on_panel", panelPlugins);
 
-    this->close();
+    this->accept();
 }

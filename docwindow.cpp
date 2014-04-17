@@ -138,6 +138,13 @@ void DocWindow::showSaveImageDialog() {
     img.save(filename, 0, -1);
 }
 
+void DocWindow::viewVHDL() {
+    SourceViewDialog *svd = new SourceViewDialog();
+    QString src = this->document->getVHDL();
+    svd->setSource(src);
+    svd->exec();
+}
+
 void DocWindow::addLabel() {
     bool ok;
     QString text = QInputDialog::getText(0,

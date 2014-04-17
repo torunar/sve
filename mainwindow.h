@@ -25,6 +25,8 @@ public:
 
     ~MainWindow();
     QSettings *settings;
+
+    void initPluginsToolbar();
     
 private:
     QList<Plugin *> plugins;
@@ -40,7 +42,6 @@ public slots:
     void quit();
     void load();
     void showPluginListWindow();
-    void initPluginsToolbar();
     void findPlugin();
     void showPreferencesDialog();
 

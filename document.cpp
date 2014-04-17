@@ -166,7 +166,6 @@ UNode* Document::getNodeByID(QString id) {
 void Document::undo(){
     if(!this->history.empty()) {
         QByteArray state = this->history.pop();
-        qDebug() << state;
         this->xml->setContent(state);
         this->renderNodes();
     };
@@ -249,7 +248,6 @@ void Document::resetActiveElement() {
 /* save xml tree to history */
 void Document::pushToHistory() {
     QByteArray state = this->xml->toByteArray();
-    qDebug() << state;
     this->history.push(state);
 }
 
@@ -258,6 +256,29 @@ QPixmap Document::getImage() {
     QPixmap img(this->workarea->size());
     this->workarea->render(&img);
     return img;
+}
+
+QString Document::getVHDL() {
+    return
+            "    -- (this is a VHDL comment)"
+            "    "
+            "    -- import std_logic from the IEEE library"
+            "    library IEEE;"
+            "    use IEEE.std_logic_1164.all;"
+            "    "
+            "    -- this is the entity"
+            "    entity ANDGATE is"
+            "      port ("
+            "        I1 : in std_logic;"
+            "        I2 : in std_logic;"
+            "        O  : out std_logic);"
+            "    end entity ANDGATE;"
+            "    "
+            "    -- this is the architecture"
+            "    architecture RTL of ANDGATE is"
+            "    begin"
+            "      O <= I1 and I2;"
+            "    end architecture RTL;";
 }
 
 /* return document's xml */

@@ -14,6 +14,7 @@
 #include "addnodedialog.h"
 #include "connectiondialog.h"
 #include "documentoptionsdialog.h"
+#include "sourceviewdialog.h"
 
 class DocWindow : public QMdiSubWindow {
     Q_OBJECT
@@ -50,6 +51,7 @@ public slots:
     void setLinkNode(UNode *node, uint nodeCounter);
     void showOptionsDialog();
     void showSaveImageDialog();
+    void viewVHDL();
 };
 
 #endif // DOCWINDOW_H

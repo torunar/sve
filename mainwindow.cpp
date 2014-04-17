@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     /* load css */
     // TODO: change path to binary-related
-    QFile cssFile("../src/ui.conf");
+    QFile cssFile("../src/ui.css");
     cssFile.open(QFile::ReadOnly);
     QString css = cssFile.readAll();
     cssFile.close();
@@ -60,6 +60,7 @@ void MainWindow::disconnectSlots() {
     disconnect(ui->aSaveAs,      SIGNAL(triggered()), this->activeWindow, SLOT(saveAs()));
     disconnect(ui->aOptions,     SIGNAL(triggered()), this->activeWindow, SLOT(showOptionsDialog()));
     disconnect(ui->aExportImage, SIGNAL(triggered()), this->activeWindow, SLOT(showSaveImageDialog()));
+    disconnect(ui->aViewVHDL,    SIGNAL(triggered()), this->activeWindow, SLOT(viewVHDL()));
 
     disconnect(ui->aUndo,        SIGNAL(triggered()), this->activeDocument, SLOT(undo()));
 }
@@ -72,6 +73,7 @@ void MainWindow::connectSlots() {
     connect(ui->aSaveAs,      SIGNAL(triggered()), this->activeWindow, SLOT(saveAs()));
     connect(ui->aOptions,     SIGNAL(triggered()), this->activeWindow, SLOT(showOptionsDialog()));
     connect(ui->aExportImage, SIGNAL(triggered()), this->activeWindow, SLOT(showSaveImageDialog()));
+    connect(ui->aViewVHDL,    SIGNAL(triggered()), this->activeWindow, SLOT(viewVHDL()));
 
     connect(ui->aUndo,        SIGNAL(triggered()), this->activeDocument, SLOT(undo()));
 }
@@ -169,8 +171,8 @@ void MainWindow::load() {
 
 void MainWindow::showPluginListWindow() {
     PluginListWindow *pw = new PluginListWindow(this);
-    pw->show();
-    // refresh toolbar
-    connect(pw, SIGNAL(finished(int)), this, SLOT(initPluginsToolbar()));
+    if (pw->exec() == QDialog::Accepted) {
+        this->initPluginsToolbar();
+    }
 }
 
