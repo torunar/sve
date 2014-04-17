@@ -11,12 +11,29 @@ LinkNode::LinkNode(QList<UNode*> elementNodes, QPair<int, int> connectors, QDomD
 
     this->xml = xml;
     this->node = this->xml->createElement("link");
-    this->node.setAttribute("id",              QString::number(QDateTime::currentMSecsSinceEpoch()));
-    this->node.setAttribute("first_id",        elementNodes.first()->attr("id"));
-    this->node.setAttribute("last_id",         elementNodes.last()->attr("id"));
-    this->node.setAttribute("first_connector", connectors.first);
-    this->node.setAttribute("last_connector",  connectors.second);
+    this->setNodeAttribute("id",              QString::number(QDateTime::currentMSecsSinceEpoch()));
+    this->setNodeAttribute("first_id",        elementNodes.first()->attr("id"));
+    this->setNodeAttribute("last_id",         elementNodes.last()->attr("id"));
+    this->setNodeAttribute("first_connector", connectors.first);
+    this->setNodeAttribute("last_connector",  connectors.second);
     this->xml->firstChild().appendChild(this->node);
+
+    this->painter = new QPainter();
+    this->pen = QPen(Qt::black, 1, Qt::SolidLine);
+
+    this->show();
+}
+
+LinkNode::LinkNode(const QDomNode node, QList<UNode *> elementNodes, QDomDocument *xml, QWidget *parent): UNode(parent) {
+    this->setObjectName("link_node");
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)), Qt::UniqueConnection);
+
+    this->settings   = new QSettings("mike-schekotov", "sve");
+
+    this->xml        = xml;
+    this->node       = node.toElement();
+    this->nodes      = elementNodes;
+    this->connectors = {this->attr("first_connector").toInt(), this->attr("last_connector").toInt()};
 
     this->painter = new QPainter();
     this->pen = QPen(Qt::black, 1, Qt::SolidLine);
@@ -29,7 +46,7 @@ bool LinkNode::hasNode(QString nodeID) {
 }
 
 void LinkNode::paintEvent(QPaintEvent *) {
-    QSize nodeSize      = this->settings->value("default_doc/node_size").toSize();
+    QSize nodeSize         = this->settings->value("default_doc/node_size").toSize();
     ElementNode *firstNode = (ElementNode*) this->nodes.first();
     ElementNode *lastNode  = (ElementNode*) this->nodes.last();
 
@@ -132,9 +149,9 @@ void LinkNode::edit() {
     ConnectionDialog *cd = new ConnectionDialog(this->nodes);
     cd->setConnectors(this->connectors);
     if (cd->exec() == QDialog::Accepted) {
+        emit(altered(AlterType::Edited));
         this->connectors = cd->getConnectors();
         this->setNodeAttribute("first_connector", connectors.first);
         this->setNodeAttribute("last_connector",  connectors.second);
-        emit(altered(AlterType::Edited));
     }
 }

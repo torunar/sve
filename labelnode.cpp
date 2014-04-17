@@ -24,7 +24,7 @@ LabelNode::LabelNode(const QString text, QDomDocument *xml, QWidget *parent) : U
 LabelNode::LabelNode(const QDomNode node, QDomDocument *xml, QWidget *parent) : UNode(node.toElement().attribute("text"), parent) {
     this->setObjectName("label_node");
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
-    this->xml = xml;
+    this->xml  = xml;
     this->node = node.toElement();
     this->show();
     // move

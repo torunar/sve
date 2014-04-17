@@ -12,7 +12,8 @@ class LinkNode : public UNode
 {
     Q_OBJECT
 public:
-    LinkNode(QList<UNode*> elementNodes, QPair<int, int> connectors, QDomDocument *xml, QWidget *parent = 0);
+    LinkNode(                     QList<UNode *> elementNodes, QPair<int, int> connectors, QDomDocument *xml, QWidget *parent = 0);
+    LinkNode(const QDomNode node, QList<UNode *> elementNodes,                             QDomDocument *xml, QWidget *parent = 0);
     ~LinkNode(){}
     bool hasNode(QString nodeID);
 

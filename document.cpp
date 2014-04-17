@@ -134,16 +134,18 @@ void Document::addLink(QList<UNode*> elementNodes, QPair<int, int> connectors, b
 
 /* add link by xml node */
 void Document::addLink(const QDomNode node, bool skipHistory) {
-    QDomElement e = node.toElement();
+    if (!skipHistory) {
+        this->pushToHistory();
+    }
 
-    QString firstID = e.attribute("first_id");
-    QString lastID  = e.attribute("last_id");
-    QPair<int, int> connectors(e.attribute("first_connector").toInt(), e.attribute("last_connector").toInt());
+    QList<UNode *> elementNodes;
+    elementNodes << this->getNodeByID(node.toElement().attribute("first_id"));
+    elementNodes << this->getNodeByID(node.toElement().attribute("last_id"));
 
-    UNode *firstNode = this->getNodeByID(firstID);
-    UNode *lastNode  = this->getNodeByID(lastID);
-
-    this->addLink({firstNode, lastNode}, connectors, skipHistory);
+    LinkNode *linkNode = new LinkNode(node, elementNodes, this->xml, this->workarea);
+    connect(linkNode, SIGNAL(activated()),        this, SLOT(setActiveElement()));
+    connect(linkNode, SIGNAL(altered(AlterType)), this, SLOT(handleChildSignals(AlterType)));
+    this->setChanged(true);
 }
 
 /* get node by xml node's id */
@@ -164,6 +166,7 @@ UNode* Document::getNodeByID(QString id) {
 void Document::undo(){
     if(!this->history.empty()) {
         QByteArray state = this->history.pop();
+        qDebug() << state;
         this->xml->setContent(state);
         this->renderNodes();
     };
@@ -192,8 +195,11 @@ void Document::load(QString filename) {
     if (!this->xml->setContent(file, &erm, &l, &c)) {
         qDebug() << erm << ':' << l << '-' << c;
     }
-    this->setChanged(false);
     fileIn.close();
+
+    this->setChanged(false);
+    this->history.clear();
+    this->pushToHistory();
 }
 
 /* set document changed flag */
@@ -243,6 +249,7 @@ void Document::resetActiveElement() {
 /* save xml tree to history */
 void Document::pushToHistory() {
     QByteArray state = this->xml->toByteArray();
+    qDebug() << state;
     this->history.push(state);
 }
 
