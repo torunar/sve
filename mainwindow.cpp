@@ -6,8 +6,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->setupUi(this);
 
     /* load css */
-    // TODO: change path to binary-related
-    QFile cssFile("../src/ui.css");
+    QFile cssFile(":/css/ui-css");
     cssFile.open(QFile::ReadOnly);
     QString css = cssFile.readAll();
     cssFile.close();

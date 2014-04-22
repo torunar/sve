@@ -13,5 +13,20 @@ SourceViewDialog::~SourceViewDialog() {
 }
 
 void SourceViewDialog::setSource(QString src) {
-    this->view->setHtml(this->htmlTemplate.replace("<!--#VHDL#-->", src));
+    QFile css(":/css/hl-css");
+    QFile js(":/js/hl-js");
+    QFile main(":/js/main-js");
+    css.open(QFile::ReadOnly);
+    js.open(QFile::ReadOnly);
+    main.open(QFile::ReadOnly);
+    this->view->setHtml(
+        this->htmlTemplate
+            .replace("<!--#CSS#-->",  css.readAll())
+            .replace("<!--#JS#-->",   js.readAll())
+            .replace("<!--#VHDL#-->", src)
+            .replace("<!--#MAIN#-->", main.readAll())
+    );
+    css.close();
+    js.close();
+    main.close();
 }

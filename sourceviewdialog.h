@@ -3,6 +3,8 @@
 
 #include <QDialog>
 #include <QWebView>
+#include <QFile>
+#include <QDebug>
 
 namespace Ui {
 class SourceViewDialog;
@@ -19,7 +21,7 @@ public:
     void setSource(QString src);
 private:
     // TODO: replace with js and css content here
-    QString htmlTemplate = "<html><head><link rel=\"stylesheet\" href=\"hl.css\"><script src=\"hl.js\"></script></head><body><pre contenteditable=\"true\" id=\"code\"><!--#VHDL#--></pre><script>var h = document.getElementById('code');hljs.highlightBlock(h);</script></body></html>";
+    QString htmlTemplate = "<html><head><style><!--#CSS#--></style><script type=\"text/javascript\"><!--#JS#--></script></head><body><div contenteditable=\"true\" id=\"code\"><!--#VHDL#--></div><script type=\"text/javascript\"><!--#MAIN#--></script></body></html>";
     QWebView *view;
     Ui::SourceViewDialog *ui;
 };
