@@ -97,21 +97,28 @@ void Document::addNode(Plugin *plugin, bool skipHistory) {
 }
 
 /* add node by xml node */
-void Document::addNode(const QDomNode node, bool skipHistory){
+bool Document::addNode(const QDomNode node, bool skipHistory){
     if (!skipHistory) {
         this->pushToHistory();
     }
     QString pluginName = node.toElement().attribute("plugin");
-    Plugin *plugin = this->getPlugin(pluginName);
-    ElementNode *elementNode = new ElementNode(node, plugin, this->xml, this->workarea);
-    connect(elementNode, SIGNAL(activated()),        this, SLOT(setActiveElement()));
-    connect(elementNode, SIGNAL(altered(AlterType)), this, SLOT(handleChildSignals(AlterType)));
-    // update internal counters
-    elementNode->setCounters(inCounter, outCounter);
-    this->inCounter  += plugin->getInputs().size();
-    this->outCounter += plugin->getOutputs().size();
-    // set changed flag
-    this->setChanged(true);
+    if (this->getPlugins().contains(pluginName)) {
+        Plugin *plugin = this->getPlugin(pluginName);
+        ElementNode *elementNode = new ElementNode(node, plugin, this->xml, this->workarea);
+        connect(elementNode, SIGNAL(activated()),        this, SLOT(setActiveElement()));
+        connect(elementNode, SIGNAL(altered(AlterType)), this, SLOT(handleChildSignals(AlterType)));
+        // update internal counters
+        elementNode->setCounters(inCounter, outCounter);
+        this->inCounter  += plugin->getInputs().size();
+        this->outCounter += plugin->getOutputs().size();
+        // set changed flag
+        this->setChanged(true);
+        return true;
+    }
+    else {
+        this->setChanged(false);
+        return false;
+    }
 }
 
 /* add node by plugin name */
@@ -259,26 +266,52 @@ QPixmap Document::getImage() {
 }
 
 QString Document::getVHDL() {
+    // at first, lets describe entities
+    QStringList usedPlugins = this->getUsedPlugins();
+
+    QString entityTemplate = "entity %1 is<br>\n"
+    "port (<br>\n"
+    "%2\n"
+    "%3\n"
+    ")<br>\n"
+    "end entity $1;<br>\n<br>\n";
+    QString inTemplate  = "\t%1 : in  std_logic;<br>\n";
+    QString outTemplate = "\t%1 : out std_logic;<br>\n";
+
+    foreach(QString name, usedPlugins) {
+        Plugin *plugin = this->getPlugin(name);
+        int c = 0;
+        QString inputs, outputs;
+        foreach (QString input, plugin->getInputs()) {
+            inputs += inTemplate.arg(input.replace("%INC%", QString::number(++c)));
+        }
+        c = 0;
+        foreach (QString input, plugin->getOutputs()) {
+            outputs += inTemplate.arg(input.replace("%OUTC%", QString::number(++c)));
+        }
+        qDebug() << entityTemplate.arg(name, inputs, outputs);
+    }
+
     return
-            "    -- (this is a VHDL comment)<br>"
-            "    <br>"
-            "    -- import std_logic from the IEEE library<br>"
-            "    library IEEE;<br>"
-            "    use IEEE.std_logic_1164.all;<br>"
-            "    <br>"
-            "    -- this is the entity<br>"
-            "    entity ANDGATE is<br>"
-            "      port (<br>"
-            "        I1 : in std_logic;<br>"
-            "        I2 : in std_logic;<br>"
-            "        O  : out std_logic);<br>"
-            "    end entity ANDGATE;<br>"
-            "    <br>"
-            "    -- this is the architecture<br>"
-            "    architecture RTL of ANDGATE is<br>"
-            "    begin<br>"
-            "      O <= I1 and I2;<br>"
-            "    end architecture RTL;";
+        "-- (this is a VHDL comment)<br>"
+        "<br>"
+        "-- import std_logic from the IEEE library<br>"
+        "library IEEE;<br>"
+        "use IEEE.std_logic_1164.all;<br>"
+        "<br>"
+        "-- this is the entity<br>"
+        "entity ANDGATE is<br>"
+        "port (<br>"
+        "    I1 : in std_logic;<br>"
+        "    I2 : in std_logic;<br>"
+        "    O  : out std_logic);<br>"
+        "end entity ANDGATE;<br>"
+        "<br>"
+        "-- this is the architecture<br>"
+        "architecture RTL of ANDGATE is<br>"
+        "begin<br>"
+        "  O <= I1 and I2;<br>"
+        "end architecture RTL;";
 }
 
 /* return document's xml */
@@ -287,7 +320,7 @@ QDomDocument *Document::getXml() {
 }
 
 /* create widgets from xml tree */
-void Document::renderNodes() {
+bool Document::renderNodes() {
     // remove children
     QObjectList children = this->workarea->children();
     foreach(QObject* child, children) {
@@ -302,13 +335,16 @@ void Document::renderNodes() {
     QDomNodeList nodes = this->xml->elementsByTagName("node");
     l = nodes.size();
     for (int i = 0; i < l; i++) {
-        this->addNode(nodes.at(i), true);
+        if (!this->addNode(nodes.at(i), true)) {
+            return false;
+        }
     }
     QDomNodeList links = this->xml->elementsByTagName("link");
     l = links.size();
     for (int i = 0; i < l; i++) {
         this->addLink(links.at(i), true);
     }
+    return true;
 }
 
 /* get plugin by its name */
@@ -328,6 +364,19 @@ QStringList Document::getPlugins() {
         ps << p->getName();
     }
     return ps;
+}
+
+QStringList Document::getUsedPlugins() {
+    QDomNodeList nodes = this->xml->elementsByTagName("node");
+    int l = nodes.size();
+    QStringList usedPlugins;
+    for (int i = 0; i < l; i++) {
+        QString usedPlugin = nodes.at(i).toElement().attribute("plugin");
+        if (!usedPlugins.contains(usedPlugin)) {
+            usedPlugins << usedPlugin;
+        }
+    }
+    return usedPlugins;
 }
 
 /* set plugins */

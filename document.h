@@ -47,16 +47,17 @@ public:
     void addLabel(const QDomNode node, bool skipHistory = false);
 
     void addNode(Plugin *plugin,       bool skipHistory = false);
-    void addNode(const QDomNode node,  bool skipHistory = false);
+    bool addNode(const QDomNode node,  bool skipHistory = false);
 
     void addLink(QList<UNode *> elementNodes, QPair<int, int> connectors, bool skipHistory = false);
     void addLink(const QDomNode node,  bool skipHistory = false);
 
     UNode *getNodeByID(QString id);
-    void   renderNodes();
+    bool renderNodes();
 
     Plugin     *getPlugin(QString name);
     QStringList getPlugins();
+    QStringList getUsedPlugins();
     void        setPlugins(QList<Plugin*> plugins);
 
     void setMode(DocumentMode documentMode);

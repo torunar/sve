@@ -86,10 +86,16 @@ bool DocWindow::load() {
     if (filename == "") return false;
     this->document->load(filename);
     this->setTitle(this->document->title);
-    this->renderNodes();
-    this->document->setChanged(false);
-    this->setStatus(tr("Document loaded"), 2000);
-    return true;
+    if (this->renderNodes()) {
+        this->document->setChanged(false);
+        this->setStatus(tr("Document loaded"), 2000);
+        return true;
+    }
+    else {
+        this->setStatus(tr("Document loading error: no required plugin"), -1);
+        return false;
+    }
+
 }
 
 void DocWindow::setLinkNode(UNode *node, uint nodeCounter) {
@@ -190,8 +196,8 @@ void DocWindow::setChanged(bool changed) {
     }
 }
 
-void DocWindow::renderNodes() {
-    this->document->renderNodes();
+bool DocWindow::renderNodes() {
+    return this->document->renderNodes();
 }
 
 void DocWindow::setStatus(QString text, int timeout = 0) {

@@ -2,6 +2,11 @@
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
+    /* load language */
+    QTranslator *t = new QTranslator();
+    t->load("sve_ru.qm");
+    qApp->installTranslator(t);
+
     this->settings = new QSettings("mike-schekotov", "sve");
     ui->setupUi(this);
 

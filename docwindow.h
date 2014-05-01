@@ -34,7 +34,7 @@ private:
     QStatusBar    *statusBar;
     QList<UNode *> linkNodes;
 
-    void renderNodes();
+    bool renderNodes();
     void setStatus(QString text, int timeout);
 
 protected:

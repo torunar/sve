@@ -56,3 +56,5 @@ RESOURCES += \
     ui.qrc
 
 QMAKE_CXXFLAGS += -std=c++11
+
+TRANSLATIONS = sve_ru.ts
