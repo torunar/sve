@@ -441,36 +441,36 @@
     </message>
 </context>
 <context>
-    <name>NodePropertiesWindow</name>
+    <name>NodePropertiesDialog</name>
     <message>
-        <location filename="nodepropertieswindow.ui" line="26"/>
+        <location filename="nodepropertiesdialog.ui" line="26"/>
         <source>Node properties</source>
         <translation>Свойства элемента</translation>
     </message>
     <message>
-        <location filename="nodepropertieswindow.ui" line="53"/>
+        <location filename="nodepropertiesdialog.ui" line="53"/>
         <source>Source code</source>
         <translation>Исходный код</translation>
     </message>
     <message>
-        <location filename="nodepropertieswindow.ui" line="118"/>
-        <source>IN</source>
-        <translation>Входы</translation>
-    </message>
-    <message>
-        <location filename="nodepropertieswindow.ui" line="137"/>
-        <source>OUT</source>
-        <translation>Выходы</translation>
-    </message>
-    <message>
-        <location filename="nodepropertieswindow.ui" line="83"/>
+        <location filename="nodepropertiesdialog.ui" line="83"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="nodepropertieswindow.ui" line="90"/>
+        <location filename="nodepropertiesdialog.ui" line="90"/>
         <source>OK</source>
         <translation>OK</translation>
+    </message>
+    <message>
+        <location filename="nodepropertiesdialog.ui" line="118"/>
+        <source>IN</source>
+        <translation>Входы</translation>
+    </message>
+    <message>
+        <location filename="nodepropertiesdialog.ui" line="137"/>
+        <source>OUT</source>
+        <translation>Выходы</translation>
     </message>
 </context>
 <context>

@@ -3,10 +3,10 @@
 
 #include "plugin.h"
 #include "unode.h"
+#include "nodepropertiesdialog.h"
 #include <QSettings>
 
 #include <QDebug>
-#include "nodepropertieswindow.h"
 
 class ElementNode : public UNode
 {

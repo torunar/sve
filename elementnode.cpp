@@ -69,7 +69,7 @@ void ElementNode::showContextMenu(const QPoint &pos) {
 }
 
 void ElementNode::edit() {
-    NodePropertiesWindow *np = new NodePropertiesWindow();
+    NodePropertiesDialog *np = new NodePropertiesDialog();
     np->setCounters(this->inCounter, this->outCounter);
     np->setInputs(this->plugin->getInputs());
     np->setOutputs(this->plugin->getOutputs());

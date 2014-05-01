@@ -15,7 +15,6 @@ SOURCES += main.cpp\
     document.cpp \
     docwindow.cpp \
     elementnode.cpp \
-    nodepropertieswindow.cpp \
     plugin.cpp \
     pluginlistwindow.cpp \
     addnodedialog.cpp \
@@ -25,12 +24,12 @@ SOURCES += main.cpp\
     connectiondialog.cpp \
     documentoptionsdialog.cpp \
     preferencesdialog.cpp \
-    sourceviewdialog.cpp
+    sourceviewdialog.cpp \
+    nodepropertiesdialog.cpp
 
 HEADERS  += mainwindow.h \
     document.h \
     docwindow.h \
-    nodepropertieswindow.h \
     plugin.h \
     pluginlistwindow.h \
     addnodedialog.h \
@@ -41,16 +40,17 @@ HEADERS  += mainwindow.h \
     connectiondialog.h \
     documentoptionsdialog.h \
     preferencesdialog.h \
-    sourceviewdialog.h
+    sourceviewdialog.h \
+    nodepropertiesdialog.h
 
 FORMS    += mainwindow.ui \
-    nodepropertieswindow.ui \
     pluginlistwindow.ui \
     addnodedialog.ui \
     connectiondialog.ui \
     documentoptionsdialog.ui \
     preferencesdialog.ui \
-    sourceviewdialog.ui
+    sourceviewdialog.ui \
+    nodepropertiesdialog.ui
 
 RESOURCES += \
     ui.qrc

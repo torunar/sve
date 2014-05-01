@@ -5,7 +5,6 @@
 #include <QPainter>
 #include <QSettings>
 
-#include "elementnode.h"
 #include "connectiondialog.h"
 
 class LinkNode : public UNode

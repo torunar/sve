@@ -1,10 +1,7 @@
-#include "nodepropertieswindow.h"
-#include "ui_nodepropertieswindow.h"
+#include "nodepropertiesdialog.h"
+#include "ui_nodepropertiesdialog.h"
 
-NodePropertiesWindow::NodePropertiesWindow(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::NodePropertiesWindow)
-{
+NodePropertiesDialog::NodePropertiesDialog(QWidget *parent) : QDialog(parent), ui(new Ui::NodePropertiesDialog) {
     ui->setupUi(this);
     this->setFixedSize(this->size());
 
@@ -12,16 +9,16 @@ NodePropertiesWindow::NodePropertiesWindow(QWidget *parent) :
     connect(ui->okButton, SIGNAL(clicked()), SLOT(save()));
 }
 
-NodePropertiesWindow::~NodePropertiesWindow() {
+NodePropertiesDialog::~NodePropertiesDialog() {
     delete ui;
 }
 
-void NodePropertiesWindow::setCounters(uint inCounter, uint outCounter) {
+void NodePropertiesDialog::setCounters(uint inCounter, uint outCounter) {
     this->inCounter  = inCounter;
     this->outCounter = outCounter;
 }
 
-void NodePropertiesWindow::setSource(QString source) {
+void NodePropertiesDialog::setSource(QString source) {
     for (int i = 1; i <= this->inputs.size(); i++) {
         source.replace("%IN_"  + QString::number(i) + "%", inputs[i-1]);
     }
@@ -31,7 +28,7 @@ void NodePropertiesWindow::setSource(QString source) {
     ui->source->setText(source);
 }
 
-void NodePropertiesWindow::setInputs(QVector<QString> inputs) {
+void NodePropertiesDialog::setInputs(QVector<QString> inputs) {
     uint i = this->inCounter;
     for(QVector<QString>::Iterator inputName = inputs.begin(); inputName < inputs.end(); inputName++) {
         QString inputText = (*inputName).replace("%INC%", QString::number(++i));
@@ -40,7 +37,7 @@ void NodePropertiesWindow::setInputs(QVector<QString> inputs) {
     }
 }
 
-void NodePropertiesWindow::setOutputs(QVector<QString> outputs) {
+void NodePropertiesDialog::setOutputs(QVector<QString> outputs) {
     uint i = this->outCounter;
     for(QVector<QString>::Iterator outputName = outputs.begin(); outputName < outputs.end(); outputName++) {
         QString outputText = (*outputName).replace("%OUTC%", QString::number(++i));
@@ -49,7 +46,7 @@ void NodePropertiesWindow::setOutputs(QVector<QString> outputs) {
     }
 }
 
-void NodePropertiesWindow::save() {
+void NodePropertiesDialog::save() {
     qDebug() << ui->source->toPlainText();
     this->close();
 }
