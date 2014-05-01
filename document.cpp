@@ -179,14 +179,18 @@ void Document::undo(){
 }
 
 /* save document to file */
-void Document::save(QString filename) {
+bool Document::save(QString filename) {
+
     this->filename = filename;
     this->title = QFileInfo(filename).baseName() + ".sve";
     QFile fileOut(this->filename);
     fileOut.open(QFile::WriteOnly);
-    fileOut.write(this->xml->toString().toUtf8());//.toAscii());
+    bool res = (fileOut.write(this->xml->toString().toUtf8()) > 0);
     fileOut.close();
-    this->setChanged(false);
+    if (res) {
+        this->setChanged(false);
+    }
+    return res;
 }
 
 /* load from file */

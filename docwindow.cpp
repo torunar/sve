@@ -64,9 +64,13 @@ void DocWindow::save() {
     else {
         filename = this->document->filename;
     }
-    this->document->save(filename);
-    this->setTitle(this->document->title);
-    this->setStatus(tr("Document saved"), 2000);
+    if (this->document->save(filename)) {
+        this->setTitle(this->document->title);
+        this->setStatus(tr("Document saved"), 2000);
+    }
+    else {
+        this->setStatus(tr("Error saving document"), -1);
+    }
 }
 
 void DocWindow::saveAs() {

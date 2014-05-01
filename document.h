@@ -84,7 +84,7 @@ signals:
 public slots:
     void handleChildSignals(AlterType type);
     void setActiveElement();
-    void save(QString filename);
+    bool save(QString filename);
     void load(QString filename);
     void addNode(QString plugin);
 
