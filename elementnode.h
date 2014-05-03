@@ -17,15 +17,16 @@ public:
     ElementNode(                     Plugin *plugin, QDomDocument *xml, QWidget* parent = 0);
     ElementNode(const QDomNode node, Plugin *plugin, QDomDocument *xml, QWidget *parent = 0);
     ~ElementNode(){}
-    void setCounters(uint inCounter, uint outCounter);
     Plugin *getPlugin();
+    QString getName();
+    QString getInput(int i);
+    QString getOutput(int i);
 
 protected:
 
 private:
     Plugin    *plugin;
     QSettings *settings;
-    uint       inCounter, outCounter;
 
 signals:
 

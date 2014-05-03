@@ -74,9 +74,6 @@ public:
     QString       title;
     QString       filename;
 
-    uint inCounter;
-    uint outCounter;
-
 signals:
     void altered(bool);
     void elementActivated(UNode*, uint);

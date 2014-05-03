@@ -47,13 +47,12 @@ ElementNode::ElementNode(const QDomNode node, Plugin *plugin, QDomDocument *xml,
     this->startPos = QPoint(0, 0);
 }
 
-void ElementNode::setCounters(uint inCounter, uint outCounter) {
-    this->inCounter  = inCounter;
-    this->outCounter = outCounter;
-}
-
 Plugin *ElementNode::getPlugin() {
     return this->plugin;
+}
+
+QString ElementNode::getName() {
+    return this->plugin->getName();
 }
 
 void ElementNode::showContextMenu(const QPoint &pos) {
@@ -70,7 +69,6 @@ void ElementNode::showContextMenu(const QPoint &pos) {
 
 void ElementNode::edit() {
     NodePropertiesDialog *np = new NodePropertiesDialog();
-    np->setCounters(this->inCounter, this->outCounter);
     np->setInputs(this->plugin->getInputs());
     np->setOutputs(this->plugin->getOutputs());
     np->setSource(this->plugin->getSource());

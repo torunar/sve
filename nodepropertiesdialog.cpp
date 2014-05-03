@@ -13,11 +13,6 @@ NodePropertiesDialog::~NodePropertiesDialog() {
     delete ui;
 }
 
-void NodePropertiesDialog::setCounters(uint inCounter, uint outCounter) {
-    this->inCounter  = inCounter;
-    this->outCounter = outCounter;
-}
-
 void NodePropertiesDialog::setSource(QString source) {
     for (int i = 1; i <= this->inputs.size(); i++) {
         source.replace("%IN_"  + QString::number(i) + "%", inputs[i-1]);
@@ -29,7 +24,7 @@ void NodePropertiesDialog::setSource(QString source) {
 }
 
 void NodePropertiesDialog::setInputs(QVector<QString> inputs) {
-    uint i = this->inCounter;
+    int i = 0;
     for(QVector<QString>::Iterator inputName = inputs.begin(); inputName < inputs.end(); inputName++) {
         QString inputText = (*inputName).replace("%INC%", QString::number(++i));
         this->inputs << inputText;
@@ -38,7 +33,7 @@ void NodePropertiesDialog::setInputs(QVector<QString> inputs) {
 }
 
 void NodePropertiesDialog::setOutputs(QVector<QString> outputs) {
-    uint i = this->outCounter;
+    int i = 0;
     for(QVector<QString>::Iterator outputName = outputs.begin(); outputName < outputs.end(); outputName++) {
         QString outputText = (*outputName).replace("%OUTC%", QString::number(++i));
         this->outputs << outputText;
@@ -47,6 +42,5 @@ void NodePropertiesDialog::setOutputs(QVector<QString> outputs) {
 }
 
 void NodePropertiesDialog::save() {
-    qDebug() << ui->source->toPlainText();
     this->close();
 }

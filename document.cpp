@@ -19,8 +19,6 @@ Document::Document(QMdiSubWindow *parent) {
 
     this->title         = "";
     this->changed       = false;
-    this->inCounter     = 0;
-    this->outCounter    = 0;
     this->mode          = DocumentMode::Default;
     this->nodeCounter   = 0;
     this->activeElement = 0;
@@ -88,10 +86,6 @@ void Document::addNode(Plugin *plugin, bool skipHistory) {
     ElementNode *elementNode = new ElementNode(plugin, this->xml, this->workarea);
     connect(elementNode, SIGNAL(activated()),        this, SLOT(setActiveElement()));
     connect(elementNode, SIGNAL(altered(AlterType)), this, SLOT(handleChildSignals(AlterType)));
-    // update internal counters
-    elementNode->setCounters(inCounter, outCounter);
-    this->inCounter  += plugin->getInputs().size();
-    this->outCounter += plugin->getOutputs().size();
     // set changed flag
     this->setChanged(true);
 }
@@ -107,10 +101,6 @@ bool Document::addNode(const QDomNode node, bool skipHistory){
         ElementNode *elementNode = new ElementNode(node, plugin, this->xml, this->workarea);
         connect(elementNode, SIGNAL(activated()),        this, SLOT(setActiveElement()));
         connect(elementNode, SIGNAL(altered(AlterType)), this, SLOT(handleChildSignals(AlterType)));
-        // update internal counters
-        elementNode->setCounters(inCounter, outCounter);
-        this->inCounter  += plugin->getInputs().size();
-        this->outCounter += plugin->getOutputs().size();
         // set changed flag
         this->setChanged(true);
         return true;
@@ -270,52 +260,140 @@ QPixmap Document::getImage() {
 }
 
 QString Document::getVHDL() {
-    // at first, lets describe entities
+    QString vhdl = "-- SVE direct export\n\n";
     QStringList usedPlugins = this->getUsedPlugins();
 
-    QString entityTemplate = "entity %1 is<br>\n"
-    "port (<br>\n"
-    "%2\n"
-    "%3\n"
-    ")<br>\n"
-    "end entity $1;<br>\n<br>\n";
-    QString inTemplate  = "\t%1 : in  std_logic;<br>\n";
-    QString outTemplate = "\t%1 : out std_logic;<br>\n";
+    QString portTemplate  = "\t%1 : %2 BIT";
+    // %1 - name
+    // %2 - type (in/out)
 
+    QString entityTemplate = "entity %1 is\n"
+    "port (\n"
+    "%2"
+    "%3"
+    ");\n"
+    "end entity %1;\n\n";
+    // %1 - name
+    // %2 - inputs
+    // %3 - outputs
+
+    QString functionalTemplate = "architecture functional of %1 is\n"
+    "begin\n"
+    "%2\n"
+    "end architecture functional;\n\n";
+    // %1 - name
+    // %2 - source
+
+    QString componentTemplate = "component %1 is\n"
+    "port (\n"
+    "%2"
+    "%3"
+    ");\n"
+    "end entity %1;\n\n";
+    // %1 - name
+    // %2 - inputs
+    // %3 - outputs
+
+    QString structureTemplate = "architecture structure of sve is\n"
+    "%1"
+    "%2\n"
+    "begin\n"
+    "%3\n"
+    "end architecture structure;";
+    // %1 - components
+    // %2 - signals
+    // %3 - source
+
+    QStringList components;
+
+    /* Enities of the system */
     foreach(QString name, usedPlugins) {
+        if (name == "port_in" || name == "port_out") {
+            continue;
+        }
         Plugin *plugin = this->getPlugin(name);
-        int c = 0;
-        QString inputs, outputs;
-        foreach (QString input, plugin->getInputs()) {
-            inputs += inTemplate.arg(input.replace("%INC%", QString::number(++c)));
+        QVector<QString> pInputs = plugin->getInputs();
+        QVector<QString> pOutputs = plugin->getOutputs();
+        QString inputs, outputs, source;
+        source = plugin->getSource();
+        int summary = pInputs.size() + pOutputs.size();
+        for (int i = 0; i < pInputs.size(); i++) {
+            pInputs[i] = pInputs[i].replace("%INC%", QString::number(i + 1));
+            inputs    += portTemplate.arg(pInputs[i], "in");
+            if (i != summary) {
+                inputs += ";\n";
+            }
+            source     = source.replace("%IN_" + QString::number(i + 1) + "%", pInputs[i]);
         }
-        c = 0;
-        foreach (QString input, plugin->getOutputs()) {
-            outputs += inTemplate.arg(input.replace("%OUTC%", QString::number(++c)));
+        for (int i = 0; i < pOutputs.size(); i++) {
+            pOutputs[i] = pOutputs[i].replace("%OUTC%", QString::number(i + 1));
+            outputs    += portTemplate.arg(pOutputs[i], "out");
+            if (i != pOutputs.size() - 1) {
+                outputs += ";\n";
+            }
+            source      = source.replace("%OUT_" + QString::number(i + 1) + "%", pOutputs[i]);
         }
-        qDebug() << entityTemplate.arg(name, inputs, outputs);
+        // describe entities
+        vhdl += entityTemplate.arg(name, inputs, outputs) + functionalTemplate.arg(name, source);
+        // add components for system
+        components << componentTemplate.arg(name, inputs, outputs);
     }
 
-    return
-        "-- (this is a VHDL comment)<br>"
-        "<br>"
-        "-- import std_logic from the IEEE library<br>"
-        "library IEEE;<br>"
-        "use IEEE.std_logic_1164.all;<br>"
-        "<br>"
-        "-- this is the entity<br>"
-        "entity ANDGATE is<br>"
-        "port (<br>"
-        "    I1 : in std_logic;<br>"
-        "    I2 : in std_logic;<br>"
-        "    O  : out std_logic);<br>"
-        "end entity ANDGATE;<br>"
-        "<br>"
-        "-- this is the architecture<br>"
-        "architecture RTL of ANDGATE is<br>"
-        "begin<br>"
-        "  O <= I1 and I2;<br>"
-        "end architecture RTL;";
+    /* Entity of system */
+    QMap<QString, QPair<QDomElement, int> > sInputs, sOutputs;
+    QString inputs, outputs;
+    QDomNodeList nodes = this->xml->elementsByTagName("node");
+    int ns = nodes.size();
+    int ic = 0;
+    int oc = 0;
+    for(int i = 0; i < ns; i++) {
+        QDomElement element = nodes.at(i).toElement();
+        QString usedPlugin = element.attribute("plugin");
+        if (usedPlugin == "port_in") {
+            sInputs[element.attribute("id")] = {element, ++ic};
+        }
+        if (usedPlugin == "port_out") {
+            sOutputs[element.attribute("id")] = {element, ++oc};
+        }
+    }
+    int summary = sInputs.size() + sOutputs.size();
+    for(int i = 0; i < sInputs.size(); i++) {
+        inputs += portTemplate.arg("SVEIN" + QString::number(i + 1), "in");
+        if (i != summary) {
+            inputs += ";\n";
+        }
+    }
+    for(int i = 0; i < sOutputs.size(); i++) {
+        outputs += portTemplate.arg("SVEOUT" + QString::number(i + 1), "out");
+        if (i != sOutputs.size() - 1) {
+            outputs += ";\n";
+        }
+    }
+    vhdl += entityTemplate.arg("sve", inputs, outputs);
+
+    /* Signals and code */
+    QDomNodeList links = this->xml->elementsByTagName("link");
+    QStringList sSignals;
+    QString source = "";
+    for(int i = 0; i < links.size(); i++) {
+        // put signal
+        sSignals << "signal SVESIG" + QString::number(i + 1) + ": BIT;\n";
+        // put some magic
+        QDomElement link = links.at(i).toElement();
+        QString fId = link.attribute("first_id");
+        QString lId = link.attribute("last_id");
+        if (sInputs.contains(fId)) {
+            source += QString("SVESIG%1 <= SVEIN%2;\n").arg(QString::number(i + 1), QString::number(sInputs[fId].second));
+        }
+        if (sOutputs.contains(lId)) {
+            source += QString("SVEOUT%2 <= SVESIG%1;\n").arg(QString::number(i + 1), QString::number(sOutputs[lId].second));
+        }
+        qDebug() << sOutputs.contains(link.attribute("last_id"));
+    }
+
+    vhdl += structureTemplate.arg(components.join(""), sSignals.join(""), source);
+
+    return vhdl.replace("\n", "<br>\n");
 }
 
 /* return document's xml */
