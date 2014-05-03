@@ -259,6 +259,8 @@ QPixmap Document::getImage() {
     return img;
 }
 
+/* TODO: very raw extremely not optimized code */
+/* This would be pretty nice to rewrite it     */
 QString Document::getVHDL() {
     QString vhdl = "-- SVE direct export\n\n";
     QStringList usedPlugins = this->getUsedPlugins();
@@ -289,7 +291,7 @@ QString Document::getVHDL() {
     "%2"
     "%3"
     ");\n"
-    "end entity %1;\n\n";
+    "end component %1;\n\n";
     // %1 - name
     // %2 - inputs
     // %3 - outputs
@@ -298,7 +300,7 @@ QString Document::getVHDL() {
     "%1"
     "%2\n"
     "begin\n"
-    "%3\n"
+    "%3"
     "end architecture structure;";
     // %1 - components
     // %2 - signals
@@ -339,7 +341,8 @@ QString Document::getVHDL() {
         components << componentTemplate.arg(name, inputs, outputs);
     }
 
-    /* Entity of system */
+    /* Main entity */
+    vhdl += "-- SVE entity\n";
     QMap<QString, QPair<QDomElement, int> > sInputs, sOutputs;
     QString inputs, outputs;
     QDomNodeList nodes = this->xml->elementsByTagName("node");
@@ -371,24 +374,46 @@ QString Document::getVHDL() {
     }
     vhdl += entityTemplate.arg("sve", inputs, outputs);
 
-    /* Signals and code */
-    QDomNodeList links = this->xml->elementsByTagName("link");
+    // signals
+    QDomNodeList elinks = this->xml->elementsByTagName("link");
+    QMap<QString, QPair<QDomElement, int> > links;
     QStringList sSignals;
     QString source = "";
-    for(int i = 0; i < links.size(); i++) {
+    for(int i = 0; i < elinks.size(); i++) {
         // put signal
         sSignals << "signal SVESIG" + QString::number(i + 1) + ": BIT;\n";
-        // put some magic
-        QDomElement link = links.at(i).toElement();
+        QDomElement link = elinks.at(i).toElement();
+        // append links
+        links[link.attribute("id")] = {link, i + 1};
         QString fId = link.attribute("first_id");
         QString lId = link.attribute("last_id");
+        // outer ports
         if (sInputs.contains(fId)) {
-            source += QString("SVESIG%1 <= SVEIN%2;\n").arg(QString::number(i + 1), QString::number(sInputs[fId].second));
+            source += QString("\tSVESIG%1 <= SVEIN%2;\n").arg(QString::number(i + 1), QString::number(sInputs[fId].second));
         }
-        if (sOutputs.contains(lId)) {
-            source += QString("SVEOUT%2 <= SVESIG%1;\n").arg(QString::number(i + 1), QString::number(sOutputs[lId].second));
+        else if (sOutputs.contains(lId)) {
+            source += QString("\tSVEOUT%2 <= SVESIG%1;\n").arg(QString::number(i + 1), QString::number(sOutputs[lId].second));
         }
-        qDebug() << sOutputs.contains(link.attribute("last_id"));
+    }
+
+    // nodes
+    for (int i = 0; i < ns; i++) {
+        QDomElement node = nodes.at(i).toElement();
+        QString usedPlugin = node.attribute("plugin");
+        if (usedPlugin != "port_in" && usedPlugin != "port_out") {
+            QStringList inputs, outputs;
+            for (int j = 0; j < links.values().size(); j++) {
+                QPair<QDomElement, int> link = links.values().at(j);
+                if (link.first.attribute("last_id") == node.attribute("id")) {
+                    // put signal accordingly to connector
+                    inputs.insert(link.first.attribute("last_connector").toInt(), "SVESIG" + QString::number(link.second));
+                }
+                if (link.first.attribute("first_id") == node.attribute("id")) {
+                    outputs.insert(link.first.attribute("first_connector").toInt(), "SVESIG" + QString::number(link.second));
+                }
+            }
+            source += QString("\tSVENODE%1 : %2 port map (%3, %4);\n").arg(QString::number(i + 1), usedPlugin, inputs.join(","), outputs.join(","));
+        }
     }
 
     vhdl += structureTemplate.arg(components.join(""), sSignals.join(""), source);
