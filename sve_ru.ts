@@ -157,12 +157,12 @@
 <context>
     <name>ElementNode</name>
     <message>
-        <location filename="elementnode.cpp" line="62"/>
+        <location filename="elementnode.cpp" line="60"/>
         <source>Edit properties</source>
         <translation>Изменить свойства</translation>
     </message>
     <message>
-        <location filename="elementnode.cpp" line="65"/>
+        <location filename="elementnode.cpp" line="63"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
@@ -170,22 +170,22 @@
 <context>
     <name>LabelNode</name>
     <message>
-        <location filename="labelnode.cpp" line="38"/>
+        <location filename="labelnode.cpp" line="37"/>
         <source>Edit text</source>
         <translation>Править текст</translation>
     </message>
     <message>
-        <location filename="labelnode.cpp" line="41"/>
+        <location filename="labelnode.cpp" line="40"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="labelnode.cpp" line="50"/>
+        <location filename="labelnode.cpp" line="49"/>
         <source>New label</source>
         <translation>Новая метка</translation>
     </message>
     <message>
-        <location filename="labelnode.cpp" line="51"/>
+        <location filename="labelnode.cpp" line="50"/>
         <source>Insert text for this label</source>
         <translation>Введите текст для метки</translation>
     </message>
@@ -599,6 +599,23 @@
         <location filename="sourceviewdialog.ui" line="51"/>
         <source>No web? No fun.</source>
         <translation>No web? No fun.</translation>
+    </message>
+    <message>
+        <location filename="sourceviewdialog.cpp" line="60"/>
+        <source>Error running GHDL.
+Is it fall yet?</source>
+        <translation>Ошибка запуска GHDL.
+Is it fall yet?</translation>
+    </message>
+    <message>
+        <location filename="sourceviewdialog.cpp" line="63"/>
+        <source>Code seems to be OK!</source>
+        <translation>С кодом все в порядке!</translation>
+    </message>
+    <message>
+        <location filename="sourceviewdialog.cpp" line="68"/>
+        <source>Error creating temporary file</source>
+        <translation>Ошибка создания временного файла</translation>
     </message>
 </context>
 </TS>

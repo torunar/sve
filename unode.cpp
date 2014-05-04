@@ -48,6 +48,7 @@ void UNode::setPosition(int x, int y) {
         this->width(),
         this->height()
     );
+    this->startPos = QPoint(x, y);
     this->node.setAttribute("x", x);
     this->node.setAttribute("y", y);
 }
@@ -69,9 +70,12 @@ void UNode::mouseMoveEvent(QMouseEvent *ev) {
 
 void UNode::mouseReleaseEvent(QMouseEvent *) {
     // document changed flag
-    emit altered(AlterType::Moved);
-    this->node.setAttribute("x", this->x());
-    this->node.setAttribute("y", this->y());
+    if (this->dragged) {
+        emit altered(AlterType::Moved);
+        this->node.setAttribute("x", this->x());
+        this->node.setAttribute("y", this->y());
+        this->dragged = false;
+    }
 }
 
 void UNode::performDrag(const QPoint endPos) {
@@ -84,6 +88,7 @@ void UNode::performDrag(const QPoint endPos) {
         this->width(),
         this->height()
     );
+    this->dragged = true;
 }
 
 

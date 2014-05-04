@@ -149,9 +149,9 @@ void DocWindow::showSaveImageDialog() {
 }
 
 void DocWindow::viewVHDL() {
-    SourceViewDialog *svd = new SourceViewDialog();
-    QString src = this->document->getVHDL();
-    svd->setSource(src);
+    QString vhdl = this->document->getVHDL();
+    SourceViewDialog *svd = new SourceViewDialog(vhdl);
+    svd->setSource(vhdl.replace("\n", "<br>\n"));
     svd->exec();
 }
 

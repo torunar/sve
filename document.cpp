@@ -412,13 +412,13 @@ QString Document::getVHDL() {
                     outputs.insert(link.first.attribute("first_connector").toInt(), "SVESIG" + QString::number(link.second));
                 }
             }
-            source += QString("\tSVENODE%1 : %2 port map (%3, %4);\n").arg(QString::number(i + 1), usedPlugin, inputs.join(","), outputs.join(","));
+            source += QString("\tSVENODE%1 : %2 port map (%3, %4);\n").arg(QString::number(i + 1), usedPlugin, inputs.join(", "), outputs.join(", "));
         }
     }
 
     vhdl += structureTemplate.arg(components.join(""), sSignals.join(""), source);
 
-    return vhdl.replace("\n", "<br>\n");
+    return vhdl;
 }
 
 /* return document's xml */

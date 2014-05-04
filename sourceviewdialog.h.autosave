@@ -32,7 +32,7 @@ private:
 
 public slots:
     void validate();
-    void handleError(QProcess::ProcessError error);
+    void handleError(QProcess::ProcessError);
 };
 
 #endif // SOURCEVIEWDIALOG_H

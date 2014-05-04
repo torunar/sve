@@ -29,7 +29,6 @@ LabelNode::LabelNode(const QDomNode node, QDomDocument *xml, QWidget *parent) : 
     this->show();
     // move
     this->setPosition(this->attr("x").toInt(), this->attr("y").toInt());
-    this->startPos = QPoint(0, 0);
 }
 
 void LabelNode::showContextMenu(const QPoint& pos) {

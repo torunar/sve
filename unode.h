@@ -44,6 +44,7 @@ public:
 
 protected:
     QPoint startPos;
+    bool   dragged = false;
 
     void mousePressEvent(QMouseEvent *ev);
     void mouseMoveEvent(QMouseEvent *ev);
