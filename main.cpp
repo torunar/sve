@@ -21,13 +21,6 @@ int main(int argc, char *argv[])
         settings.setValue("plugins/icon_size",  QSize(32, 32));
     }
 
-    // no longer required with migration to qt5
-    /*
-    QTextCodec *utfcodec = QTextCodec::codecForName("UTF-8");
-    QTextCodec::setCodecForTr(utfcodec);
-    QTextCodec::setCodecForCStrings(utfcodec);
-    */
-
     QApplication a(argc, argv);
 
     MainWindow w;

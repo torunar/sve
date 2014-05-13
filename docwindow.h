@@ -12,7 +12,6 @@
 
 #include "document.h"
 #include "addnodedialog.h"
-#include "connectiondialog.h"
 #include "documentoptionsdialog.h"
 #include "sourceviewdialog.h"
 

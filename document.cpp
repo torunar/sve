@@ -374,7 +374,7 @@ QString Document::getVHDL() {
     }
     vhdl += entityTemplate.arg("sve", inputs, outputs);
 
-    // signals
+    // signals to inputs and outputs
     QDomNodeList elinks = this->xml->elementsByTagName("link");
     QMap<QString, QPair<QDomElement, int> > links;
     QStringList sSignals;
@@ -395,20 +395,35 @@ QString Document::getVHDL() {
             source += QString("\tSVEOUT%2 <= SVESIG%1;\n").arg(QString::number(i + 1), QString::number(sOutputs[lId].second));
         }
     }
-
+    // signals with same output
+    for(int i = 0; i < elinks.size(); i++) {
+        QDomElement link1 = elinks.at(i).toElement();
+        QString fId1 = link1.attribute("first_id");
+        QString cId1 = link1.attribute("first_connector");
+        for(int j = i + 1; j < elinks.size(); j++) {
+            QDomElement link2 = elinks.at(j).toElement();
+            QString fId2 = link2.attribute("first_id");
+            QString cId2 = link2.attribute("first_connector");
+            if (fId1 == fId2 && cId1 == cId2) {
+                source += QString("\tSVESIG%1 <= SVESIG%2;\n").arg(QString::number(j + 1), QString::number(i + 1));
+            }
+        }
+    }
     // nodes
     for (int i = 0; i < ns; i++) {
         QDomElement node = nodes.at(i).toElement();
         QString usedPlugin = node.attribute("plugin");
+        int maxInputs  = this->getPlugin(usedPlugin)->getInputs().size();
+        int maxOutputs = this->getPlugin(usedPlugin)->getOutputs().size();
         if (usedPlugin != "port_in" && usedPlugin != "port_out") {
             QStringList inputs, outputs;
             for (int j = 0; j < links.values().size(); j++) {
                 QPair<QDomElement, int> link = links.values().at(j);
-                if (link.first.attribute("last_id") == node.attribute("id")) {
+                if (link.first.attribute("last_id") == node.attribute("id") && inputs.size() < maxInputs) {
                     // put signal accordingly to connector
                     inputs.insert(link.first.attribute("last_connector").toInt(), "SVESIG" + QString::number(link.second));
                 }
-                if (link.first.attribute("first_id") == node.attribute("id")) {
+                if (link.first.attribute("first_id") == node.attribute("id") && outputs.size() < maxOutputs) {
                     outputs.insert(link.first.attribute("first_connector").toInt(), "SVESIG" + QString::number(link.second));
                 }
             }
