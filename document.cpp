@@ -184,7 +184,7 @@ bool Document::save(QString filename) {
 }
 
 /* load from file */
-void Document::load(QString filename) {
+bool Document::load(QString filename) {
     this->filename = filename;
     this->title = QFileInfo(filename).baseName() + ".sve";
     QFile fileIn(this->filename);
@@ -194,12 +194,15 @@ void Document::load(QString filename) {
     int l, c;
     if (!this->xml->setContent(file, &erm, &l, &c)) {
         qDebug() << erm << ':' << l << '-' << c;
+        return false;
     }
     fileIn.close();
 
     this->setChanged(false);
     this->history.clear();
     this->pushToHistory();
+
+    return true;
 }
 
 /* set document changed flag */
@@ -305,6 +308,12 @@ QString Document::getVHDL() {
     // %1 - components
     // %2 - signals
     // %3 - source
+
+    QString portMapTemplate = "\tSVENODE%1 : %2 port map (%3, %4);\n";
+    // %1 - number
+    // %2 - component
+    // %3 - inputs
+    // %4 - outputs
 
     QStringList components;
 
@@ -427,7 +436,7 @@ QString Document::getVHDL() {
                     outputs.insert(link.first.attribute("first_connector").toInt(), "SVESIG" + QString::number(link.second));
                 }
             }
-            source += QString("\tSVENODE%1 : %2 port map (%3, %4);\n").arg(QString::number(i + 1), usedPlugin, inputs.join(", "), outputs.join(", "));
+            source += portMapTemplate.arg(QString::number(i + 1), usedPlugin, inputs.join(", "), outputs.join(", "));
         }
     }
 

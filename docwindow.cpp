@@ -87,18 +87,26 @@ bool DocWindow::load() {
     fd->setDefaultSuffix(".sve");
     QString filename = fd->getOpenFileName(0, tr("Open file..."), "", "*.sve");
     // saving cancelled
-    if (filename == "") return false;
-    this->document->load(filename);
-    this->setTitle(this->document->title);
-    if (this->renderNodes()) {
-        this->document->setChanged(false);
-        this->setStatus(tr("Document loaded"), 2000);
-        return true;
-    }
-    else {
-        this->setStatus(tr("Document loading error: no required plugin"), -1);
+    if (filename == "") {
         return false;
     }
+    // loading non-sve
+    if (this->document->load(filename)) {
+        this->setTitle(this->document->title);
+        if (this->renderNodes()) {
+            this->document->setChanged(false);
+            this->setStatus(tr("Document loaded"), 2000);
+            return true;
+        }
+        // no required plugin
+        else {
+            this->setStatus(tr("Document loading error: no required plugin"), -1);
+        }
+    }
+    else {
+        this->setStatus(tr("Document loading error: wrong format"), -1);
+    }
+    return false;
 
 }
 

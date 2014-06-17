@@ -76,7 +76,7 @@
     </message>
     <message>
         <location filename="docwindow.cpp" line="58"/>
-        <location filename="docwindow.cpp" line="142"/>
+        <location filename="docwindow.cpp" line="150"/>
         <source>Save as...</source>
         <translation>Сохранить как...</translation>
     </message>
@@ -96,32 +96,37 @@
         <translation>Открыть...</translation>
     </message>
     <message>
-        <location filename="docwindow.cpp" line="95"/>
+        <location filename="docwindow.cpp" line="98"/>
         <source>Document loaded</source>
         <translation>Документ загружен</translation>
     </message>
     <message>
-        <location filename="docwindow.cpp" line="99"/>
+        <location filename="docwindow.cpp" line="103"/>
         <source>Document loading error: no required plugin</source>
         <translation>Ошибка загрузки: нет необходимого плагина</translation>
     </message>
     <message>
-        <location filename="docwindow.cpp" line="110"/>
+        <location filename="docwindow.cpp" line="107"/>
+        <source>Document loading error: wrong format</source>
+        <translation>Ошибка загрузки: неверный формат</translation>
+    </message>
+    <message>
+        <location filename="docwindow.cpp" line="118"/>
         <source>Set ending node</source>
         <translation>Укажите конечный элемент</translation>
     </message>
     <message>
-        <location filename="docwindow.cpp" line="161"/>
+        <location filename="docwindow.cpp" line="169"/>
         <source>New label</source>
         <translation>Новая метка</translation>
     </message>
     <message>
-        <location filename="docwindow.cpp" line="162"/>
+        <location filename="docwindow.cpp" line="170"/>
         <source>Insert text for this label</source>
         <translation>Введите текст для метки</translation>
     </message>
     <message>
-        <location filename="docwindow.cpp" line="181"/>
+        <location filename="docwindow.cpp" line="189"/>
         <source>Set beginning node</source>
         <translation>Укажите начальный элемент</translation>
     </message>
@@ -601,19 +606,19 @@
         <translation>No web? No fun.</translation>
     </message>
     <message>
-        <location filename="sourceviewdialog.cpp" line="60"/>
+        <location filename="sourceviewdialog.cpp" line="55"/>
         <source>Error running GHDL.
 Is it fall yet?</source>
         <translation>Ошибка запуска GHDL.
 Is it fall yet?</translation>
     </message>
     <message>
-        <location filename="sourceviewdialog.cpp" line="63"/>
+        <location filename="sourceviewdialog.cpp" line="58"/>
         <source>Code seems to be OK!</source>
         <translation>С кодом все в порядке!</translation>
     </message>
     <message>
-        <location filename="sourceviewdialog.cpp" line="68"/>
+        <location filename="sourceviewdialog.cpp" line="63"/>
         <source>Error creating temporary file</source>
         <translation>Ошибка создания временного файла</translation>
     </message>

@@ -17,9 +17,10 @@
 #include "linknode.h"
 
 typedef enum {
-    Stub = 0,
-    Entity = 1,
-    Label = 2
+    Stub  = 0,
+    Node  = 1,
+    Label = 2,
+    Link  = 3
 } NodeType;
 
 typedef enum {
@@ -82,7 +83,7 @@ public slots:
     void handleChildSignals(AlterType type);
     void setActiveElement();
     bool save(QString filename);
-    void load(QString filename);
+    bool load(QString filename);
     void addNode(QString plugin);
 
     void undo();

@@ -24,7 +24,7 @@ public:
     void setSource(QString src);
 
 private:
-    QString htmlTemplate = "<html><head><style><!--#CSS#--></style><script type=\"text/javascript\"><!--#JS#--></script></head><body><div contenteditable=\"true\" id=\"code\"><!--#VHDL#--></div><script type=\"text/javascript\"><!--#MAIN#--></script></body></html>";
+    QString htmlTemplate = "<html><head><style>%1</style><script type=\"text/javascript\">%2</script></head><body><div contenteditable=\"true\" id=\"code\">%3</div><script type=\"text/javascript\">%4</script></body></html>";
     QString vhdlSource;
     QWebView *view;
     Ui::SourceViewDialog *ui;

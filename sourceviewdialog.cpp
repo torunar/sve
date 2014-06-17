@@ -24,13 +24,7 @@ void SourceViewDialog::setSource(QString src) {
     css.open(QFile::ReadOnly);
     js.open(QFile::ReadOnly);
     main.open(QFile::ReadOnly);
-    this->view->setHtml(
-        this->htmlTemplate
-            .replace("<!--#CSS#-->",  css.readAll())
-            .replace("<!--#JS#-->",   js.readAll())
-            .replace("<!--#VHDL#-->", src)
-            .replace("<!--#MAIN#-->", main.readAll())
-    );
+    this->view->setHtml(this->htmlTemplate.arg(css.readAll(), js.readAll(), src, main.readAll()));
     css.close();
     js.close();
     main.close();

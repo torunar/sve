@@ -3,7 +3,6 @@
 
 #include <QDialog>
 #include <QAbstractButton>
-#include <QDebug>
 
 namespace Ui {
 class NodePropertiesDialog;
